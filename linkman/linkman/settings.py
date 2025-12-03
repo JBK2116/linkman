@@ -12,9 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def get_env_var(env_var: str) -> str:
+    """
+    Gets a specified environment variable.
+    :param env_var: Name of the environment variable
+    :return: The value of the specified environment variable
+    """
+    value = os.getenv(env_var)
+    if value is None:
+        error_message = f"Set the {env_var} environment variable!"
+        raise ImproperlyConfigured(error_message)
+    return value
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,20 +37,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-key: str | None = os.getenv("SECRET_KEY")
-if key is None:
-    raise RuntimeError('Django "SECRET_KEY is not set')
-
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = get_env_var("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+# IN PROD DO THIS -> ALLOWED_HOSTS = ["Your IP", "Your Domain"]
 
 
 # Application definition
-
+MY_APPS: list[str] = [
+    "apps.authentication",
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,6 +60,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'tailwind',
     'theme',
+    *MY_APPS,
 ]
 
 # Tell django-tailwind which app contains your Tailwind code
@@ -71,8 +85,10 @@ ROOT_URLCONF = 'linkman.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            BASE_DIR / 'templates', # templates folder(s)
+        ],
+        'APP_DIRS': True, # Also look in app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -92,11 +108,11 @@ WSGI_APPLICATION = 'linkman.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+        'NAME': get_env_var("DB_NAME"),
+        'USER': get_env_var("DB_USER"),
+        'PASSWORD': get_env_var("DB_PASSWORD"),
+        'HOST': get_env_var("DB_HOST"),
+        'PORT': get_env_var("DB_PORT"),
     }
 }
 
@@ -134,7 +150,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static"  # global static folder
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
