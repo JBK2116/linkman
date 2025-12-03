@@ -1,13 +1,89 @@
+{% load static %}
 <!doctype html>
 <html lang="">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
     <title>LinkMan - Bookmarks Improved</title>
 </head>
+
 <body>
-<p>Hello, Do you see me?</p>
+{% include "navbar_guest.html" %}
+<main class="bg-[#121212] min-h-screen">
+    <!-- Hero Section -->
+    <section class="px-4 py-16 sm:py-24 lg:py-32">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#E0E0E0] mb-6">
+                Your Links, Organized and Searchable
+            </h1>
+            <p class="text-lg sm:text-xl text-[#B0B0B0] mb-10 max-w-2xl mx-auto">
+                A privacy-focused personal link manager. Reliable, secure, and lightning fast.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-[#888888] hover:bg-[#B0B0B0] text-[#121212] font-semibold px-8 py-3 rounded-lg transition-colors">
+                    Sign Up
+                </button>
+                <button class="bg-transparent hover:bg-[#444444] text-[#E0E0E0] font-semibold px-8 py-3 rounded-lg border-2 border-[#444444] transition-colors">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="px-4 py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature Card 1 -->
+                <div class="bg-[#1a1a1a] border border-[#444444] rounded-lg p-6 hover:border-[#888888] transition-colors">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <h3 class="text-xl font-semibold text-[#E0E0E0] mb-3">
+                        Instant Search
+                    </h3>
+                    <p class="text-[#B0B0B0]">
+                        Find any link in milliseconds with fuzzy search
+                    </p>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="bg-[#1a1a1a] border border-[#444444] rounded-lg p-6 hover:border-[#888888] transition-colors">
+                    <div class="text-4xl mb-4">🏷️</div>
+                    <h3 class="text-xl font-semibold text-[#E0E0E0] mb-3">
+                        Smart Organization
+                    </h3>
+                    <p class="text-[#B0B0B0]">
+                        Groups, and filters for efficient organization
+                    </p>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="bg-[#1a1a1a] border border-[#444444] rounded-lg p-6 hover:border-[#888888] transition-colors">
+                    <div class="text-4xl mb-4">🔐</div>
+                    <h3 class="text-xl font-semibold text-[#E0E0E0] mb-3">
+                        Privacy First
+                    </h3>
+                    <p class="text-[#B0B0B0]">
+                        Your data stays yours. Protected end-to-end
+                    </p>
+                </div>
+
+                <!-- Feature Card 4 -->
+                <div class="bg-[#1a1a1a] border border-[#444444] rounded-lg p-6 hover:border-[#888888] transition-colors">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-semibold text-[#E0E0E0] mb-3">
+                        Lightning Fast
+                    </h3>
+                    <p class="text-[#B0B0B0]">
+                        Client-side search for instant results
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% include "footer.html" %}
 </body>
 </html>
