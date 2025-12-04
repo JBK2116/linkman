@@ -19,9 +19,11 @@ dev = [
     "cookiecutter>=2.6.0",
     "django-browser-reload>=1.21.0",
     "django-extensions>=4.1",
+    "django-stubs[compatible-mypy]>=5.2.8",
     "mypy>=1.18.2",
     "ruff>=0.14.6",
 ]
+
 
 [tool.ruff]
 # Match Black's style.
@@ -51,6 +53,8 @@ docstring-code-line-length = "dynamic"
 convention = "google"
 
 [tool.mypy]
+# For Django-Stubs plugin
+plugins = ["mypy_django_plugin.main"]
 # Warn when functions return 'Any'.
 warn_return_any = true
 # Warn for unused config options in mypy.ini/pyproject.toml.
@@ -71,3 +75,9 @@ no_implicit_optional = true
 show_error_codes = true
 # Warn for ignored `# type: ignore` comments that aren’t needed.
 warn_unused_ignores = true
+
+[tool.django-stubs]
+django_settings_module = "linkman.settings"
+
+[tool.mypy_django_plugin]
+django_settings_module = "linkman.settings"
