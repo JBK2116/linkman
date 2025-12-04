@@ -9,25 +9,19 @@ Partial template that defines the navbar for un-authenticated users
         <div class="flex justify-between items-center h-12">
             <!-- Logo -->
             <div class="shrink-0">
-                <a class="text-[#E0E0E0] text-2xl font-bold hover:text-white transition-colors" href="#">
+                <a class="text-[#E0E0E0] text-2xl font-bold hover:text-white transition-colors" href="{% url 'landing_page' %}">
                     {% comment %}
-                    <!-- Add this later once you have a functioning image -->
-                    <img src="{% static 'path/to/logo.png' %}" alt="Logo" class="h-8">
+                    <!-- TODO: Add this later once you have a functioning image -->
+                    <img alt="Logo" class="h-8" src="{% static 'path/to/logo.png' %}">
                     {% endcomment %}
-                    Logo
+                    LINKMAN
                 </a>
             </div>
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-8">
-
-                {% comment %}
-                <!-- TODO: Update The Href To Include Urls to `Login`, `Signup` -->
-                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'endpoint-name' %}">endpoint-name</a>
-                {% endcomment %}
-
-                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="#">Sign Up</a>
-                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="#">Login</a>
+                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'signup_page' %}">Sign Up</a>
+                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'login_page' %}">Login</a>
             </nav>
 
             <!-- Mobile menu button -->
@@ -40,14 +34,10 @@ Partial template that defines the navbar for un-authenticated users
 
         <!-- Mobile Navigation -->
         <nav class="hidden md:hidden pb-4" id="mobile-menu">
-
-            {% comment %}
-            <!-- TODO: Update The Href To Include Urls to `Login`, `Signup` -->
-            <a class="text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'endpoint-name' %}">endpoint-name</a>
-            {% endcomment %}
-
-            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="#">Sign Up</a>
-            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="#">Login</a>
+            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'signup_page' %}">Sign
+                Up</a>
+            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors"
+               href="{% url 'login_page' %}">Login</a>
         </nav>
     </div>
 </div>
