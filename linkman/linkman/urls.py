@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")), # Django browser reload dependency
     path("", include("apps.authentication.urls")), # Auth application
+    path("dashboard/", include("apps.main.urls")), # Main application
 ]

@@ -8,7 +8,9 @@ def landing_page(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 def signup_page(request: HttpRequest) -> HttpResponse:
+    """Signup page for the application"""
     return render(request, "authentication/signup.html")
 
 def login_page(request: HttpRequest) -> HttpResponse:
+    """Login page for the application"""
     return render(request, "authentication/login.html")
