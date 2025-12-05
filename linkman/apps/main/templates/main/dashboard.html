@@ -1,0 +1,196 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+            name="viewport"
+    />
+    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+    <link href="{% static 'main/main.js' %}">
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet"/>
+    <title>Dashboard - LinkMan</title>
+</head>
+<body>
+{% include "navbar_user.html" %}
+<!-- Main Dashboard Component -->
+<main class="bg-[#121212] min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Search Bar Section -->
+        <div class="mb-8">
+            <div class="max-w-3xl mx-auto">
+                <label for="search-input"></label><input
+                    autocomplete="off"
+                    class="w-full px-6 py-4 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg focus:outline-none focus:border-[#888888] transition-colors text-lg"
+                    id="search-input"
+                    placeholder="Search links..."
+                    type="text"
+            >
+                <!-- Search results count - hidden by default, shown via JS -->
+                <p class="mt-2 text-[#B0B0B0] text-sm text-center hidden" id="search-results-count"></p>
+            </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <!-- Filter Dropdown -->
+            <div class="relative">
+                <button
+                        class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] transition-colors flex items-center gap-2"
+                        id="filter-button"
+                >
+                    <span id="filter-label">Recently Created</span>
+                    <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    </svg>
+                </button>
+                <!-- Dropdown menu - hidden by default, shown via JS -->
+                <div class="hidden absolute top-full left-0 mt-2 w-48 bg-[#1E1E1E] border border-[#444444] rounded-lg shadow-lg z-10"
+                     id="filter-dropdown">
+                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
+                            data-filter="recent">Recently Created
+                    </button>
+                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
+                            data-filter="last-used">Last Used
+                    </button>
+                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
+                            data-filter="most-used">Most Used
+                    </button>
+                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors rounded-b-lg"
+                            data-filter="group">By Group
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button
+                        class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] hover:bg-[#2A2A2A] transition-colors"
+                        id="add-group-button"
+                >
+                    + Group
+                </button>
+                <button
+                        class="px-4 py-2 bg-[#888888] text-[#121212] rounded-lg hover:bg-[#999999] transition-colors font-medium"
+                        id="add-link-button"
+                >
+                    + Link
+                </button>
+            </div>
+        </div>
+
+        <!-- Link Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="links-container">
+
+            <!-- Sample Link Card 1 - Remove these and populate via JS/Django template loop -->
+            <div class="link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer">
+                <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">GitHub Repository</h3>
+                <p class="text-[#888888] text-sm mb-3 truncate">https://github.com/user/repo</p>
+                <div class="flex items-center justify-between text-[#B0B0B0] text-xs">
+                    <span>Clicks: 42</span>
+                    <span>Last used: 2 hours ago</span>
+                </div>
+                <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
+                    <span class="text-[#888888] text-xs">Development</span>
+                    <div class="flex gap-2">
+                        <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Edit">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button class="delete-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Delete">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Link Card 2 -->
+            <div class="link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer">
+                <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">Documentation Portal</h3>
+                <p class="text-[#888888] text-sm mb-3 truncate">https://docs.example.com/api/v2</p>
+                <div class="flex items-center justify-between text-[#B0B0B0] text-xs">
+                    <span>Clicks: 128</span>
+                    <span>Last used: 1 day ago</span>
+                </div>
+                <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
+                    <span class="text-[#888888] text-xs">Development</span>
+                    <div class="flex gap-2">
+                        <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Edit">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button class="delete-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Delete">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Add here -->
+            </div>
+
+            <!-- Sample Link Card 3 -->
+            <div class="link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer">
+                <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">Stack Overflow Question</h3>
+                <p class="text-[#888888] text-sm mb-3 truncate">https://stackoverflow.com/questions/12345</p>
+                <div class="flex items-center justify-between text-[#B0B0B0] text-xs">
+                    <span>Clicks: 7</span>
+                    <span>Last used: 3 days ago</span>
+                </div>
+                <!-- Add here -->
+                <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
+                    <span class="text-[#888888] text-xs">Development</span>
+                    <div class="flex gap-2">
+                        <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Edit">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button class="delete-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
+                                title="Delete">
+                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                      stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading indicator - hidden by default, shown during infinite scroll -->
+        <div class="hidden text-center py-8" id="loading-indicator">
+            <div class="inline-block w-8 h-8 border-4 border-[#444444] border-t-[#888888] rounded-full animate-spin"></div>
+        </div>
+
+        <!-- No results message - hidden by default, shown when search returns nothing -->
+        <div class="hidden text-center py-16" id="no-results">
+            <p class="text-[#B0B0B0] text-lg">No links found</p>
+        </div>
+
+    </div>
+</main>
+{% include "footer.html" %}
+</body>
+</html>
