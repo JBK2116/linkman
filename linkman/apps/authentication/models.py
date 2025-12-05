@@ -45,6 +45,7 @@ class CustomUserManager(BaseUserManager["CustomUser"]):
 class CustomUser(AbstractUser):
     username = None  # type: ignore[assignment]  # Not needed in the application
     email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
+    # password is handled by django's built in session authentication
     total_groups = models.PositiveIntegerField(default=0)
     total_links = models.PositiveIntegerField(default=0)
     # TODO: Add a foreign key to all associated Groups and Links
