@@ -50,10 +50,7 @@ ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
-MY_APPS: list[str] = [
-    "apps.authentication",
-    "apps.main",
-]
+MY_APPS: list[str] = ["apps.authentication", "apps.main", "apps.api"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

@@ -12,6 +12,7 @@
     <title>Dashboard - LinkMan</title>
 </head>
 <body>
+{% csrf_token %}
 {% include "navbar_user.html" %}
 <!-- Main Dashboard Component -->
 <main class="bg-[#121212] min-h-screen">
@@ -192,5 +193,6 @@
     </div>
 </main>
 {% include "footer.html" %}
+<script src="{% static 'main/main.js' %}"></script>
 </body>
 </html>

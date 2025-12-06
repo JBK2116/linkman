@@ -43,7 +43,6 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 status=400,
             )
         # User does not exist and form data is valid, now we can create the new user
-        print(cleaned_form.cleaned_data)
         new_user: CustomUser = auth_utils.create_user(
             cleaned_form.cleaned_data["email"],
             cleaned_form.cleaned_data["password_one"],
