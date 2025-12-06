@@ -81,6 +81,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Session Configuration
+SESSION_ENGINE = "django.contrib.sessions.backends.db" # Store the session in the Database
+SESSION_COOKIE_AGE: int = 60*60*24*7*2 # Cookie length stored in seconds (2 Weeks Here)
+SESSION_COOKIE_HTTPONLY: bool = True
+SESSION_COOKIE_NAME: str = 'sessionid'
+SESSION_COOKIE_SAMESITE: str = 'Lax'
+
+# IMPORTANT: Ensure these values are uncommented and properly set in production
+# SESSION_COOKIE_SECURE: bool = True
+
+# USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#
+# CSRF_TRUSTED_ORIGINS = [
+#     '',
+#     ''
+# ]
+# USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ROOT_URLCONF = 'linkman.urls'
 
 TEMPLATES = [
@@ -157,6 +177,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static"  # global static folder
 ]
+# STATIC_ROOT = "/home/ubuntu/[insert appname]/staticfiles/"  # for production (via collectstatic)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

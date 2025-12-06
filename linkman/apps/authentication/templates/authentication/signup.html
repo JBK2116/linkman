@@ -44,6 +44,9 @@
                     {% if form.email.errors %}
                     <p class="mt-1 text-red-400 text-sm">{{ form.email.errors.0 }}</p>
                     {% endif %}
+                    {% if email_exists %}
+                    <p class="mt-1 text-red-400 text-sm">{{ email_exists }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- Password One Field -->
@@ -99,7 +102,8 @@
 
                 <!-- Login Link -->
                 <p class="text-center text-[#B0B0B0] text-sm">
-                    Already have an account? <a class="text-[#E0E0E0] hover:text-white underline" href="{% url 'login_page' %}">Log in</a>
+                    Already have an account? <a class="text-[#E0E0E0] hover:text-white underline"
+                                                href="{% url 'login_page' %}">Log in</a>
                 </p>
             </form>
         </div>

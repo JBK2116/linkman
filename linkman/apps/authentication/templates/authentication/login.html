@@ -44,6 +44,9 @@
                     {% if form.email.errors %}
                     <p class="mt-1 text-red-400 text-sm">{{ form.email.errors.0 }}</p>
                     {% endif %}
+                    {% if invalid_credentials %}
+                    <p class="mt-1 text-red-400 text-sm">{{ invalid_credentials }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- Password Field -->
