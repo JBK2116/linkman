@@ -24,7 +24,7 @@
             </div>
             {% endif %}
 
-            <form method="post" novalidate>
+            <form action="{% url 'login_page' %}" method="post">
                 {% csrf_token %}
 
                 <!-- Email Field -->
@@ -84,7 +84,8 @@
 
                 <!-- Sign Up Link -->
                 <p class="text-center text-[#B0B0B0] text-sm">
-                    Don't have an account? <a class="text-[#E0E0E0] hover:text-white underline" href="{% url 'signup_page' %}">Sign up</a>
+                    Don't have an account? <a class="text-[#E0E0E0] hover:text-white underline"
+                                              href="{% url 'signup_page' %}">Sign up</a>
                 </p>
             </form>
         </div>

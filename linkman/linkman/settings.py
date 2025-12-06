@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -16,6 +17,7 @@ from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 def get_env_var(env_var: str) -> str:
     """
@@ -28,6 +30,7 @@ def get_env_var(env_var: str) -> str:
         error_message = f"Set the {env_var} environment variable!"
         raise ImproperlyConfigured(error_message)
     return value
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,15 +55,15 @@ MY_APPS: list[str] = [
     "apps.main",
 ]
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_browser_reload',
-    'tailwind',
-    'theme',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_browser_reload",
+    "tailwind",
+    "theme",
     *MY_APPS,
 ]
 
@@ -71,22 +74,26 @@ TAILWIND_APP_NAME = "theme"
 TAILWIND_DEV_MODE = True
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 # Session Configuration
-SESSION_ENGINE = "django.contrib.sessions.backends.db" # Store the session in the Database
-SESSION_COOKIE_AGE: int = 60*60*24*7*2 # Cookie length stored in seconds (2 Weeks Here)
+SESSION_ENGINE = (
+    "django.contrib.sessions.backends.db"  # Store the session in the Database
+)
+SESSION_COOKIE_AGE: int = (
+    60 * 60 * 24 * 7 * 2
+)  # Cookie length stored in seconds (2 Weeks Here)
 SESSION_COOKIE_HTTPONLY: bool = True
-SESSION_COOKIE_NAME: str = 'sessionid'
-SESSION_COOKIE_SAMESITE: str = 'Lax'
+SESSION_COOKIE_NAME: str = "sessionid"
+SESSION_COOKIE_SAMESITE: str = "Lax"
 
 # IMPORTANT: Ensure these values are uncommented and properly set in production
 # SESSION_COOKIE_SECURE: bool = True
@@ -100,60 +107,62 @@ SESSION_COOKIE_SAMESITE: str = 'Lax'
 # ]
 # USE_X_FORWARDED_HOST = True
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+LOGIN_URL: str = "login_page"
+LOGOUT_REDIRECT_URL: str = "landing_page"
 
-ROOT_URLCONF = 'linkman.urls'
+ROOT_URLCONF = "linkman.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates', # templates folder(s)
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            BASE_DIR / "templates",  # templates folder(s)
         ],
-        'APP_DIRS': True, # Also look in app directories
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "APP_DIRS": True,  # Also look in app directories
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'linkman.wsgi.application'
+WSGI_APPLICATION = "linkman.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_var("DB_NAME"),
-        'USER': get_env_var("DB_USER"),
-        'PASSWORD': get_env_var("DB_PASSWORD"),
-        'HOST': get_env_var("DB_HOST"),
-        'PORT': get_env_var("DB_PORT"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": get_env_var("DB_NAME"),
+        "USER": get_env_var("DB_USER"),
+        "PASSWORD": get_env_var("DB_PASSWORD"),
+        "HOST": get_env_var("DB_HOST"),
+        "PORT": get_env_var("DB_PORT"),
     }
 }
 # CUSTOM USER
-AUTH_USER_MODEL = 'authentication.CustomUser'
+AUTH_USER_MODEL = "authentication.CustomUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -161,9 +170,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -182,4 +191,4 @@ STATICFILES_DIRS = [
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

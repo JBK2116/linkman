@@ -24,7 +24,13 @@ Partial template that defines the navbar for authenticated users
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-8">
                 <a class="text-[#E0E0E0] hover:text-white transition-colors" href="#">Settings</a>
-                <a class="text-[#E0E0E0] hover:text-white transition-colors" href="#">Logout</a>
+                <form action="{% url 'logout_page' %}" method="post">
+                    {% csrf_token %}
+                    <button class="text-[#E0E0E0] hover:text-white transition-colors bg-transparent p-0 border-0"
+                            type="submit">
+                        Logout
+                    </button>
+                </form>
             </nav>
 
             <!-- Mobile menu button -->
@@ -41,8 +47,13 @@ Partial template that defines the navbar for authenticated users
         <!-- Mobile Navigation -->
         <nav class="hidden md:hidden pb-4" id="mobile-menu">
             <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="#">Settings</a>
-            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors"
-               href="#">Logout</a>
+            <form action="{% url 'logout_page' %}" method="post">
+                {% csrf_token %}
+                <button class="text-[#E0E0E0] hover:text-white transition-colors bg-transparent p-0 border-0"
+                        type="submit">
+                    Logout
+                </button>
+            </form>
         </nav>
     </div>
 </div>

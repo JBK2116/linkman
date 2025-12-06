@@ -4,7 +4,6 @@ This file stores utility functions for the `authentication` app
 
 from enum import Enum
 
-from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
@@ -36,7 +35,13 @@ def validate_signup_form(
     if is_valid:
         return form
     else:
-        return render(request, "authentication/signup.html", {"form": form})
+        print(form.errors)
+        return render(
+            request,
+            template_name="authentication/signup.html",
+            context={"form": form},
+            status=400,
+        )
 
 
 def validate_login_form(
@@ -52,10 +57,15 @@ def validate_login_form(
     if is_valid:
         return form
     else:
-        return render(request, "authentication/login.html", {"form": form})
+        return render(
+            request,
+            template_name="authentication/login.html",
+            context={"form": form},
+            status=400,
+        )
 
 
-def user_exists(email) -> bool:
+def user_exists(email: str) -> bool:
     """
     Checks if a user exists with the provided email
     :param email: Email to check with
@@ -64,7 +74,7 @@ def user_exists(email) -> bool:
     return CustomUser.objects.filter(email=email).exists()
 
 
-def create_user(email: str, password: str) -> ValidationError | CustomUser:
+def create_user(email: str, password: str) -> CustomUser:
     """
     Creates a new user and returns the created user
     :param email: Email to set for the new user
