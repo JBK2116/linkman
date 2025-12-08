@@ -1,10 +1,9 @@
 /*
 This js file serves as the entry point for the logic in the `dashboard.html` page
  */
+import * as utils from "./utils.js";
+import * as form_utils from "./forms.js";
 
-// REQUIRED VARIABLES
-const GROUPS = [];
-const LINKS = [];
 // Filter dropdown toggle
 document.getElementById('filter-button').addEventListener('click', function () {
     document.getElementById('filter-dropdown').classList.toggle('hidden');
@@ -98,55 +97,13 @@ document.querySelectorAll('.delete-link-btn').forEach(btn => {
 });
 
 /**
- * Sends a `GET` request to fetch all groups associated with the user
- *
- * Pushes all received groups into the `GROUPS` array
+ * Initializes the page, including getting `user` data and connecting event listeners
+ * @returns {Promise<void>}
  */
-async function getGroups() {
-    try {
-        const response = await fetch('/api/groups', {
-            method: 'GET',
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            console.log(`Unable to fetch all groups: ${data.detail}`)
-            return;
-        }
-        data.groups.forEach((item) => {
-            GROUPS.push(item);
-        })
-        console.log(`Data successfully retrieved: ${data.groups}`)
-    } catch (error) {
-        console.log(`Error occurred fetching all groups: ${error}`);
-    }
+async function init() {
+    // Load user data
+    await utils.getGroups();
+    await utils.getLinks();
 }
 
-/**
- * Sends a `GET` request to fetch all links associated with the user
- *
- * Pushes all received links into the `LINKS` array
- */
-async function getLinks() {
-    try {
-        const response = await fetch('/api/links', {
-            method: 'GET',
-        })
-        const data = await response.json();
-        if (!response.ok) {
-            console.log(`Unable to fetch links: ${data.links}`);
-            return;
-        }
-        data.links.forEach((item) => {
-            LINKS.push(item);
-        })
-        console.log(`Data successfully retrieved: ${data.links}`);
-    } catch (error) {
-        console.log(`Error occurred fetching links: ${error}`);
-    }
-}
-
-function getCSRFToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]').value;
-}
-
-window.addEventListener('DOMContentLoaded', getGroups)
+window.addEventListener('DOMContentLoaded', init)
