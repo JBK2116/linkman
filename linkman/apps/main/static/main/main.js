@@ -70,16 +70,6 @@ document.querySelectorAll('.link-card').forEach(card => {
     });
 });
 
-// Add Group button
-document.getElementById('add-group-button').addEventListener('click', function () {
-    // TODO: Open modal or redirect to add group form
-});
-
-// Add Link button
-document.getElementById('add-link-button').addEventListener('click', function () {
-    // TODO: Open modal or redirect to add link form
-});
-
 // Edit link button
 document.querySelectorAll('.edit-link-btn').forEach(btn => {
     btn.addEventListener('click', function (e) {

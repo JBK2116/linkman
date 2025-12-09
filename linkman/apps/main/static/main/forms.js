@@ -15,9 +15,12 @@ const GROUP_FORM_ERRORS = document.getElementById("group-form-errors");
 const ADD_LINK_BUTTON = document.getElementById("add-link-button");
 const LINK_FORM_MODAL = document.getElementById("link-form-modal");
 const LINK_FORM = document.getElementById("link-form");
-const LINK_FORM_CANCEL = document.getElementById("link-form-cancel");
+const LINK_FORM_NAME_INPUT = document.getElementById("link-name-input");
+const LINK_FORM_URL_INPUT = document.getElementById("link-url-input");
+const LINK_FORM_GROUP_INPUT = document.getElementById("link-group-select");
+const LINK_FORM_CANCEL_BUTTON = document.getElementById("cancel-link-form");
+const LINK_FORM_CANCEL_ICON = document.getElementById("close-link-form");
 const LINK_FORM_ERRORS = document.getElementById("link-form-errors");
-
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener("click", () => {
     utils.toggleElementVisibility("group-form-modal");
@@ -62,9 +65,12 @@ GROUP_FORM.addEventListener("submit", async (e) => {
             return;
         }
         // POST was successful
-        alert(`Link successfully created!`);
-        utils.LINKS.push(data.group);
+        alert(`Group successfully created!`);
+        utils.GROUPS.push(data.group);
+        resetGroupForm();
+        utils.toggleElementVisibility("group-form-modal");
     } catch (error) {
+        alert("An error occurred creating the group");
         console.log(`Error creating group: ${error}`);
     }
 });
@@ -80,16 +86,21 @@ function closeGroupForm() {
     } else {
         let result = confirm("Your form data may not be saved. Are you sure?")
         if (result) {
-            // reset the forms value
-            GROUP_NAME_INPUT.value = "";
-            // reset the forms errors
-            if (!GROUP_FORM_ERRORS.classList.contains("hidden")) {
-                GROUP_FORM_ERRORS.classList.add("hidden");
-            }
-            GROUP_FORM_ERRORS.innerHTML = "";
+            resetGroupForm();
             utils.toggleElementVisibility("group-form-modal");
         }
     }
+}
+
+/**
+ * Resets all values in the `group form modal`
+ */
+function resetGroupForm() {
+    GROUP_NAME_INPUT.value = "";
+    if (!GROUP_FORM_ERRORS.classList.contains("hidden")) {
+        GROUP_FORM_ERRORS.classList.add("hidden");
+    }
+    GROUP_FORM_ERRORS.innerHTML = "";
 }
 
 /**
@@ -108,4 +119,134 @@ function validateGroupName(name) {
         return "Group name must be less than 50 characters.";
     }
     return "";
+}
+
+// LINK FORM VISIBILITY
+ADD_LINK_BUTTON.addEventListener("click", () => {
+    // show the form
+    utils.toggleElementVisibility("link-form-modal");
+    // initialize the group options
+    LINK_FORM_GROUP_INPUT.innerHTML = "";
+    for (const group of utils.GROUPS) {
+        const el = document.createElement("option");
+        el.className = "px-4 py-2 hover:bg-[#2A2A2A] cursor-pointer text-[#E0E0E0]";
+        el.value = group.id
+        el.textContent = group.name
+        LINK_FORM_GROUP_INPUT.appendChild(el);
+    }
+})
+
+LINK_FORM.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    // TODO: Implement POST functionality
+    const url = LINK_FORM.action
+    const csrfToken = utils.getCSRFToken();
+    const linkName = LINK_FORM_NAME_INPUT.value.trim();
+    const linkURL = LINK_FORM_URL_INPUT.value.trim();
+    const groupID = Number(LINK_FORM_GROUP_INPUT.value.trim());
+    const validationResult = validateLinkForm(linkName, linkURL);
+    // validation failed
+    if (validationResult) {
+        LINK_FORM_ERRORS.classList.remove("hidden");
+        LINK_FORM_ERRORS.innerHTML = `<p>${validationResult}</p>`;
+        return;
+    }
+    // get the associated group object
+    const group = utils.getGroup(groupID);
+    if (!group) {
+        LINK_FORM_ERRORS.innerHTML = `<p>Unable to find the selected group</p>`;
+        return;
+    }
+    // all data is valid by now
+    const payload = {"link_name": linkName, "link_url": linkURL, "group_id": group.id};
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {"Content-Type": "application/json", "X-CSRFToken": csrfToken},
+        })
+        const data = await response.json();
+        // handle error response
+        if (!response.ok) {
+            if (GROUP_FORM_ERRORS.classList.contains("hidden")) {
+                GROUP_FORM_ERRORS.classList.remove("hidden");
+            }
+            GROUP_FORM_ERRORS.innerHTML = `<p>${response.detail}</p>`;
+            return;
+        }
+        // handle successful response
+        alert(`Link successfully created!`);
+        utils.LINKS.push(data.link);
+        resetLinkForm();
+        utils.toggleElementVisibility("link-form-modal");
+    } catch (error) {
+        alert("An error occurred creating the link");
+        console.log(`Error creating link: ${error}`);
+    }
+})
+
+
+// LINK FORM CANCEL FUNCTIONALITY
+LINK_FORM_CANCEL_BUTTON.addEventListener("click", () => {
+    closeLinkForm();
+})
+LINK_FORM_CANCEL_ICON.addEventListener("click", () => {
+    closeLinkForm();
+})
+
+/**
+ * Handles the logic for closing the add link form
+ */
+function closeLinkForm() {
+    const formIsEmpty = LINK_FORM_NAME_INPUT.value.trim().length <= 0 && LINK_FORM_URL_INPUT.value.trim().length <= 0;
+    if (formIsEmpty) {
+        utils.toggleElementVisibility("link-form-modal");
+    } else {
+        const result = confirm("Your form data may not be saved. Are you sure?");
+        if (result) {
+            resetLinkForm();
+            utils.toggleElementVisibility("link-form-modal");
+        }
+    }
+}
+
+/**
+ * Resets all data in the `link form`
+ */
+function resetLinkForm() {
+    // reset the form values
+    LINK_FORM_NAME_INPUT.value = "";
+    LINK_FORM_URL_INPUT.value = "";
+    LINK_FORM_GROUP_INPUT.innerHTML = "";
+    // reset the form errors display
+    if (!LINK_FORM_ERRORS.classList.contains("hidden")) {
+        LINK_FORM_ERRORS.classList.add("hidden");
+    }
+    LINK_FORM_ERRORS.innerHTML = "";
+}
+
+/**
+ * Validates the `link-form-modal`
+ * @param name Link name to validate
+ * @param url Link url to validate
+ * @returns {string} Error string if validation failed, else empty string
+ */
+function validateLinkForm(name, url) {
+    // validate the name
+    name = name.trim();
+    if (name.length > 50) {
+        return "Link name must be less than 50 characters.";
+    }
+    if (name.length <= 0) {
+        return "Link name required"
+    }
+    // validate the url
+    url = url.trim();
+    if (url.length > 2000) {
+        return "Link url must be less than 2000 characters"
+    }
+    if (url.length <= 0) {
+        return "Link url required"
+    }
+    return ""
 }

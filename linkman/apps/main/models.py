@@ -48,7 +48,7 @@ class Link(models.Model):
         max_length=50, null=False, blank=False, help_text="Name of the link"
     )
     url = models.CharField(
-        max_length=100, null=False, blank=False, help_text="URL of the link"
+        max_length=2000, null=False, blank=False, help_text="URL of the link"
     )
     click_count = models.PositiveIntegerField(
         default=0, help_text="Click count of the link"
