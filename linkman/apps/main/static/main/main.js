@@ -3,6 +3,7 @@ This js file serves as the entry point for the logic in the `dashboard.html` pag
  */
 import * as utils from "./utils.js";
 import * as form_utils from "./forms.js";
+import * as display_utils from "./display.js";
 
 // Filter dropdown toggle
 document.getElementById('filter-button').addEventListener('click', function () {
@@ -94,6 +95,7 @@ async function init() {
     // Load user data
     await utils.getGroups();
     await utils.getLinks();
+    await display_utils.displayAllLinks()
 }
 
 window.addEventListener('DOMContentLoaded', init)
