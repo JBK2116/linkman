@@ -190,18 +190,24 @@
                                         </div>
 
                                         <div class="mb-6">
+                                            <!-- Replace the select between this comment -->
                                             <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                                   for="link-group-select">
+                                                   for="link-group-input">
                                                 Group
                                             </label>
-                                            <select
-                                                    class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                                    id="link-group-select"
-                                                    name="group"
-                                            >
-                                                <option value="">Default</option>
-                                                <!-- Value should be the same as the displayed Text -->
-                                            </select>
+                                            <div class="relative">
+                                                <input
+                                                        autocomplete="off"
+                                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                                        id="link-group-input"
+                                                        placeholder="Search or select group..."
+                                                        type="text"
+                                                >
+                                                <div class="hidden absolute w-full mt-1 bg-[#1E1E1E] border border-[#444444] rounded-lg max-h-48 overflow-y-auto z-10"
+                                                     id="group-dropdown"></div>
+                                                <input id="link-group-id" name="group" type="hidden">
+                                            </div>
+                                            <!-- -->
                                         </div>
 
                                         <div class="flex gap-3">
@@ -274,6 +280,6 @@
     </div>
 </main>
 {% include "footer.html" %}
-<script type="module" src="{% static 'main/main.js' %}"></script>
+<script src="{% static 'main/main.js' %}" type="module"></script>
 </body>
 </html>

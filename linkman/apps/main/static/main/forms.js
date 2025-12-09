@@ -5,7 +5,6 @@ import * as utils from "./utils.js";
 
 // CONSTANTS
 const ADD_GROUP_BUTTON = document.getElementById("add-group-button");
-const GROUP_FORM_MODAL = document.getElementById("group-form-modal");
 const GROUP_FORM = document.getElementById("group-form");
 const GROUP_NAME_INPUT = document.getElementById("group-name-input");
 const GROUP_FORM_CANCEL_BUTTON = document.getElementById("cancel-group-form");
@@ -13,11 +12,12 @@ const GROUP_FORM_CANCEL_ICON = document.getElementById("close-group-form");
 const GROUP_FORM_ERRORS = document.getElementById("group-form-errors");
 
 const ADD_LINK_BUTTON = document.getElementById("add-link-button");
-const LINK_FORM_MODAL = document.getElementById("link-form-modal");
 const LINK_FORM = document.getElementById("link-form");
 const LINK_FORM_NAME_INPUT = document.getElementById("link-name-input");
 const LINK_FORM_URL_INPUT = document.getElementById("link-url-input");
-const LINK_FORM_GROUP_INPUT = document.getElementById("link-group-select");
+const LINK_FORM_GROUP_INPUT = document.getElementById("link-group-input");
+const LINK_FORM_GROUP_DROPDOWN = document.getElementById("group-dropdown");
+const LINK_FORM_GROUP_HIDDEN = document.getElementById("link-group-id");
 const LINK_FORM_CANCEL_BUTTON = document.getElementById("cancel-link-form");
 const LINK_FORM_CANCEL_ICON = document.getElementById("close-link-form");
 const LINK_FORM_ERRORS = document.getElementById("link-form-errors");
@@ -126,24 +126,49 @@ ADD_LINK_BUTTON.addEventListener("click", () => {
     // show the form
     utils.toggleElementVisibility("link-form-modal");
     // initialize the group options
-    LINK_FORM_GROUP_INPUT.innerHTML = "";
-    for (const group of utils.GROUPS) {
-        const el = document.createElement("option");
-        el.className = "px-4 py-2 hover:bg-[#2A2A2A] cursor-pointer text-[#E0E0E0]";
-        el.value = group.id
-        el.textContent = group.name
-        LINK_FORM_GROUP_INPUT.appendChild(el);
-    }
+    LINK_FORM_GROUP_INPUT.value = "";
+    LINK_FORM_GROUP_HIDDEN.value = "";
+
 })
+
+// LINK FORM GROUP SEARCH FUNCTIONALITY
+LINK_FORM_GROUP_INPUT.addEventListener('focus', () => {
+    LINK_FORM_GROUP_DROPDOWN.innerHTML = utils.GROUPS.map(g =>
+        `<div class="px-4 py-2 hover:bg-[#2A2A2A] text-[#E0E0E0] cursor-pointer" data-id="${g.id}">${g.name}</div>`
+    ).join('');
+    LINK_FORM_GROUP_DROPDOWN.classList.remove('hidden');
+});
+
+LINK_FORM_GROUP_INPUT.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const filtered = utils.GROUPS.filter(g => g.name.toLowerCase().includes(query));
+
+    LINK_FORM_GROUP_DROPDOWN.innerHTML = filtered.map(g =>
+        `<div class="px-4 py-2 hover:bg-[#2A2A2A] text-[#E0E0E0] cursor-pointer" data-id="${g.id}">${g.name}</div>`
+    ).join('');
+
+    LINK_FORM_GROUP_DROPDOWN.classList.toggle('hidden', filtered.length === 0);
+});
+
+LINK_FORM_GROUP_DROPDOWN.addEventListener('click', (e) => {
+    if (e.target.dataset.id) {
+        LINK_FORM_GROUP_INPUT.value = e.target.textContent;
+        LINK_FORM_GROUP_HIDDEN.value = e.target.dataset.id;
+        LINK_FORM_GROUP_DROPDOWN.classList.add('hidden');
+    }
+});
+
+LINK_FORM_GROUP_INPUT.addEventListener('blur', () => {
+    setTimeout(() => LINK_FORM_GROUP_DROPDOWN.classList.add('hidden'), 200);
+});
 
 LINK_FORM.addEventListener("submit", async (e) => {
     e.preventDefault();
-    // TODO: Implement POST functionality
     const url = LINK_FORM.action
     const csrfToken = utils.getCSRFToken();
     const linkName = LINK_FORM_NAME_INPUT.value.trim();
     const linkURL = LINK_FORM_URL_INPUT.value.trim();
-    const groupID = Number(LINK_FORM_GROUP_INPUT.value.trim());
+    const groupID = LINK_FORM_GROUP_HIDDEN.value
     const validationResult = validateLinkForm(linkName, linkURL);
     // validation failed
     if (validationResult) {
