@@ -3,6 +3,7 @@ This javascript file handles the link display functionality
  */
 
 import * as utils from "./utils.js";
+import * as form_utils from "./forms.js";
 // CONSTANTS
 const LINKS_CONTAINER = document.getElementById("links-container");
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
@@ -60,6 +61,16 @@ export function createLinkCard(link) {
             </div>
         </div>
     `;
+    // DELETE LINK FUNCTIONALITY
+    const deleteBtn = card.querySelector(".delete-link-btn");
+    deleteBtn.addEventListener("click", async function (e) {
+        e.stopPropagation();
+        await form_utils.deleteLinkAPI(link, card)
+    })
+
+    // EDIT LINK FUNCTIONALITY
+    const editBtn = card.querySelector(".edit-link-btn");
+    // TODO: Implement This
 
     return card;
 }

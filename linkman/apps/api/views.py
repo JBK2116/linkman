@@ -57,7 +57,7 @@ def group_all(request: HttpRequest) -> JsonResponse:
     return JsonResponse({"groups": groups})
 
 
-def link_all(request) -> JsonResponse:
+def link_all(request: HttpRequest) -> JsonResponse:
     if request.method == HttpMethod.POST.value:
         """Equivalent to api/link POST"""
         if not utils.validate_authentication(request.user):
@@ -102,3 +102,20 @@ def link_all(request) -> JsonResponse:
     # request is a simple /api/links GET
     links = list(Link.objects.filter(user=request.user).values())
     return JsonResponse({"links": links})
+
+
+def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
+    if request.method == HttpMethod.DELETE.value:
+        """Equivalent to api/link/:id DELETE"""
+        # validate authentication
+        if not utils.validate_authentication(request.user):
+            return JsonResponse({"detail": "User not authenticated"}, status=401)
+        assert isinstance(request.user, CustomUser)
+        deletion_result: bool = utils.delete_link_in_db(link_id)
+        if not deletion_result:
+            return JsonResponse({"detail": "Link does not exist"}, status=400)
+        return JsonResponse({"detail": "Link successfully deleted"}, status=200)
+    link: Link | None = utils.get_link_from_db(link_id)
+    if link is None:
+        return JsonResponse({"detail": "Link does not exist"}, status=400)
+    return JsonResponse({"detail": "Link found", "link": link}, status=200)

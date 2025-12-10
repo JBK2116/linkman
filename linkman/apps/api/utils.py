@@ -8,7 +8,7 @@ from typing import Any
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.core import serializers
 
-from ..main.models import CustomUser, Group
+from ..main.models import CustomUser, Group, Link
 
 
 def validate_group_name(group_name: str) -> bool:
@@ -60,6 +60,28 @@ def validate_group_exists(group_id: int, user: CustomUser) -> Group | None:
     :return: Group object if it exists, false otherwise
     """
     return Group.objects.filter(id=group_id, user=user).first()
+
+
+def delete_link_in_db(link_id) -> bool:
+    """
+    Deletes a link from the database
+    :param link_id: ID of the link to delete
+    :return: True if the link was deleted, false otherwise
+    """
+    try:
+        link = Link.objects.get(id=link_id)
+        link.delete()
+        return True
+    except Link.DoesNotExist:
+        return False
+
+
+def get_link_from_db(link_id) -> Link | None:
+    try:
+        link = Link.objects.get(id=link_id)
+        return link
+    except Link.DoesNotExist:
+        return None
 
 
 def serialize_object(obj: Any) -> dict[str, Any]:

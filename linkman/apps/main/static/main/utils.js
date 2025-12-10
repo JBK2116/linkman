@@ -2,8 +2,8 @@
 This javascript file handles the utility functions and attributes used throughout the frontend
  */
 
-export const GROUPS = [];
-export const LINKS = [];
+export let GROUPS = [];
+export let LINKS = [];
 
 /**
  * Sends a `GET` request to fetch all groups associated with the user
@@ -83,4 +83,12 @@ export function getGroup(id) {
         return null;
     }
     return group
+}
+
+/**
+ * Removes the link object from the `LINKS` array with the matching ID
+ * @param id ID of the link to remove
+ */
+export function deleteLinkFromList(id) {
+    LINKS = LINKS.filter(l => l.id !== Number(id));
 }
