@@ -21,6 +21,18 @@ const LINK_FORM_GROUP_HIDDEN = document.getElementById("link-group-id");
 const LINK_FORM_CANCEL_BUTTON = document.getElementById("cancel-link-form");
 const LINK_FORM_CANCEL_ICON = document.getElementById("close-link-form");
 const LINK_FORM_ERRORS = document.getElementById("link-form-errors");
+
+const EDIT_LINK_FORM = document.getElementById("edit-link-form");
+const EDIT_LINK_GROUP_DROPDOWN = document.getElementById("edit-group-dropdown");
+const EDIT_LINK_FORM_ERRORS = document.getElementById("edit-link-form-errors");
+const EDIT_LINK_NAME = document.getElementById("edit-link-name-input");
+const EDIT_LINK_URL = document.getElementById("edit-link-url-input");
+const EDIT_LINK_GROUP_INPUT = document.getElementById("edit-link-group-input");
+const EDIT_LINK_GROUP_ID = document.getElementById("edit-link-group-id");
+const EDIT_LINK_SAVE_BUTTON = document.getElementById("edit-link-form-submit");
+const EDIT_LINK_CANCEL_BUTTON = document.getElementById("cancel-edit-link-form");
+const EDIT_LINK_CANCEL_ICON = document.getElementById("close-edit-link-form");
+let editGroupSelectorInitialized = false;
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener("click", () => {
     utils.toggleElementVisibility("group-form-modal");
@@ -161,7 +173,7 @@ LINK_FORM_GROUP_DROPDOWN.addEventListener('click', (e) => {
 LINK_FORM_GROUP_INPUT.addEventListener('blur', () => {
     setTimeout(() => LINK_FORM_GROUP_DROPDOWN.classList.add('hidden'), 200);
 });
-
+// LINK FORM SUBMIT FUNCTIONALITY
 LINK_FORM.addEventListener("submit", async (e) => {
     e.preventDefault();
     const url = LINK_FORM.action
@@ -301,4 +313,98 @@ export async function deleteLinkAPI(link, linkCard) {
     } catch (error) {
         console.log(`Error deleting link: ${link}`);
     }
+}
+
+/**
+ * Handles the functionality for the `edit-group-dropdown`
+ */
+export function setUpEditGroupSelector() {
+    if (editGroupSelectorInitialized) {
+        return;
+    }
+    editGroupSelectorInitialized = true;
+    EDIT_LINK_GROUP_INPUT.addEventListener("input", () => {
+        const term = EDIT_LINK_GROUP_INPUT.value.trim().toLowerCase();
+        if (term === "") {
+            EDIT_LINK_GROUP_ID.value = "";
+        }
+        EDIT_LINK_GROUP_DROPDOWN.innerHTML = "";
+        // find matching groups
+        const matches = term
+            ? utils.GROUPS.filter(g => g.name.toLowerCase().includes(term))
+            : utils.GROUPS;
+        // no matches found
+        if (matches.length === 0) {
+            EDIT_LINK_GROUP_DROPDOWN.classList.add("hidden");
+            return;
+        }
+        // show all matches
+        EDIT_LINK_GROUP_DROPDOWN.classList.remove("hidden");
+        // add all matches to the group dropdown
+        for (const group of matches) {
+            const option = document.createElement("div");
+            option.className = "px-4 py-2 text-[#E0E0E0] cursor-pointer hover:bg-[#2A2A2A]";
+            option.textContent = group.name;
+
+            option.addEventListener("click", () => {
+                EDIT_LINK_GROUP_INPUT.value = group.name;
+                EDIT_LINK_GROUP_ID.value = group.id;
+                EDIT_LINK_GROUP_DROPDOWN.classList.add("hidden");
+            });
+
+            EDIT_LINK_GROUP_DROPDOWN.appendChild(option);
+        }
+    });
+    // show all groups when focusing the empty input
+    EDIT_LINK_GROUP_INPUT.addEventListener("focus", () => {
+        if (EDIT_LINK_GROUP_INPUT.value.trim() === "") {
+            EDIT_LINK_GROUP_INPUT.dispatchEvent(new Event("input"));
+        }
+    });
+    // hide the drop-down when clicked out of
+    document.addEventListener("click", (e) => {
+        if (!EDIT_LINK_GROUP_DROPDOWN.contains(e.target) && e.target !== EDIT_LINK_GROUP_INPUT) {
+            EDIT_LINK_GROUP_DROPDOWN.classList.add("hidden");
+        }
+    });
+}
+
+
+/**
+ * Handles the logic for closing the `edit-link-modal`
+ * @param initialName Initial name of the link
+ * @param initialURL Initial url of the link
+ * @param initialGroupId Initial group associated with the link
+ */
+export function setUpEditLinkCloseHandlers(initialName, initialURL, initialGroupId) {
+    const closeHandler = () => {
+        if (EDIT_LINK_NAME.value !== initialName ||
+            EDIT_LINK_URL.value !== initialURL ||
+            EDIT_LINK_GROUP_ID.value !== initialGroupId) {
+
+            if (!confirm("Your changes may not be saved. Are you sure?")) {
+                return; // User cancelled, keep modal open
+            }
+        }
+        // close the modal
+        resetEditLinkForm();
+        utils.toggleElementVisibility("edit-link-modal");
+        // clean up listeners
+        EDIT_LINK_CANCEL_BUTTON.removeEventListener("click", closeHandler);
+        EDIT_LINK_CANCEL_ICON.removeEventListener("click", closeHandler);
+    }
+    // set up event listeners
+    EDIT_LINK_CANCEL_BUTTON.addEventListener("click", closeHandler);
+    EDIT_LINK_CANCEL_ICON.addEventListener("click", closeHandler);
+}
+
+
+/**
+ * Resets all values in the `edit-link-modal`
+ */
+export function resetEditLinkForm() {
+    EDIT_LINK_NAME.value = "";
+    EDIT_LINK_URL.value = "";
+    EDIT_LINK_GROUP_INPUT.value = "";
+    EDIT_LINK_GROUP_ID.value = "";
 }

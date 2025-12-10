@@ -70,7 +70,34 @@ export function createLinkCard(link) {
 
     // EDIT LINK FUNCTIONALITY
     const editBtn = card.querySelector(".edit-link-btn");
-    // TODO: Implement This
+    editBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+
+        // initialize the starting values
+        const initialName = link.name;
+        const initialURL = link.url;
+        const initialGroupId = link.group_id;
+
+        // populate the form
+        const nameInput = document.getElementById("edit-link-name-input");
+        const urlInput = document.getElementById("edit-link-url-input");
+        const groupInput = document.getElementById("edit-link-group-input");
+        const groupIdInput = document.getElementById("edit-link-group-id");
+
+        nameInput.value = initialName;
+        urlInput.value = initialURL;
+        groupIdInput.value = initialGroupId;
+        groupInput.value = utils.getGroup(initialGroupId).name
+
+        // setup close event handlers
+        form_utils.setUpEditLinkCloseHandlers(initialName, initialURL, initialGroupId);
+
+        // setup change group dropdown functionality
+        form_utils.setUpEditGroupSelector()
+
+        // show the edit link form
+        utils.toggleElementVisibility("edit-link-modal");
+    })
 
     return card;
 }
