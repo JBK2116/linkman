@@ -315,6 +315,84 @@ export async function deleteLinkAPI(link, linkCard) {
     }
 }
 
+
+EDIT_LINK_FORM.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    // retrieve the updated values
+
+    const currentLinkID = document.getElementById("edit-link-id").value;
+    const link = utils.getLink(currentLinkID);
+    const newLinkName = EDIT_LINK_NAME.value;
+    const newLinkURL = EDIT_LINK_URL.value;
+    const newLinkGroupID = EDIT_LINK_GROUP_ID.value;
+
+    // validate the form
+    const validationResult = validateEditLink(link, newLinkName, newLinkURL, newLinkGroupID);
+    if (validationResult) {
+        showEditLinkError(validationResult);
+        return;
+    }
+    // form is valid by now
+    hideEditLinkErrors()
+    const payload = {
+        "id": link.id,
+        "link_name": newLinkName,
+        "link_url": newLinkURL,
+        "group_id": Number(newLinkGroupID),
+        "for_clicked": false,
+    };
+    const url = `/api/links/${link.id}/`;
+    const csrfToken = utils.getCSRFToken();
+    try {
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json", "X-CSRFToken": csrfToken},
+            body: JSON.stringify(payload),
+        })
+        const data = await response.json();
+        if (!response.ok) {
+            showEditLinkError(data.detail);
+            return;
+        }
+        const updateResult = utils.replaceLink(data.link.id, data.link);
+        console.log(updateResult)
+        if (!updateResult) {
+            showEditLinkError("Error occurred updating the link");
+            return;
+        }
+        utils.updateLinkCard(data.link)
+        alert(`Link successfully updated!`);
+        resetEditLinkForm();
+        utils.toggleElementVisibility("edit-link-modal")
+    } catch (error) {
+        console.log(`Error updating link: ${link}`);
+    }
+
+
+})
+
+function validateEditLink(linkObj, newLinkName, newLinkURL, newLinkGroupID) {
+    if (!newLinkGroupID) {
+        // handle ""
+        return "Group not found";
+    }
+    // check for changes
+    if (linkObj.name === newLinkName && linkObj.url === newLinkURL && linkObj.group_id === Number(newLinkGroupID)) {
+        return "No changes detected"
+    }
+    // validate the new name and url
+    const nameAndUrlResult = validateLinkForm(newLinkName, newLinkURL);
+    if (nameAndUrlResult) {
+        return nameAndUrlResult;
+    }
+    // validate that the user has chose a proper group
+    const group = utils.getGroup(newLinkGroupID);
+    if (!group) {
+        return "Group not found";
+    }
+    return "";
+}
+
 /**
  * Handles the functionality for the `edit-group-dropdown`
  */
@@ -407,4 +485,25 @@ export function resetEditLinkForm() {
     EDIT_LINK_URL.value = "";
     EDIT_LINK_GROUP_INPUT.value = "";
     EDIT_LINK_GROUP_ID.value = "";
+}
+
+/**
+ * Showcases an error string in the `edit-link-modal` form
+ * @param errorStr Error message to display
+ */
+function showEditLinkError(errorStr) {
+    if (EDIT_LINK_FORM_ERRORS.classList.contains("hidden")) {
+        EDIT_LINK_FORM_ERRORS.classList.remove("hidden");
+    }
+    EDIT_LINK_FORM_ERRORS.innerHTML = `<p>${errorStr}</p>`;
+}
+
+/**
+ * Removes all error strings in the `edit-link-modal` form
+ */
+function hideEditLinkErrors() {
+    if (!EDIT_LINK_FORM_ERRORS.classList.contains("hidden")) {
+        EDIT_LINK_FORM_ERRORS.classList.add("hidden");
+    }
+    EDIT_LINK_FORM_ERRORS.innerHTML = "";
 }

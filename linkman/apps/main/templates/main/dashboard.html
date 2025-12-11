@@ -258,6 +258,8 @@
                         <form id="edit-link-form" method="post">
                             {% csrf_token %}
 
+                            <input type="hidden" id="edit-link-id">
+
                             <div class="mb-4">
                                 <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
                                        for="edit-link-name-input">

@@ -4,7 +4,6 @@ This js file serves as the entry point for the logic in the `dashboard.html` pag
 import * as utils from "./utils.js";
 import * as form_utils from "./forms.js";
 import * as display_utils from "./display.js";
-
 // Filter dropdown toggle
 document.getElementById('filter-button').addEventListener('click', function () {
     document.getElementById('filter-dropdown').classList.toggle('hidden');
@@ -68,22 +67,6 @@ window.addEventListener('scroll', function () {
 document.querySelectorAll('.link-card').forEach(card => {
     card.addEventListener('click', function () {
         // TODO: Increment click count, update last_used, redirect to URL
-    });
-});
-
-// Edit link button
-document.querySelectorAll('.edit-link-btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-        e.stopPropagation(); // Prevent card click
-        // TODO: Open edit modal
-    });
-});
-
-// Delete link button
-document.querySelectorAll('.delete-link-btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-        e.stopPropagation(); // Prevent card click
-        // TODO: Confirm and delete via AJAX
     });
 });
 

@@ -56,7 +56,7 @@ def validate_group_exists(group_id: int, user: CustomUser) -> Group | None:
     """
     Validates that a group exists with the provided id and belongs to the provided user
     :param group_id: ID of the group to check
-    :param user: User object to check wit
+    :param user: User object to check with
     :return: Group object if it exists, false otherwise
     """
     return Group.objects.filter(id=group_id, user=user).first()
@@ -74,6 +74,42 @@ def delete_link_in_db(link_id) -> bool:
         return True
     except Link.DoesNotExist:
         return False
+
+
+def update_link_in_db(
+    link_id: int, data: dict[str, Any], user: CustomUser
+) -> str | Link:
+    """
+    Updates a link in the database
+    :param link_id: ID of the link to update
+    :param data: data to update the link
+    :param user: User associated with the link
+    :return: Link object if it was updated else string explaining why the update failed
+    """
+
+    link: Link | None = get_link_from_db(link_id)
+    if link is None:
+        return "Unable to update link. Link not found."
+    group: Group | None = get_group_from_db(data["group_id"])
+    if group is None:
+        return "Unable to update link. Group not found."
+    if data["for_clicked"] is True:
+        link.click_count += 1
+        link.save()
+        return link
+    link.name = data["link_name"]
+    link.url = data["link_url"]
+    link.group = group
+    link.save()
+    return link
+
+
+def get_group_from_db(group_id: int) -> Group | None:
+    try:
+        group = Group.objects.get(id=group_id)
+        return group
+    except Group.DoesNotExist:
+        return None
 
 
 def get_link_from_db(link_id) -> Link | None:

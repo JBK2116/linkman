@@ -118,4 +118,18 @@ def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
     link: Link | None = utils.get_link_from_db(link_id)
     if link is None:
         return JsonResponse({"detail": "Link does not exist"}, status=400)
+    if request.method == HttpMethod.PUT.value:
+        """Equivalent to api/link/:id PUT"""
+        if not utils.validate_authentication(request.user):
+            return JsonResponse({"detail": "User not authenticated"}, status=401)
+        assert isinstance(request.user, CustomUser)
+        data: dict[str, Any] = json.loads(request.body)
+        updated_link: str | Link = utils.update_link_in_db(link_id, data, request.user)
+        # if updated link is a string, then an error occurred
+        if not isinstance(updated_link, Link):
+            return JsonResponse({"detail": f"{updated_link}"}, status=400)
+        updated_link_data: dict[str, Any] = utils.serialize_object(updated_link)
+        return JsonResponse(
+            {"detail": "Link successfully updated", "link": updated_link_data},
+        )
     return JsonResponse({"detail": "Link found", "link": link}, status=200)

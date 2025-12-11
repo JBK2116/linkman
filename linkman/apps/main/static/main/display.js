@@ -39,14 +39,14 @@ export function createLinkCard(link) {
     card.dataset.linkId = link.id;
 
     card.innerHTML = `
-        <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">${link.name}</h3>
-        <p class="text-[#888888] text-sm mb-3 truncate">${link.url}</p>
+        <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate link-name">${link.name}</h3>
+        <p class="text-[#888888] text-sm mb-3 truncate link-url">${link.url}</p>
         <div class="flex items-center justify-between text-[#B0B0B0] text-xs">
-            <span>Clicks: ${link.click_count || 0}</span>
-            <span>Last used: ${formatUpdatedAt(link.updated_at) || 'Never'}</span>
+            <span class="link-click-count">Clicks: ${link.click_count || 0}</span>
+            <span class="link-last-used">Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}</span>
         </div>
         <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
-            <span class="text-[#888888] text-xs">${utils.getGroup(link.group_id).name || 'Default'}</span>
+            <span class="text-[#888888] text-xs link-group-name">${utils.getGroup(link.group_id).name || 'Default'}</span>
             <div class="flex gap-2">
                 <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" title="Edit">
                     <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,8 @@ export function createLinkCard(link) {
     const editBtn = card.querySelector(".edit-link-btn");
     editBtn.addEventListener("click", function (e) {
         e.stopPropagation();
-
+        // update the edit link form to store the id of this link card
+        document.getElementById("edit-link-id").value = link.id;
         // initialize the starting values
         const initialName = link.name;
         const initialURL = link.url;
@@ -102,36 +103,6 @@ export function createLinkCard(link) {
     return card;
 }
 
-/**
- * Formats the provided date time string and returns it in a relative time format
- *
- * @example Last 3 days
- * @example 24th November 2025
- * @param updatedAt ISO8601 Date Time String
- * @returns {string} The formatted string in a user readable format
- */
-function formatUpdatedAt(updatedAt) {
-    const now = new Date();
-    const date = new Date(updatedAt);
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    if (diffDays < 30) {
-        const weeks = Math.floor(diffDays / 7);
-        return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-    }
-
-    const day = date.getDate();
-    const month = date.toLocaleString('en-US', {month: 'long'});
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
-}
 
 /**
  * Shows the `no-results` container
