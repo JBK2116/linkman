@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main', '0002_alter_group_user_alter_link_group_alter_link_user'),
+        ("main", "0002_alter_group_user_alter_link_group_alter_link_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='link',
-            name='url',
-            field=models.CharField(help_text='URL of the link', max_length=2000),
+            model_name="link",
+            name="url",
+            field=models.CharField(help_text="URL of the link", max_length=2000),
         ),
     ]

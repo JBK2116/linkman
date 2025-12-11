@@ -62,7 +62,7 @@ def validate_group_exists(group_id: int, user: CustomUser) -> Group | None:
     return Group.objects.filter(id=group_id, user=user).first()
 
 
-def delete_link_in_db(link_id) -> bool:
+def delete_link_in_db(link_id: int) -> bool:
     """
     Deletes a link from the database
     :param link_id: ID of the link to delete
@@ -76,14 +76,11 @@ def delete_link_in_db(link_id) -> bool:
         return False
 
 
-def update_link_in_db(
-    link_id: int, data: dict[str, Any], user: CustomUser
-) -> str | Link:
+def update_link_in_db(link_id: int, data: dict[str, Any]) -> str | Link:
     """
     Updates a link in the database
     :param link_id: ID of the link to update
     :param data: data to update the link
-    :param user: User associated with the link
     :return: Link object if it was updated else string explaining why the update failed
     """
 
@@ -112,7 +109,7 @@ def get_group_from_db(group_id: int) -> Group | None:
         return None
 
 
-def get_link_from_db(link_id) -> Link | None:
+def get_link_from_db(link_id: int) -> Link | None:
     try:
         link = Link.objects.get(id=link_id)
         return link

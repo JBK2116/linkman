@@ -51,8 +51,10 @@ def group_all(request: HttpRequest) -> JsonResponse:
             {"detail": "Group successfully created", "group": new_group_data},
             status=201,
         )
-
     # Request is a simple api/group GET
+    if not utils.validate_authentication(request.user):
+        return JsonResponse({"detail": "User not authenticated"}, status=401)
+    assert isinstance(request.user, CustomUser)
     groups = list(Group.objects.filter(user=request.user).values())
     return JsonResponse({"groups": groups})
 
@@ -100,6 +102,9 @@ def link_all(request: HttpRequest) -> JsonResponse:
             {"detail": "Link successfully created", "link": new_link_data}
         )
     # request is a simple /api/links GET
+    if not utils.validate_authentication(request.user):
+        return JsonResponse({"detail": "User not authenticated"}, status=401)
+    assert isinstance(request.user, CustomUser)
     links = list(Link.objects.filter(user=request.user).values())
     return JsonResponse({"links": links})
 
@@ -124,7 +129,7 @@ def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
             return JsonResponse({"detail": "User not authenticated"}, status=401)
         assert isinstance(request.user, CustomUser)
         data: dict[str, Any] = json.loads(request.body)
-        updated_link: str | Link = utils.update_link_in_db(link_id, data, request.user)
+        updated_link: str | Link = utils.update_link_in_db(link_id, data)
         # if updated link is a string, then an error occurred
         if not isinstance(updated_link, Link):
             return JsonResponse({"detail": f"{updated_link}"}, status=400)

@@ -6,26 +6,40 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main', '0001_initial'),
+        ("main", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='group',
-            name='user',
-            field=models.ForeignKey(help_text='The User who this group belongs to', on_delete=django.db.models.deletion.CASCADE, related_name='user_groups', to=settings.AUTH_USER_MODEL),
+            model_name="group",
+            name="user",
+            field=models.ForeignKey(
+                help_text="The User who this group belongs to",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="user_groups",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='link',
-            name='group',
-            field=models.ForeignKey(help_text='The Group who this link belongs to', on_delete=django.db.models.deletion.CASCADE, related_name='group_links', to='main.group'),
+            model_name="link",
+            name="group",
+            field=models.ForeignKey(
+                help_text="The Group who this link belongs to",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="group_links",
+                to="main.group",
+            ),
         ),
         migrations.AlterField(
-            model_name='link',
-            name='user',
-            field=models.ForeignKey(help_text='The User who this link belongs to', on_delete=django.db.models.deletion.CASCADE, related_name='links', to=settings.AUTH_USER_MODEL),
+            model_name="link",
+            name="user",
+            field=models.ForeignKey(
+                help_text="The User who this link belongs to",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="links",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

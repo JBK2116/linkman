@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,26 +14,97 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Group',
+            name="Group",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='Default', help_text='Name of the group', max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Date and time when this group was created')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Date and time when this group was last updated')),
-                ('user', models.ForeignKey(help_text='The User who this group belongs to', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        default="Default", help_text="Name of the group", max_length=50
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="Date and time when this group was created",
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(
+                        auto_now=True,
+                        help_text="Date and time when this group was last updated",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        help_text="The User who this group belongs to",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Link',
+            name="Link",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Name of the link', max_length=50)),
-                ('url', models.CharField(help_text='URL of the link', max_length=100)),
-                ('click_count', models.PositiveIntegerField(default=0, help_text='Click count of the link')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Date and time when this link was created')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Date and time when this link was last updated')),
-                ('group', models.ForeignKey(help_text='The Group who this link belongs to', on_delete=django.db.models.deletion.CASCADE, to='main.group')),
-                ('user', models.ForeignKey(help_text='The User who this link belongs to', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(help_text="Name of the link", max_length=50)),
+                ("url", models.CharField(help_text="URL of the link", max_length=100)),
+                (
+                    "click_count",
+                    models.PositiveIntegerField(
+                        default=0, help_text="Click count of the link"
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True,
+                        help_text="Date and time when this link was created",
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(
+                        auto_now=True,
+                        help_text="Date and time when this link was last updated",
+                    ),
+                ),
+                (
+                    "group",
+                    models.ForeignKey(
+                        help_text="The Group who this link belongs to",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="main.group",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        help_text="The User who this link belongs to",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

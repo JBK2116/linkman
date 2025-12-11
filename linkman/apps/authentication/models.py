@@ -11,7 +11,7 @@ class CustomUserManager(BaseUserManager["CustomUser"]):
     """
 
     def create_user(
-            self, email: str, password: Optional[str] = None, **extra_fields: Any
+        self, email: str, password: Optional[str] = None, **extra_fields: Any
     ) -> "CustomUser":
         """
         Create and save a user with the given email and password.
@@ -25,7 +25,7 @@ class CustomUserManager(BaseUserManager["CustomUser"]):
         return user
 
     def create_superuser(
-            self, email: str, password: Optional[str] = None, **extra_fields: Any
+        self, email: str, password: Optional[str] = None, **extra_fields: Any
     ) -> "CustomUser":
         """
         Create and save a superuser with the given email and password.
@@ -53,7 +53,7 @@ class CustomUser(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = "email"  # NOTE: This is used for authentication
-    REQUIRED_FIELDS = [] # Empty since username and email are required by default
+    REQUIRED_FIELDS = []  # Empty since username and email are required by default
     objects = CustomUserManager()  # type: ignore[assignment]
     # objects here is needed to ensure that
     # CustomUserManager is the one used when creating CustomUser models.
