@@ -385,7 +385,8 @@ function validateEditLink(linkObj, newLinkName, newLinkURL, newLinkGroupID) {
         return "Group not found";
     }
     // check for changes
-    if (linkObj.name === newLinkName && linkObj.url === newLinkURL && linkObj.group_id === Number(newLinkGroupID)) {
+    const linkGroupID = linkObj.group_id || linkObj.group;
+    if (linkObj.name === newLinkName && linkObj.url === newLinkURL && linkGroupID === Number(newLinkGroupID)) {
         return "No changes detected"
     }
     // validate the new name and url
