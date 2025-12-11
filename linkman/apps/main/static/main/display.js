@@ -75,9 +75,12 @@ export function createLinkCard(link) {
         // update the edit link form to store the id of this link card
         document.getElementById("edit-link-id").value = link.id;
         // initialize the starting values
-        const initialName = link.name;
-        const initialURL = link.url;
-        const initialGroupId = link.group_id;
+        const currentLinkObj = utils.getLink(link.id)
+
+        // pass down the initial name
+        const initialName = currentLinkObj.name;
+        const initialURL = currentLinkObj.url;
+        const initialGroupId = currentLinkObj.group_id || currentLinkObj.group;
 
         // populate the form
         const nameInput = document.getElementById("edit-link-name-input");

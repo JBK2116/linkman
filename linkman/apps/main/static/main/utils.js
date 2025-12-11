@@ -113,10 +113,7 @@ export function deleteLinkFromList(id) {
  * @returns boolean True if the update was successful, False otherwise
  */
 export function replaceLink(id, link) {
-    console.log("IDs in LINKS:", LINKS.map(l => l.id));
-    console.log("Looking for:", Number(id));
     const index = LINKS.findIndex(l => l.id === Number(id));
-    console.log(index)
     if (index === -1) {
         return false;
     }

@@ -32,6 +32,8 @@ const EDIT_LINK_GROUP_ID = document.getElementById("edit-link-group-id");
 const EDIT_LINK_SAVE_BUTTON = document.getElementById("edit-link-form-submit");
 const EDIT_LINK_CANCEL_BUTTON = document.getElementById("cancel-edit-link-form");
 const EDIT_LINK_CANCEL_ICON = document.getElementById("close-edit-link-form");
+
+let editLinkCloseHandler = null;
 let editGroupSelectorInitialized = false;
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener("click", () => {
@@ -355,7 +357,6 @@ EDIT_LINK_FORM.addEventListener("submit", async function (e) {
             return;
         }
         const updateResult = utils.replaceLink(data.link.id, data.link);
-        console.log(updateResult)
         if (!updateResult) {
             showEditLinkError("Error occurred updating the link");
             return;
@@ -364,8 +365,15 @@ EDIT_LINK_FORM.addEventListener("submit", async function (e) {
         alert(`Link successfully updated!`);
         resetEditLinkForm();
         utils.toggleElementVisibility("edit-link-modal")
+
+        if (editLinkCloseHandler) {
+            // remove the cancel button event listeners
+            EDIT_LINK_CANCEL_BUTTON.removeEventListener("click", editLinkCloseHandler);
+            EDIT_LINK_CANCEL_ICON.removeEventListener("click", editLinkCloseHandler);
+            editLinkCloseHandler = null;
+        }
     } catch (error) {
-        console.log(`Error updating link: ${link}`);
+        console.log(`Error updating link: ${error.message}`);
     }
 
 
@@ -455,6 +463,12 @@ export function setUpEditGroupSelector() {
  * @param initialGroupId Initial group associated with the link
  */
 export function setUpEditLinkCloseHandlers(initialName, initialURL, initialGroupId) {
+    // track if an event listener is added to the cancel button
+    if (editLinkCloseHandler) {
+        EDIT_LINK_CANCEL_BUTTON.removeEventListener(editLinkCloseHandler);
+        EDIT_LINK_CANCEL_ICON.removeEventListener(editLinkCloseHandler);
+        editLinkCloseHandler = null;
+    }
     const closeHandler = () => {
         if (EDIT_LINK_NAME.value !== initialName ||
             EDIT_LINK_URL.value !== initialURL ||
@@ -470,7 +484,10 @@ export function setUpEditLinkCloseHandlers(initialName, initialURL, initialGroup
         // clean up listeners
         EDIT_LINK_CANCEL_BUTTON.removeEventListener("click", closeHandler);
         EDIT_LINK_CANCEL_ICON.removeEventListener("click", closeHandler);
+        editLinkCloseHandler = null;
     }
+    // store the close handler reference so we can remove it later
+    editLinkCloseHandler = closeHandler;
     // set up event listeners
     EDIT_LINK_CANCEL_BUTTON.addEventListener("click", closeHandler);
     EDIT_LINK_CANCEL_ICON.addEventListener("click", closeHandler);
