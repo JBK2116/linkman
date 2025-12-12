@@ -1,8 +1,11 @@
 /*
 This module stores the functionality for the `group-form-modal`
  */
-
 import * as utils from "./utils.js";
+
+// ============================================================================
+// DOM ELEMENTS
+// ============================================================================
 
 const ADD_GROUP_BUTTON = document.getElementById("add-group-button");
 const Add_group_form = document.getElementById("group-form");
@@ -10,10 +13,65 @@ const GROUP_NAME_INPUT = document.getElementById("group-name-input");
 const GROUP_FORM_CANCEL_BUTTON = document.getElementById("cancel-group-form");
 const GROUP_FORM_CANCEL_ICON = document.getElementById("close-group-form");
 const GROUP_FORM_ERRORS = document.getElementById("group-form-errors");
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Validates the provided group name
+ * @param name Name to validate
+ * @returns {string} Error reason if validation fails, else empty string
+ */
+function validateGroupName(name) {
+    // ensure that name is not empty
+    name = name.trim();
+    if (!name) {
+        return "Group name is required.";
+    }
+    // ensure that name is not too long
+    if (name.length >= 50) {
+        return "Group name must be less than 50 characters.";
+    }
+    return "";
+}
+
+/**
+ * Resets all values in the `group form modal`
+ */
+function resetGroupForm() {
+    GROUP_NAME_INPUT.value = "";
+    if (!GROUP_FORM_ERRORS.classList.contains("hidden")) {
+        GROUP_FORM_ERRORS.classList.add("hidden");
+    }
+    GROUP_FORM_ERRORS.innerHTML = "";
+}
+
+/**
+ * Handles the logic for closing the group form
+ */
+function closeGroupForm() {
+    const formIsEmpty = GROUP_NAME_INPUT.value.trim().length <= 0;
+    if (formIsEmpty) {
+        utils.toggleElementVisibility("group-form-modal");
+    } else {
+        let result = confirm("Your form data may not be saved. Are you sure?")
+        if (result) {
+            resetGroupForm();
+            utils.toggleElementVisibility("group-form-modal");
+        }
+    }
+}
+
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
+
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener("click", () => {
     utils.toggleElementVisibility("group-form-modal");
 })
+
 // GROUP FORM CANCEL BUTTONS
 GROUP_FORM_CANCEL_ICON.addEventListener("click", closeGroupForm)
 GROUP_FORM_CANCEL_BUTTON.addEventListener("click", closeGroupForm)
@@ -63,50 +121,3 @@ Add_group_form.addEventListener("submit", async (e) => {
         console.log(`Error creating group: ${error}`);
     }
 });
-
-
-/**
- * Handles the logic for closing the group form
- */
-function closeGroupForm() {
-    const formIsEmpty = GROUP_NAME_INPUT.value.trim().length <= 0;
-    if (formIsEmpty) {
-        utils.toggleElementVisibility("group-form-modal");
-    } else {
-        let result = confirm("Your form data may not be saved. Are you sure?")
-        if (result) {
-            resetGroupForm();
-            utils.toggleElementVisibility("group-form-modal");
-        }
-    }
-}
-
-/**
- * Resets all values in the `group form modal`
- */
-function resetGroupForm() {
-    GROUP_NAME_INPUT.value = "";
-    if (!GROUP_FORM_ERRORS.classList.contains("hidden")) {
-        GROUP_FORM_ERRORS.classList.add("hidden");
-    }
-    GROUP_FORM_ERRORS.innerHTML = "";
-}
-
-/**
- * Validates the provided group name
- * @param name Name to validate
- * @returns {string} Error reason if validation fails, else empty string
- */
-function validateGroupName(name) {
-    // ensure that name is not empty
-    name = name.trim();
-    if (!name) {
-        return "Group name is required.";
-    }
-    // ensure that name is not too long
-    if (name.length >= 50) {
-        return "Group name must be less than 50 characters.";
-    }
-    return "";
-}
-

@@ -5,7 +5,7 @@ import "./add_group_form.js";
 import "./add_link_form.js";
 import "./edit_link_form.js";
 import "./delete_link_form.js";
-import * as display_utils from "./display.js";
+import * as display_utils from "./display_utils.js";
 import * as utils from "./utils.js";
 // Filter dropdown toggle
 document.getElementById('filter-button').addEventListener('click', function () {

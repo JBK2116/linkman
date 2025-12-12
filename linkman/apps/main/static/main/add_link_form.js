@@ -4,6 +4,10 @@ This module stores the functionality for the `link-form-modal`
 
 import * as utils from "./utils.js";
 
+// ============================================================================
+// DOM ELEMENTS
+// ============================================================================
+
 const ADD_LINK_BUTTON = document.getElementById("add-link-button");
 const Add_link_form = document.getElementById("link-form");
 const LINK_FORM_NAME_INPUT = document.getElementById("link-name-input");
@@ -14,6 +18,71 @@ const LINK_FORM_GROUP_HIDDEN = document.getElementById("link-group-id");
 const LINK_FORM_CANCEL_BUTTON = document.getElementById("cancel-link-form");
 const LINK_FORM_CANCEL_ICON = document.getElementById("close-link-form");
 const LINK_FORM_ERRORS = document.getElementById("link-form-errors");
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Validates the `link-form-modal`
+ * @param name Link name to validate
+ * @param url Link url to validate
+ * @returns {string} Error string if validation failed, else empty string
+ */
+export function validateLinkForm(name, url) {
+    // validate the name
+    name = name.trim();
+    if (name.length > 50) {
+        return "Link name must be less than 50 characters.";
+    }
+    if (name.length <= 0) {
+        return "Link name required"
+    }
+    // validate the url
+    url = url.trim();
+    if (url.length > 2000) {
+        return "Link url must be less than 2000 characters"
+    }
+    if (url.length <= 0) {
+        return "Link url required"
+    }
+    return ""
+}
+
+/**
+ * Resets all data in the `link form`
+ */
+function resetLinkForm() {
+    // reset the form values
+    LINK_FORM_NAME_INPUT.value = "";
+    LINK_FORM_URL_INPUT.value = "";
+    LINK_FORM_GROUP_INPUT.innerHTML = "";
+    // reset the form errors display
+    if (!LINK_FORM_ERRORS.classList.contains("hidden")) {
+        LINK_FORM_ERRORS.classList.add("hidden");
+    }
+    LINK_FORM_ERRORS.innerHTML = "";
+}
+
+/**
+ * Handles the logic for closing the add link form
+ */
+function closeLinkForm() {
+    const formIsEmpty = LINK_FORM_NAME_INPUT.value.trim().length <= 0 && LINK_FORM_URL_INPUT.value.trim().length <= 0;
+    if (formIsEmpty) {
+        utils.toggleElementVisibility("link-form-modal");
+    } else {
+        const result = confirm("Your form data may not be saved. Are you sure?");
+        if (result) {
+            resetLinkForm();
+            utils.toggleElementVisibility("link-form-modal");
+        }
+    }
+}
+
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
 
 // LINK FORM VISIBILITY
 ADD_LINK_BUTTON.addEventListener("click", () => {
@@ -55,6 +124,7 @@ LINK_FORM_GROUP_DROPDOWN.addEventListener('click', (e) => {
 LINK_FORM_GROUP_INPUT.addEventListener('blur', () => {
     setTimeout(() => LINK_FORM_GROUP_DROPDOWN.classList.add('hidden'), 200);
 });
+
 // LINK FORM SUBMIT FUNCTIONALITY
 Add_link_form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -104,7 +174,6 @@ Add_link_form.addEventListener("submit", async (e) => {
     }
 })
 
-
 // LINK FORM CANCEL FUNCTIONALITY
 LINK_FORM_CANCEL_BUTTON.addEventListener("click", () => {
     closeLinkForm();
@@ -112,60 +181,3 @@ LINK_FORM_CANCEL_BUTTON.addEventListener("click", () => {
 LINK_FORM_CANCEL_ICON.addEventListener("click", () => {
     closeLinkForm();
 })
-
-/**
- * Handles the logic for closing the add link form
- */
-function closeLinkForm() {
-    const formIsEmpty = LINK_FORM_NAME_INPUT.value.trim().length <= 0 && LINK_FORM_URL_INPUT.value.trim().length <= 0;
-    if (formIsEmpty) {
-        utils.toggleElementVisibility("link-form-modal");
-    } else {
-        const result = confirm("Your form data may not be saved. Are you sure?");
-        if (result) {
-            resetLinkForm();
-            utils.toggleElementVisibility("link-form-modal");
-        }
-    }
-}
-
-/**
- * Resets all data in the `link form`
- */
-function resetLinkForm() {
-    // reset the form values
-    LINK_FORM_NAME_INPUT.value = "";
-    LINK_FORM_URL_INPUT.value = "";
-    LINK_FORM_GROUP_INPUT.innerHTML = "";
-    // reset the form errors display
-    if (!LINK_FORM_ERRORS.classList.contains("hidden")) {
-        LINK_FORM_ERRORS.classList.add("hidden");
-    }
-    LINK_FORM_ERRORS.innerHTML = "";
-}
-
-/**
- * Validates the `link-form-modal`
- * @param name Link name to validate
- * @param url Link url to validate
- * @returns {string} Error string if validation failed, else empty string
- */
-export function validateLinkForm(name, url) {
-    // validate the name
-    name = name.trim();
-    if (name.length > 50) {
-        return "Link name must be less than 50 characters.";
-    }
-    if (name.length <= 0) {
-        return "Link name required"
-    }
-    // validate the url
-    url = url.trim();
-    if (url.length > 2000) {
-        return "Link url must be less than 2000 characters"
-    }
-    if (url.length <= 0) {
-        return "Link url required"
-    }
-    return ""
-}

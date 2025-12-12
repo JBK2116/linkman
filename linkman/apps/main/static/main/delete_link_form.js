@@ -1,8 +1,11 @@
 /*
 This module stores the functionality for the `delete-btn`
  */
-
 import * as utils from "./utils.js";
+
+// ============================================================================
+// API FUNCTIONS
+// ============================================================================
 
 /**
  * Deletes the provided Link
