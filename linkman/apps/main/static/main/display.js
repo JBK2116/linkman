@@ -2,8 +2,12 @@
 This javascript file handles the link display functionality
  */
 
+import "./add_group_form.js";
+import "./add_link_form.js";
 import * as utils from "./utils.js";
-import * as form_utils from "./forms.js";
+import * as edit_link_form from "./edit_link_form.js";
+import * as delete_link_form from "./delete_link_form.js";
+
 // CONSTANTS
 const LINKS_CONTAINER = document.getElementById("links-container");
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
@@ -65,42 +69,14 @@ export function createLinkCard(link) {
     const deleteBtn = card.querySelector(".delete-link-btn");
     deleteBtn.addEventListener("click", async function (e) {
         e.stopPropagation();
-        await form_utils.deleteLinkAPI(link, card)
+        await delete_link_form.deleteLinkAPI(link, card)
     })
 
     // EDIT LINK FUNCTIONALITY
     const editBtn = card.querySelector(".edit-link-btn");
     editBtn.addEventListener("click", function (e) {
         e.stopPropagation();
-        // update the edit link form to store the id of this link card
-        document.getElementById("edit-link-id").value = link.id;
-        // initialize the starting values
-        const currentLinkObj = utils.getLink(link.id)
-
-        // pass down the initial name
-        const initialName = currentLinkObj.name;
-        const initialURL = currentLinkObj.url;
-        const initialGroupId = currentLinkObj.group_id || currentLinkObj.group;
-
-        // populate the form
-        const nameInput = document.getElementById("edit-link-name-input");
-        const urlInput = document.getElementById("edit-link-url-input");
-        const groupInput = document.getElementById("edit-link-group-input");
-        const groupIdInput = document.getElementById("edit-link-group-id");
-
-        nameInput.value = initialName;
-        urlInput.value = initialURL;
-        groupIdInput.value = initialGroupId;
-        groupInput.value = utils.getGroup(initialGroupId).name
-
-        // setup close event handlers
-        form_utils.setUpEditLinkCloseHandlers(initialName, initialURL, initialGroupId);
-
-        // setup change group dropdown functionality
-        form_utils.setUpEditGroupSelector()
-
-        // show the edit link form
-        utils.toggleElementVisibility("edit-link-modal");
+        edit_link_form.setUpEditLinkForm(link)
     })
 
     return card;
