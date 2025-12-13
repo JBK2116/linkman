@@ -8,23 +8,21 @@ import * as delete_link_form from "./delete_link_form.js";
 import * as clicked_link_form from "./clicked_link_form.js";
 
 // CONSTANTS
-const LINKS_CONTAINER = document.getElementById("links-container");
+const LINKS_CONTAINER = document.getElementById("links-container")
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
-const FILTER_LABEL_CONTAINER = document.getElementById("filter-label");
 
 /**
  * Displays all links in the `utils.LINKS` array by recently created
  */
 export function displayRecentlyCreated() {
-    if (utils.LINKS.length <= 0) {
-        // show no results if there are no links
-        showNoResults();
-        return;
-    }
+    LINKS_CONTAINER.innerHTML = "";
     // sort by updated_at field
     utils.LINKS.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    // handle empty links possibility
+    if (handleEmptyLinksArrayDisplay()) {
+        return;
+    }
     // reset the links container
-    LINKS_CONTAINER.innerHTML = "";
     for (const link of utils.LINKS) {
         const card = createLinkCard(link);
         LINKS_CONTAINER.appendChild(card);
@@ -32,7 +30,48 @@ export function displayRecentlyCreated() {
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.RECENTLY_CREATED);
     // update filter label display
-    FILTER_LABEL_CONTAINER.textContent = "Recently Created";
+    document.getElementById("filter-label").textContent = "Recently Created";
+}
+
+/**
+ * Displays all links in the `utils.LINKS` array by last used
+ */
+export function displayLastUsed() {
+    LINKS_CONTAINER.innerHTML = "";
+    // sort by last_used field
+    utils.LINKS.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    // handle empty links possibility
+    if (handleEmptyLinksArrayDisplay()) {
+        return;
+    }
+    // reset the links container
+    for (const link of utils.LINKS) {
+        const card = createLinkCard(link);
+        LINKS_CONTAINER.appendChild(card);
+    }
+    // set current state
+    utils.setCurrentDisplay(utils.CURRENT_DISPLAY.LAST_USED);
+    // update filter label display
+    document.getElementById("filter-label").textContent = "Last Used";
+}
+
+export function displayMostUsed() {
+    LINKS_CONTAINER.innerHTML = "";
+    // sort by click_count field
+    utils.LINKS.sort((a, b) => b.click_count - a.click_count);
+    // handle empty links possibility
+    if (handleEmptyLinksArrayDisplay()) {
+        return;
+    }
+    for (const link of utils.LINKS) {
+        const card = createLinkCard(link);
+        LINKS_CONTAINER.appendChild(card);
+    }
+    // set current state
+    utils.setCurrentDisplay(utils.CURRENT_DISPLAY.MOST_USED);
+    // update filter label display
+    document.getElementById("filter-label").textContent = "Most Used";
+
 }
 
 /**
@@ -105,29 +144,32 @@ export function updateLinkCard(link) {
     linkCard.querySelector(".link-click-count").textContent = `Clicks: ${link.click_count || 0}`;
     linkCard.querySelector(".link-last-used").textContent = `Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}`;
     linkCard.querySelector(".link-group-name").textContent = `${utils.getGroup(link.group).name}`
+    // remove the link from the current display if the group doesn't match, implement it below
 }
 
 /**
- * Adds the provided linkCard to the `LINKS_CONTAINER`
- * @param linkCard Link Card to add
- * @param link link Object
+ * Reloads the current links display
  */
-export function addLinkToContainer(linkCard, link) {
+export function reloadLinksDisplay() {
     const currentDisplayValue = utils.getCurrentDisplay();
-    switch(currentDisplayValue) {
-        case utils.CURRENT_DISPLAY.RECENTLY_CREATED:
-        {
+    switch (currentDisplayValue) {
+        case utils.CURRENT_DISPLAY.RECENTLY_CREATED: {
             displayRecentlyCreated();
             break;
         }
-        default:
-        {
+        case utils.CURRENT_DISPLAY.LAST_USED: {
+            displayLastUsed();
+            break;
+        }
+        case utils.CURRENT_DISPLAY.MOST_USED: {
+            displayMostUsed();
+            break;
+        }
+        default: {
             console.log("Hello");
             break;
         }
     }
-
-    if (currentDisplayValue === link.id) {}
 }
 
 /**
@@ -146,4 +188,18 @@ export function hideNoResults() {
     if (!NO_RESULTS_CONTAINER.classList.contains("hidden")) {
         NO_RESULTS_CONTAINER.classList.add("hidden");
     }
+}
+
+/**
+ * Handles displaying the page when there are no links
+ * @returns {boolean}
+ */
+export function handleEmptyLinksArrayDisplay() {
+    const links_count = utils.LINKS.length;
+    if (links_count <= 0) {
+        // show no results if there are no links
+        showNoResults();
+        return true;
+    }
+    return false;
 }

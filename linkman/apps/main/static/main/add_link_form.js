@@ -170,7 +170,7 @@ Add_link_form.addEventListener("submit", async (e) => {
         resetLinkForm();
         utils.toggleElementVisibility("link-form-modal");
         const linkCard = display_utils.createLinkCard(data.link);
-        display_utils.addLinkToContainer(linkCard, data.link);
+        display_utils.reloadLinksDisplay(linkCard, data.link);
     } catch (error) {
         alert("An error occurred creating the link");
         console.log(`Error creating link: ${error}`);

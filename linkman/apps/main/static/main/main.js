@@ -25,10 +25,20 @@ document.addEventListener('click', function (event) {
 // Filter option selection - Update label and close dropdown
 document.querySelectorAll('.filter-option').forEach(option => {
     option.addEventListener('click', function () {
-        const filterLabel = this.textContent;
-        document.getElementById('filter-label').textContent = filterLabel;
+        document.getElementById('filter-label').textContent = this.textContent;
         document.getElementById('filter-dropdown').classList.add('hidden');
-        // TODO: Implement filter logic here
+        // show the filter
+        const filterType = this.getAttribute("data-filter");
+        if (filterType === utils.CURRENT_DISPLAY.RECENTLY_CREATED) {
+            display_utils.displayRecentlyCreated();
+        } else if (filterType === utils.CURRENT_DISPLAY.LAST_USED) {
+            display_utils.displayLastUsed();
+        } else if (filterType === utils.CURRENT_DISPLAY.MOST_USED) {
+            display_utils.displayMostUsed();
+        }
+        else {
+            console.log("No display accessed")
+        }
     });
 });
 
