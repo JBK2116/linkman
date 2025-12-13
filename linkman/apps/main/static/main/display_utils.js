@@ -2,8 +2,6 @@
 This javascript file handles the link display functionality
  */
 
-import "./add_group_form.js";
-import "./add_link_form.js";
 import * as utils from "./utils.js";
 import * as edit_link_form from "./edit_link_form.js";
 import * as delete_link_form from "./delete_link_form.js";
@@ -17,14 +15,16 @@ const FILTER_LABEL_CONTAINER = document.getElementById("filter-label");
 /**
  * Displays all links in the `utils.LINKS` array by recently created
  */
-export async function displayRecentLinks() {
+export function displayRecentlyCreated() {
     if (utils.LINKS.length <= 0) {
         // show no results if there are no links
         showNoResults();
         return;
     }
     // sort by updated_at field
-    utils.LINKS.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    utils.LINKS.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    // reset the links container
+    LINKS_CONTAINER.innerHTML = "";
     for (const link of utils.LINKS) {
         const card = createLinkCard(link);
         LINKS_CONTAINER.appendChild(card);
@@ -53,7 +53,7 @@ export function createLinkCard(link) {
             <span class="link-last-used">Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}</span>
         </div>
         <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
-            <span class="text-[#888888] text-xs link-group-name">${utils.getGroup(link.group_id).name || 'Default'}</span>
+            <span class="text-[#888888] text-xs link-group-name">${utils.getGroup(link.group_id || link.group).name || 'Default'}</span>
             <div class="flex gap-2">
                 <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" title="Edit">
                     <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,6 +93,10 @@ export function createLinkCard(link) {
     return card;
 }
 
+/**
+ * Updates the visual link card statistics
+ * @param link Link to update with
+ */
 export function updateLinkCard(link) {
     // TODO: Updating the card should also remove it from the display if it's group doesn't match
     const linkCard = document.querySelector(`.link-card[data-link-id="${link.id}"]`);
@@ -101,6 +105,29 @@ export function updateLinkCard(link) {
     linkCard.querySelector(".link-click-count").textContent = `Clicks: ${link.click_count || 0}`;
     linkCard.querySelector(".link-last-used").textContent = `Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}`;
     linkCard.querySelector(".link-group-name").textContent = `${utils.getGroup(link.group).name}`
+}
+
+/**
+ * Adds the provided linkCard to the `LINKS_CONTAINER`
+ * @param linkCard Link Card to add
+ * @param link link Object
+ */
+export function addLinkToContainer(linkCard, link) {
+    const currentDisplayValue = utils.getCurrentDisplay();
+    switch(currentDisplayValue) {
+        case utils.CURRENT_DISPLAY.RECENTLY_CREATED:
+        {
+            displayRecentlyCreated();
+            break;
+        }
+        default:
+        {
+            console.log("Hello");
+            break;
+        }
+    }
+
+    if (currentDisplayValue === link.id) {}
 }
 
 /**

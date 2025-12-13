@@ -81,7 +81,7 @@ async function init() {
     // Load user data
     await utils.getGroups();
     await utils.getLinks();
-    await display_utils.displayRecentLinks();
+    await display_utils.displayRecentlyCreated();
 }
 
 window.addEventListener('DOMContentLoaded', init)

@@ -3,6 +3,7 @@ This module stores the functionality for the `link-form-modal`
  */
 
 import * as utils from "./utils.js";
+import * as display_utils from "./display_utils.js";
 
 // ============================================================================
 // DOM ELEMENTS
@@ -168,6 +169,8 @@ Add_link_form.addEventListener("submit", async (e) => {
         utils.LINKS.push(data.link);
         resetLinkForm();
         utils.toggleElementVisibility("link-form-modal");
+        const linkCard = display_utils.createLinkCard(data.link);
+        display_utils.addLinkToContainer(linkCard, data.link);
     } catch (error) {
         alert("An error occurred creating the link");
         console.log(`Error creating link: ${error}`);
