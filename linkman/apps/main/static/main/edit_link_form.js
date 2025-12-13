@@ -3,6 +3,7 @@ This module stores the functionality for the `edit-link-form`
  */
 
 import * as utils from "./utils.js";
+import * as display_utils from "./display_utils.js";
 import * as add_link_form from "./add_link_form.js";
 
 // ============================================================================
@@ -262,7 +263,7 @@ EDIT_LINK_FORM.addEventListener("submit", async function (e) {
             showEditLinkError("Error occurred updating the link");
             return;
         }
-        utils.updateLinkCard(data.link)
+        display_utils.updateLinkCard(data.link)
         alert(`Link successfully updated!`);
         resetEditLinkForm();
         utils.toggleElementVisibility("edit-link-modal")

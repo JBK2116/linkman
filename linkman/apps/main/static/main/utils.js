@@ -5,6 +5,28 @@ This javascript file handles the utility functions and attributes used throughou
 export let GROUPS = [];
 export let LINKS = [];
 
+// ENUM for tracking current display
+export const CURRENT_DISPLAY = Object.freeze({
+    RECENTLY_CREATED: "recent", MOST_USED: "most-used", LAST_USED: "last-used", GROUP: "group",
+})
+export let currentDisplay = null;
+
+/**
+ * Sets the `currentDisplay` value
+ * @param value Value to set
+ */
+export function setCurrentDisplay(value) {
+    currentDisplay = value;
+}
+
+/**
+ * Gets the `currentDisplay` value
+ * @returns {null} The `currentDisplay` value
+ */
+export function getCurrentDisplay() {
+    return currentDisplay;
+}
+
 /**
  * Sends a `GET` request to fetch all groups associated with the user
  *
@@ -119,16 +141,6 @@ export function replaceLink(id, link) {
     }
     LINKS[index] = link;
     return true;
-}
-
-export function updateLinkCard(link) {
-    // TODO: Updating the card should also remove it from the display if it's group doesn't match
-    const linkCard = document.querySelector(`.link-card[data-link-id="${link.id}"]`);
-    linkCard.querySelector(".link-name").textContent = link.name;
-    linkCard.querySelector(".link-url").textContent = link.url;
-    linkCard.querySelector(".link-click-count").textContent = `Clicks: ${link.click_count || 0}`;
-    linkCard.querySelector(".link-last-used").textContent = `Last used: ${formatUpdatedAt(link.updated_at) || 'Never'}`;
-    linkCard.querySelector(".link-group-name").textContent = `${getGroup(link.group).name}`
 }
 
 /**

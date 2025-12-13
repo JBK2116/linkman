@@ -7,29 +7,32 @@ import "./add_link_form.js";
 import * as utils from "./utils.js";
 import * as edit_link_form from "./edit_link_form.js";
 import * as delete_link_form from "./delete_link_form.js";
+import * as clicked_link_form from "./clicked_link_form.js";
 
 // CONSTANTS
 const LINKS_CONTAINER = document.getElementById("links-container");
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
+const FILTER_LABEL_CONTAINER = document.getElementById("filter-label");
 
 /**
- * Displays all links in the `utils.LINKS` array
- *
- * Shows the `no-results` container if no links are found
+ * Displays all links in the `utils.LINKS` array by recently created
  */
-export function displayAllLinks() {
-    // show the no links found if there are no links
+export async function displayRecentLinks() {
     if (utils.LINKS.length <= 0) {
+        // show no results if there are no links
         showNoResults();
         return;
     }
-    // show available links
-    hideNoResults();
+    // sort by updated_at field
+    utils.LINKS.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
     for (const link of utils.LINKS) {
         const card = createLinkCard(link);
         LINKS_CONTAINER.appendChild(card);
     }
-
+    // set current state
+    utils.setCurrentDisplay(utils.CURRENT_DISPLAY.RECENTLY_CREATED);
+    // update filter label display
+    FILTER_LABEL_CONTAINER.textContent = "Recently Created";
 }
 
 /**
@@ -79,9 +82,26 @@ export function createLinkCard(link) {
         edit_link_form.setUpEditLinkForm(link)
     })
 
+    // CARD UPDATE FUNCTIONALITY
+    card.addEventListener("click", async function (e) {
+        e.stopPropagation();
+        const updated_link_object = await clicked_link_form.updateLinkStats(link);
+        updateLinkCard(updated_link_object);
+        window.open(link.url, "_blank"); // redirect the user to the specified links url
+    })
+
     return card;
 }
 
+export function updateLinkCard(link) {
+    // TODO: Updating the card should also remove it from the display if it's group doesn't match
+    const linkCard = document.querySelector(`.link-card[data-link-id="${link.id}"]`);
+    linkCard.querySelector(".link-name").textContent = link.name;
+    linkCard.querySelector(".link-url").textContent = link.url;
+    linkCard.querySelector(".link-click-count").textContent = `Clicks: ${link.click_count || 0}`;
+    linkCard.querySelector(".link-last-used").textContent = `Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}`;
+    linkCard.querySelector(".link-group-name").textContent = `${utils.getGroup(link.group).name}`
+}
 
 /**
  * Shows the `no-results` container
