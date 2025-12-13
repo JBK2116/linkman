@@ -37,9 +37,7 @@ def validate_authentication(user: AbstractBaseUser | AnonymousUser) -> bool:
     :param user: User object to validate
     :return: True if the user is valid, false otherwise
     """
-    if not isinstance(user, CustomUser):
-        return False
-    return CustomUser.objects.filter(id=user.id).exists()
+    return isinstance(user, CustomUser) and user.pk is not None
 
 
 def validate_link_name(link_name: str) -> bool:

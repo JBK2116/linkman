@@ -7,8 +7,11 @@ export let LINKS = [];
 
 // ENUM for tracking current display
 export const CURRENT_DISPLAY = Object.freeze({
-    RECENTLY_CREATED: "recent", MOST_USED: "most-used", LAST_USED: "last-used", GROUP: "group",
-})
+    RECENTLY_CREATED: "recent",
+    MOST_USED: "most-used",
+    LAST_USED: "last-used",
+    GROUP: "group",
+});
 export let currentDisplay = null;
 export let currentGroup = null;
 
@@ -51,17 +54,17 @@ export function getCurrentGroup() {
  */
 export async function getGroups() {
     try {
-        const response = await fetch('/api/groups', {
-            method: 'GET',
+        const response = await fetch("/api/groups", {
+            method: "GET",
         });
         const data = await response.json();
         if (!response.ok) {
-            console.log(`Unable to fetch all groups: ${data.detail}`)
+            console.log(`Unable to fetch all groups: ${data.detail}`);
             return;
         }
         data.groups.forEach((item) => {
             GROUPS.push(item);
-        })
+        });
         console.log(GROUPS);
     } catch (error) {
         console.log(`Error occurred fetching all groups: ${error}`);
@@ -75,9 +78,9 @@ export async function getGroups() {
  */
 export async function getLinks() {
     try {
-        const response = await fetch('/api/links', {
-            method: 'GET',
-        })
+        const response = await fetch("/api/links", {
+            method: "GET",
+        });
         const data = await response.json();
         if (!response.ok) {
             console.log(`Unable to fetch links: ${data.links}`);
@@ -85,7 +88,7 @@ export async function getLinks() {
         }
         data.links.forEach((item) => {
             LINKS.push(item);
-        })
+        });
         console.log(LINKS);
     } catch (error) {
         console.log(`Error occurred fetching links: ${error}`);
@@ -97,7 +100,7 @@ export async function getLinks() {
  * @returns {string} The csrf token
  */
 export function getCSRFToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return document.querySelector("[name=csrfmiddlewaretoken]").value;
 }
 
 /**
@@ -121,7 +124,7 @@ export function getGroup(id) {
     if (!group) {
         return null;
     }
-    return group
+    return group;
 }
 
 /**
@@ -142,7 +145,7 @@ export function getLink(id) {
  * @param id ID of the link to remove
  */
 export function deleteLinkFromList(id) {
-    LINKS = LINKS.filter(l => l.id !== Number(id));
+    LINKS = LINKS.filter((l) => l.id !== Number(id));
 }
 
 /**
@@ -152,7 +155,7 @@ export function deleteLinkFromList(id) {
  * @returns boolean True if the update was successful, False otherwise
  */
 export function replaceLink(id, link) {
-    const index = LINKS.findIndex(l => l.id === Number(id));
+    const index = LINKS.findIndex((l) => l.id === Number(id));
     if (index === -1) {
         return false;
     }
@@ -176,17 +179,19 @@ export function formatUpdatedAt(updatedAt) {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60)
+        return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+    if (diffHours < 24)
+        return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
     if (diffDays < 30) {
         const weeks = Math.floor(diffDays / 7);
-        return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+        return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
     }
 
     const day = date.getDate();
-    const month = date.toLocaleString('en-US', {month: 'long'});
+    const month = date.toLocaleString("en-US", { month: "long" });
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
 }

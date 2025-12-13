@@ -55,7 +55,7 @@ function closeGroupForm() {
     if (formIsEmpty) {
         utils.toggleElementVisibility("group-form-modal");
     } else {
-        let result = confirm("Your form data may not be saved. Are you sure?")
+        let result = confirm("Your form data may not be saved. Are you sure?");
         if (result) {
             resetGroupForm();
             utils.toggleElementVisibility("group-form-modal");
@@ -70,20 +70,20 @@ function closeGroupForm() {
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener("click", () => {
     utils.toggleElementVisibility("group-form-modal");
-})
+});
 
 // GROUP FORM CANCEL BUTTONS
-GROUP_FORM_CANCEL_ICON.addEventListener("click", closeGroupForm)
-GROUP_FORM_CANCEL_BUTTON.addEventListener("click", closeGroupForm)
+GROUP_FORM_CANCEL_ICON.addEventListener("click", closeGroupForm);
+GROUP_FORM_CANCEL_BUTTON.addEventListener("click", closeGroupForm);
 
 // GROUP FORM SUBMIT FUNCTIONALITY
 Add_group_form.addEventListener("submit", async (e) => {
     e.preventDefault();
     // form values
-    const url = Add_group_form.action
+    const url = Add_group_form.action;
     const csrfToken = utils.getCSRFToken();
     const groupName = GROUP_NAME_INPUT.value.trim();
-    const payload = {"group_name": groupName}
+    const payload = { group_name: groupName };
     // validate the group name
     const validationResult = validateGroupName(groupName);
     if (validationResult) {
@@ -99,8 +99,11 @@ Add_group_form.addEventListener("submit", async (e) => {
         const response = await fetch(url, {
             method: "POST",
             body: JSON.stringify(payload),
-            headers: {"Content-Type": "application/json", "X-CSRFToken": csrfToken},
-        })
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+        });
         const data = await response.json();
         if (!response.ok) {
             // showcase the error message sent from the backend
@@ -121,3 +124,4 @@ Add_group_form.addEventListener("submit", async (e) => {
         console.log(`Error creating group: ${error}`);
     }
 });
+

@@ -14,13 +14,13 @@ import * as utils from "./utils.js";
  * @returns {Promise<void>}
  */
 export async function deleteLinkAPI(link, linkCard) {
-    const url = `/api/links/${link.id}/`
+    const url = `/api/links/${link.id}/`;
     const csrfToken = utils.getCSRFToken();
     try {
         const response = await fetch(url, {
             method: "DELETE",
-            headers: {"X-CSRFToken": csrfToken},
-        })
+            headers: { "X-CSRFToken": csrfToken },
+        });
         // handle error response
         if (!response.ok) {
             alert(`Error occurred deleting the link`);

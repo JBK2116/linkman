@@ -9,25 +9,27 @@ import * as display_utils from "./display_utils.js";
 import * as utils from "./utils.js";
 
 // Filter dropdown toggle
-document.getElementById('filter-button').addEventListener('click', function () {
-    document.getElementById('filter-dropdown').classList.toggle('hidden');
+document.getElementById("filter-button").addEventListener("click", function () {
+    document.getElementById("filter-dropdown").classList.toggle("hidden");
 });
 
-
 // Close dropdown when clicking outside
-document.addEventListener('click', function (event) {
-    const filterButton = document.getElementById('filter-button');
-    const filterDropdown = document.getElementById('filter-dropdown');
-    if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-        filterDropdown.classList.add('hidden');
+document.addEventListener("click", function (event) {
+    const filterButton = document.getElementById("filter-button");
+    const filterDropdown = document.getElementById("filter-dropdown");
+    if (
+        !filterButton.contains(event.target) &&
+        !filterDropdown.contains(event.target)
+    ) {
+        filterDropdown.classList.add("hidden");
     }
 });
 
 // Filter option selection - Update label and close dropdown
-document.querySelectorAll('.filter-option').forEach(option => {
-    option.addEventListener('click', function () {
-        document.getElementById('filter-label').textContent = this.textContent;
-        document.getElementById('filter-dropdown').classList.add('hidden');
+document.querySelectorAll(".filter-option").forEach((option) => {
+    option.addEventListener("click", function () {
+        document.getElementById("filter-label").textContent = this.textContent;
+        document.getElementById("filter-dropdown").classList.add("hidden");
         // show the filter
         const filterType = this.getAttribute("data-filter");
         if (filterType === utils.CURRENT_DISPLAY.RECENTLY_CREATED) {
@@ -39,14 +41,14 @@ document.querySelectorAll('.filter-option').forEach(option => {
         } else if (filterType === utils.CURRENT_DISPLAY.GROUP) {
             display_utils.showGroupFilter();
         } else {
-            console.log("No display accessed")
+            console.log("No display accessed");
         }
     });
 });
 
 // Search input handler - Add debouncing here
 let searchTimeout;
-document.getElementById('search-input').addEventListener('input', function (e) {
+document.getElementById("search-input").addEventListener("input", function (e) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         const query = e.target.value;
@@ -55,16 +57,18 @@ document.getElementById('search-input').addEventListener('input', function (e) {
 });
 
 // Clear search on Escape key
-document.getElementById('search-input').addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-        this.value = '';
-        this.dispatchEvent(new Event('input'));
-    }
-});
+document
+    .getElementById("search-input")
+    .addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            this.value = "";
+            this.dispatchEvent(new Event("input"));
+        }
+    });
 
 // Infinite scroll implementation
 let isLoading = false;
-window.addEventListener('scroll', function () {
+window.addEventListener("scroll", function () {
     if (isLoading) return;
 
     const scrollPosition = window.innerHeight + window.scrollY;
@@ -72,7 +76,7 @@ window.addEventListener('scroll', function () {
 
     if (scrollPosition >= threshold) {
         isLoading = true;
-        document.getElementById('loading-indicator').classList.remove('hidden');
+        document.getElementById("loading-indicator").classList.remove("hidden");
         // TODO: Fetch more links via AJAX here
         // After loading, set isLoading = false and hide loading indicator
     }
@@ -86,7 +90,8 @@ async function init() {
     // Load user data
     await utils.getGroups();
     await utils.getLinks();
-    await display_utils.displayRecentlyCreated();
+    display_utils.displayRecentlyCreated();
 }
 
-window.addEventListener('DOMContentLoaded', init)
+window.addEventListener("DOMContentLoaded", init);
+
