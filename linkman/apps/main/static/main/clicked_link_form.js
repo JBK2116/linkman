@@ -14,7 +14,6 @@ import * as utils from "./utils.js"
  * @returns link Updated link
  */
 export async function updateLinkStats(link) {
-    console.log(`Card Clicked: ${link.name} `);
     const latestLink = utils.getLink(link.id); // get the latest link version
     const csrfToken = utils.getCSRFToken();
     const url = `/api/links/${link.id}/`;

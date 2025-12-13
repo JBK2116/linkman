@@ -7,6 +7,7 @@ import "./edit_link_form.js";
 import "./delete_link_form.js";
 import * as display_utils from "./display_utils.js";
 import * as utils from "./utils.js";
+
 // Filter dropdown toggle
 document.getElementById('filter-button').addEventListener('click', function () {
     document.getElementById('filter-dropdown').classList.toggle('hidden');
@@ -35,8 +36,9 @@ document.querySelectorAll('.filter-option').forEach(option => {
             display_utils.displayLastUsed();
         } else if (filterType === utils.CURRENT_DISPLAY.MOST_USED) {
             display_utils.displayMostUsed();
-        }
-        else {
+        } else if (filterType === utils.CURRENT_DISPLAY.GROUP) {
+            display_utils.showGroupFilter();
+        } else {
             console.log("No display accessed")
         }
     });
@@ -74,13 +76,6 @@ window.addEventListener('scroll', function () {
         // TODO: Fetch more links via AJAX here
         // After loading, set isLoading = false and hide loading indicator
     }
-});
-
-// Link card click handler
-document.querySelectorAll('.link-card').forEach(card => {
-    card.addEventListener('click', function () {
-        // TODO: Increment click count, update last_used, redirect to URL
-    });
 });
 
 /**

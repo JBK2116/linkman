@@ -71,6 +71,32 @@ export function displayMostUsed() {
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.MOST_USED);
     // update filter label display
     document.getElementById("filter-label").textContent = "Most Used";
+}
+
+/**
+ * Displays all links that match to the provided group
+ * @param groupID ID of the group to filter by
+ */
+export function displayByGroup(groupID) {
+    LINKS_CONTAINER.innerHTML = "";
+    hideNoResults();
+    // get the current group object
+    const group = utils.getGroup(groupID);
+    // only display current group
+    const linksIngroup = utils.LINKS.filter((link) => link.group_id === group.id || link.group === group.id);
+    // handle empty links display
+    if (linksIngroup.length <= 0) {
+        showNoResults();
+        return;
+    }
+    for (const link of linksIngroup) {
+        const card = createLinkCard(link);
+        LINKS_CONTAINER.appendChild(card);
+    }
+    utils.setCurrentDisplay(utils.CURRENT_DISPLAY.GROUP)
+    utils.setCurrentGroup(group);
+    // update filter label display
+    document.getElementById("filter-label").textContent = `${group.name}`;
 
 }
 
@@ -145,6 +171,14 @@ export function updateLinkCard(link) {
     linkCard.querySelector(".link-last-used").textContent = `Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}`;
     linkCard.querySelector(".link-group-name").textContent = `${utils.getGroup(link.group).name}`
     // remove the link from the current display if the group doesn't match, implement it below
+    const currentDisplayValue = utils.getCurrentDisplay();
+    if (currentDisplayValue === utils.CURRENT_DISPLAY.GROUP) {
+        const currentDisplayGroup = utils.getCurrentGroup();
+        const linkGroupID = link.group_id || link.group;
+        if (linkGroupID !== currentDisplayGroup) {
+            linkCard.remove() // the card no longer belongs to the currently displayed group
+        }
+    }
 }
 
 /**
@@ -163,6 +197,11 @@ export function reloadLinksDisplay() {
         }
         case utils.CURRENT_DISPLAY.MOST_USED: {
             displayMostUsed();
+            break;
+        }
+        case utils.CURRENT_DISPLAY.GROUP: {
+            const currentDisplayedGroup = utils.getCurrentGroup();
+            displayByGroup(currentDisplayedGroup.id);
             break;
         }
         default: {
@@ -203,3 +242,65 @@ export function handleEmptyLinksArrayDisplay() {
     }
     return false;
 }
+
+// DISPLAY GROUP FUNCTIONALITY
+const GROUP_FILTER_MODAL = document.getElementById("group-filter-modal");
+const GROUP_FILTER_SEARCH = document.getElementById("group-filter-search");
+const GROUP_FILTER_LIST = document.getElementById("group-filter-list");
+const CLOSE_GROUP_FILTER_MODAL = document.getElementById("close-group-filter-modal");
+
+
+/**
+ * Populates the group filter list with all groups
+ */
+function populateGroupFilterList(groups) {
+    GROUP_FILTER_LIST.innerHTML = groups.map(group => `
+        <button class="group-filter-option w-full px-4 py-3 bg-[#121212] hover:bg-[#2A2A2A] text-[#E0E0E0] text-left rounded-lg transition-colors border border-[#444444] hover:border-[#888888]" data-group-id="${group.id}">
+            ${group.name}
+        </button>
+    `).join('');
+}
+
+/**
+ * Opens the group filter modal
+ */
+export function showGroupFilter() {
+    GROUP_FILTER_MODAL.classList.remove('hidden');
+    GROUP_FILTER_SEARCH.value = "";
+    populateGroupFilterList(utils.GROUPS);
+    GROUP_FILTER_SEARCH.focus();
+}
+
+/**
+ * Closes the group filter modal
+ */
+function closeGroupFilterModal() {
+    GROUP_FILTER_MODAL.classList.add('hidden');
+    GROUP_FILTER_SEARCH.value = "";
+}
+
+
+// GROUP FILTER SEARCH FUNCTIONALITY
+GROUP_FILTER_SEARCH.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    const filtered = utils.GROUPS.filter(g => g.name.toLowerCase().includes(query));
+    populateGroupFilterList(filtered);
+});
+
+// GROUP FILTER SELECTION
+GROUP_FILTER_LIST.addEventListener('click', (e) => {
+    if (e.target.classList.contains('group-filter-option')) {
+        const groupId = e.target.dataset.groupId;
+        const group = utils.getGroup(groupId);
+        if (group) {
+            // Update filter label
+            document.getElementById('filter-label').textContent = `Group: ${group.name}`;
+            // Display links filtered by this group
+            displayByGroup(group.id);
+            closeGroupFilterModal();
+        }
+    }
+});
+
+// CLOSE MODAL
+CLOSE_GROUP_FILTER_MODAL.addEventListener('click', closeGroupFilterModal);

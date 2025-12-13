@@ -26,9 +26,9 @@ export async function deleteLinkAPI(link, linkCard) {
             alert(`Error occurred deleting the link`);
             return;
         }
-        utils.deleteLinkFromList(link.id);
-        linkCard.remove();
-        alert(`Link successfully deleted!`);
+        utils.deleteLinkFromList(link.id); // remove link from LINKS array
+        linkCard.remove(); // remove link from the DOM
+        alert(`Link successfully deleted!`); // alert the user
     } catch (error) {
         console.log(`Error deleting link: ${link}`);
     }

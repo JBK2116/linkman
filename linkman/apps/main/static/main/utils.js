@@ -10,6 +10,7 @@ export const CURRENT_DISPLAY = Object.freeze({
     RECENTLY_CREATED: "recent", MOST_USED: "most-used", LAST_USED: "last-used", GROUP: "group",
 })
 export let currentDisplay = null;
+export let currentGroup = null;
 
 /**
  * Sets the `currentDisplay` value
@@ -20,11 +21,27 @@ export function setCurrentDisplay(value) {
 }
 
 /**
+ * Sets the `currentGroup` value
+ * @param value Object of the current group
+ */
+export function setCurrentGroup(value) {
+    currentGroup = value;
+}
+
+/**
  * Gets the `currentDisplay` value
  * @returns {null} The `currentDisplay` value
  */
 export function getCurrentDisplay() {
     return currentDisplay;
+}
+
+/**
+ * Gets the current group that is displayed with the filter
+ * @returns {null} The current group
+ */
+export function getCurrentGroup() {
+    return currentGroup;
 }
 
 /**
