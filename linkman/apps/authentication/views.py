@@ -80,7 +80,7 @@ def login_page(request: HttpRequest) -> HttpResponse:
             return validation_result
         cleaned_form = validation_result
         # authenticate the user
-        user: CustomUser | None = authenticate(
+        user = authenticate(
             request,
             email=cleaned_form.cleaned_data["email"],
             password=cleaned_form.cleaned_data["password"],
