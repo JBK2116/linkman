@@ -14,7 +14,7 @@ export const CURRENT_DISPLAY = Object.freeze({
 });
 export let currentDisplay = null;
 export let currentGroup = null;
-
+export let LINKS_PER_PAGE = calculateLinksPerPage();
 /**
  * Sets the `currentDisplay` value
  * @param value Value to set
@@ -45,6 +45,14 @@ export function getCurrentDisplay() {
  */
 export function getCurrentGroup() {
     return currentGroup;
+}
+
+/*
+ * Sets the `LINKS_PER_PAGE` value
+ * @param {value} Value of the current links per page
+ */
+export function setLinksPerPage(value) {
+    LINKS_PER_PAGE = value;
 }
 
 /**
@@ -194,4 +202,31 @@ export function formatUpdatedAt(updatedAt) {
     const month = date.toLocaleString("en-US", { month: "long" });
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
+}
+
+/**
+ * Calculates the amount of link cards to display on the current page
+ *
+ * @returns The number of link cards to display on the current page
+ */
+export function calculateLinksPerPage() {
+    const viewportHeight = window.innerHeight;
+    const cardHeight = 180; // Approximate height of your link card in pixels
+    const buffer = 1.5; // Load 1.5x viewport for smooth scrolling
+
+    return Math.max(8, Math.ceil((viewportHeight / cardHeight) * buffer));
+}
+
+/**
+ * Debounce helper function
+ *
+ * @param {*} func A function to execute
+ * @param {*} wait Amount of time in milliseconds to wait before executing the provided function
+ */
+export function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
 }

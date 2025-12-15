@@ -10,6 +10,8 @@ import * as clicked_link_form from "./clicked_link_form.js";
 // CONSTANTS
 const LINKS_CONTAINER = document.getElementById("links-container");
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
+let CURRENT_FILTERED_LINKS = []; // links that are filtered when group filter is on
+let CURRENT_DISPLAYED_COUNT = 0; // tracks the amount of currently displayed links
 
 /**
  * Displays all links in the `utils.LINKS` array by recently created
@@ -22,11 +24,9 @@ export function displayRecentlyCreated() {
     if (handleEmptyLinksArrayDisplay()) {
         return;
     }
-    // reset the links container
-    for (const link of utils.LINKS) {
-        const card = createLinkCard(link);
-        LINKS_CONTAINER.appendChild(card);
-    }
+    CURRENT_FILTERED_LINKS = [];
+    CURRENT_DISPLAYED_COUNT = 0;
+    loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.RECENTLY_CREATED);
     // update filter label display
@@ -44,11 +44,9 @@ export function displayLastUsed() {
     if (handleEmptyLinksArrayDisplay()) {
         return;
     }
-    // reset the links container
-    for (const link of utils.LINKS) {
-        const card = createLinkCard(link);
-        LINKS_CONTAINER.appendChild(card);
-    }
+    CURRENT_FILTERED_LINKS = [];
+    CURRENT_DISPLAYED_COUNT = 0;
+    loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.LAST_USED);
     // update filter label display
@@ -63,10 +61,9 @@ export function displayMostUsed() {
     if (handleEmptyLinksArrayDisplay()) {
         return;
     }
-    for (const link of utils.LINKS) {
-        const card = createLinkCard(link);
-        LINKS_CONTAINER.appendChild(card);
-    }
+    CURRENT_FILTERED_LINKS = [];
+    CURRENT_DISPLAYED_COUNT = 0;
+    loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.MOST_USED);
     // update filter label display
@@ -83,18 +80,18 @@ export function displayByGroup(groupID) {
     // get the current group object
     const group = utils.getGroup(groupID);
     // only display current group
-    const linksIngroup = utils.LINKS.filter(
+    CURRENT_FILTERED_LINKS = utils.LINKS.filter(
         (link) => link.group_id === group.id || link.group === group.id
     );
     // handle empty links display
-    if (linksIngroup.length <= 0) {
+    if (CURRENT_FILTERED_LINKS.length <= 0) {
         showNoResults();
         return;
     }
-    for (const link of linksIngroup) {
-        const card = createLinkCard(link);
-        LINKS_CONTAINER.appendChild(card);
-    }
+    // showcase group links
+    CURRENT_DISPLAYED_COUNT = 0;
+    loadMoreLinks();
+    // update display
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.GROUP);
     utils.setCurrentGroup(group);
     // update filter label display
@@ -320,3 +317,25 @@ GROUP_FILTER_LIST.addEventListener("click", (e) => {
 // CLOSE MODAL
 CLOSE_GROUP_FILTER_MODAL.addEventListener("click", closeGroupFilterModal);
 
+// INFINITE SCROLL FUNCTIONALITY
+
+/**
+ * Loads the next batch of links into the display
+ * @returns {boolean} True if more links are available to load, else False
+ */
+export function loadMoreLinks() {
+    const linksToUse =
+        CURRENT_FILTERED_LINKS.length > 0
+            ? CURRENT_FILTERED_LINKS
+            : utils.LINKS;
+    const start = CURRENT_DISPLAYED_COUNT;
+    const end = Math.min(start + utils.LINKS_PER_PAGE, linksToUse.length);
+
+    for (let i = start; i < end; i++) {
+        const card = createLinkCard(linksToUse[i]);
+        LINKS_CONTAINER.appendChild(card);
+    }
+
+    CURRENT_DISPLAYED_COUNT = end;
+    return end < utils.LINKS.length;
+}

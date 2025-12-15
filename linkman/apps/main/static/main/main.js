@@ -77,8 +77,12 @@ window.addEventListener("scroll", function () {
     if (scrollPosition >= threshold) {
         isLoading = true;
         document.getElementById("loading-indicator").classList.remove("hidden");
-        // TODO: Fetch more links via AJAX here
-        // After loading, set isLoading = false and hide loading indicator
+        const hasMore = display_utils.loadMoreLinks();
+        if (!hasMore) {
+            document
+                .getElementById("loading-indicator")
+                .classList.add("hidden");
+        }
     }
 });
 
@@ -95,3 +99,16 @@ async function init() {
 
 window.addEventListener("DOMContentLoaded", init);
 
+window.addEventListener(
+    "resize",
+    utils.debounce(() => {
+        const oldValue = utils.LINKS_PER_PAGE;
+        const newValue = utils.calculateLinksPerPage();
+        utils.setLinksPerPage(newValue);
+
+        // only reload if significantly different (optional optimization)
+        if (Math.abs(oldValue - newValue) > 5) {
+            reloadLinksDisplay();
+        }
+    }, 300)
+);
