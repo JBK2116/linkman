@@ -46,13 +46,43 @@ document.querySelectorAll(".filter-option").forEach((option) => {
     });
 });
 
-// Search input handler - Add debouncing here
+// Fuse Search input handler
+const fuseOptions = {
+    keys: ['name'],
+    threshold: 0.3,
+    ignoreLocation: true,
+    includeScore: true,
+    includeMatches: true,
+    minMatchCharLength: 2
+};
 let searchTimeout;
+let linksContainer = document.getElementById("links-container");
 document.getElementById("search-input").addEventListener("input", function (e) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         const query = e.target.value;
-        // TODO: Implement fuzzy search with Fuse.js here
+        if (!query) {
+            // user hasn't inputted anything
+            display_utils.reloadLinksDisplay();
+            return;
+        }
+        // if we are filtering by group, use the group links, else use the standard utils.LINKS
+        const dataSet = display_utils.CURRENT_FILTERED_LINKS.length > 0 ? display_utils.CURRENT_FILTERED_LINKS : utils.LINKS
+        const fuseObj = new Fuse(dataSet, fuseOptions); // fuse object for implementing the fuzzy search
+        const results = fuseObj.search(query);
+        // reset the links container
+        linksContainer.innerHTML = "";
+        // handle no results
+        if (!results.length > 0) {
+            display_utils.showNoResults();
+            return;
+        }
+        // showcase the results
+        display_utils.hideNoResults();
+        results.forEach(result => {
+            const card = display_utils.createLinkCard(result.item);
+            linksContainer.appendChild(card);
+        })
     }, 200);
 });
 

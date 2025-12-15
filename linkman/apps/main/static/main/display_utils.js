@@ -10,7 +10,7 @@ import * as clicked_link_form from "./clicked_link_form.js";
 // CONSTANTS
 const LINKS_CONTAINER = document.getElementById("links-container");
 const NO_RESULTS_CONTAINER = document.getElementById("no-results");
-let CURRENT_FILTERED_LINKS = []; // links that are filtered when group filter is on
+export let CURRENT_FILTERED_LINKS = []; // links that are filtered when group filter is on
 let CURRENT_DISPLAYED_COUNT = 0; // tracks the amount of currently displayed links
 
 /**
