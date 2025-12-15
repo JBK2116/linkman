@@ -15,6 +15,7 @@ export const CURRENT_DISPLAY = Object.freeze({
 export let currentDisplay = null;
 export let currentGroup = null;
 export let LINKS_PER_PAGE = calculateLinksPerPage();
+
 /**
  * Sets the `currentDisplay` value
  * @param value Value to set
@@ -199,7 +200,7 @@ export function formatUpdatedAt(updatedAt) {
     }
 
     const day = date.getDate();
-    const month = date.toLocaleString("en-US", { month: "long" });
+    const month = date.toLocaleString("en-US", {month: "long"});
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
 }

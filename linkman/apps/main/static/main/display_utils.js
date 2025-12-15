@@ -17,6 +17,7 @@ let CURRENT_DISPLAYED_COUNT = 0; // tracks the amount of currently displayed lin
  * Displays all links in the `utils.LINKS` array by recently created
  */
 export function displayRecentlyCreated() {
+    hideNoResults();
     LINKS_CONTAINER.innerHTML = "";
     // sort by updated_at field
     utils.LINKS.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -37,6 +38,7 @@ export function displayRecentlyCreated() {
  * Displays all links in the `utils.LINKS` array by last used
  */
 export function displayLastUsed() {
+    hideNoResults();
     LINKS_CONTAINER.innerHTML = "";
     // sort by last_used field
     utils.LINKS.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
@@ -54,6 +56,7 @@ export function displayLastUsed() {
 }
 
 export function displayMostUsed() {
+    hideNoResults();
     LINKS_CONTAINER.innerHTML = "";
     // sort by click_count field
     utils.LINKS.sort((a, b) => b.click_count - a.click_count);
@@ -85,6 +88,9 @@ export function displayByGroup(groupID) {
     );
     // handle empty links display
     if (CURRENT_FILTERED_LINKS.length <= 0) {
+        utils.setCurrentDisplay(utils.CURRENT_DISPLAY.GROUP);
+        utils.setCurrentGroup(group);
+        document.getElementById("filter-label").textContent = `${group.name}`;
         showNoResults();
         return;
     }
@@ -337,5 +343,5 @@ export function loadMoreLinks() {
     }
 
     CURRENT_DISPLAYED_COUNT = end;
-    return end < utils.LINKS.length;
+    return end < linksToUse;
 }

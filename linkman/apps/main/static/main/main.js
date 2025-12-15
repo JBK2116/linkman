@@ -83,6 +83,7 @@ window.addEventListener("scroll", function () {
                 .getElementById("loading-indicator")
                 .classList.add("hidden");
         }
+        isLoading = false;
     }
 });
 
@@ -108,7 +109,7 @@ window.addEventListener(
 
         // only reload if significantly different (optional optimization)
         if (Math.abs(oldValue - newValue) > 5) {
-            reloadLinksDisplay();
+            display_utils.reloadLinksDisplay();
         }
     }, 300)
 );
