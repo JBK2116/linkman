@@ -3,11 +3,14 @@ from django.db import IntegrityError
 from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+from django_ratelimit.decorators import ratelimit
 
 from ..authentication import utils as auth_utils
 from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
+
+# TODO: Ensure that rate-limiting works appropriately, also make sure to create a rate limit view
 
 
 def landing_page(request: HttpRequest) -> HttpResponse:
@@ -17,7 +20,7 @@ def landing_page(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html")
 
 
-# TODO: Add rate limiting to the POST endpoint
+@ratelimit(key="ip", method="POST", rate="10/m")
 def signup_page(request: HttpRequest) -> HttpResponse:
     """Signup page for the application"""
     if request.user.is_authenticated:
@@ -66,7 +69,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
         return render(request, "authentication/signup.html", {"form": SignupForm()})
 
 
-# TODO: Add rate limiting to the POST endpoint
+@ratelimit(key="ip", method="POST", rate="10/m")
 def login_page(request: HttpRequest) -> HttpResponse:
     """Login page for the application"""
     if request.user.is_authenticated:

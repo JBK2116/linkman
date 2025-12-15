@@ -169,7 +169,6 @@ export function createLinkCard(link) {
  * @param link Link to update with
  */
 export function updateLinkCard(link) {
-    // TODO: Updating the card should also remove it from the display if it's group doesn't match
     const linkCard = document.querySelector(
         `.link-card[data-link-id="${link.id}"]`
     );
