@@ -1,8 +1,9 @@
 import json
 from typing import Any
 
-from django.http import HttpRequest
-from django.http.response import JsonResponse
+from django.contrib.auth import logout
+from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
 
 from ..api import utils
 from ..authentication.models import CustomUser
@@ -180,3 +181,23 @@ def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
             {"detail": "Link successfully updated", "link": updated_link_data},
         )
     return JsonResponse({"detail": "Link found", "link": link}, status=200)
+
+
+def users_one(request: HttpRequest) -> JsonResponse | HttpResponseRedirect:
+    if request.method == HttpMethod.DELETE.value:
+        """Equivalent to api/users/:id DELETE"""
+        if not utils.validate_authentication(request.user):
+            return JsonResponse({"detail": "User not authenticated"}, status=401)
+        # user is authenticated
+        assert isinstance(request.user, CustomUser)
+        request.user.delete()  # delete the user from the database
+        logout(request)  # logout the user and clear out all session info
+        return redirect("landing_page")  # redirect to landing page
+    # request is a simple /api/users/:id GET
+    if not utils.validate_authentication(request.user):
+        return JsonResponse({"detail": "User not authenticated"}, status=401)
+    assert isinstance(request.user, CustomUser)
+    user_data: dict[str, Any] = utils.serialize_object(request.user)
+    return JsonResponse(
+        {"detail": "User successfully retrieved", "user": user_data}, status=201
+    )

@@ -2,9 +2,7 @@
 
 const GROUP_SEARCH_INPUT = document.getElementById("group-search-input");
 const GROUP_SEARCH_DROPDOWN = document.getElementById("group-search-dropdown");
-const GROUP_EDIT_FORM_CONTAINER = document.getElementById(
-    "group-edit-form-container"
-);
+const GROUP_EDIT_FORM_CONTAINER = document.getElementById("group-edit-form-container");
 const GROUP_EDIT_FORM = document.getElementById("group-edit-form");
 const GROUP_EDIT_FORM_ERRORS = document.getElementById("group-edit-errors");
 const GROUP_DELETE_BUTTON = document.getElementById("group-delete-btn");
@@ -18,16 +16,12 @@ const GROUP_EDIT_CREATED = document.getElementById("group-edit-created");
 
 // DELETE ACCOUNT FUNCTIONALITY
 const DELETE_ACCOUNT_MODAL = document.getElementById("delete-account-modal");
-const DELETE_ACCOUNT_CANCEL_BUTTON = document.getElementById(
-    "cancel-delete-account"
-);
-const DELETE_ACCOUNT_CONFIRM_BUTTON = document.getElementById(
-    "confirm-delete-account"
-);
+const DELETE_ACCOUNT_CANCEL_BUTTON = document.getElementById("cancel-delete-account");
+const DELETE_ACCOUNT_CONFIRM_BUTTON = document.getElementById("confirm-delete-account");
 const DELETE_ACCOUNT_BUTTON = document.getElementById("delete-account-btn");
 
 // VARIABLES
-const GROUPS = [];
+const ALL_GROUPS = [];
 let CURRENT_SELECTED_GROUP = null;
 
 const fuseOptions = {
@@ -46,7 +40,7 @@ const debouncedSearch = debounce(() => {
         return;
     }
     hideEmptyGroupState();
-    const fuseObj = new Fuse(GROUPS, fuseOptions);
+    const fuseObj = new Fuse(ALL_GROUPS, fuseOptions);
     const results = fuseObj.search(query);
 
     GROUP_SEARCH_DROPDOWN.innerHTML = "";
@@ -87,7 +81,7 @@ async function getAllGroups() {
             return;
         }
         data.groups.forEach((item) => {
-            GROUPS.push(item);
+            ALL_GROUPS.push(item);
         });
     } catch (error) {
         console.log(`Error occurred fetching all groups: ${error}`);
@@ -124,10 +118,7 @@ function createGroupCard(group) {
 }
 
 const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    weekday: "long", year: "numeric", month: "long", day: "numeric",
 };
 const locales = "en-US";
 
@@ -225,12 +216,9 @@ function resetEditGroupForm() {
 async function updateGroup(groupId, groupName) {
     try {
         const response = await fetch(`/api/groups/${groupId}/`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCSRFToken(),
-            },
-            body: JSON.stringify({ name: groupName }),
+            method: "PATCH", headers: {
+                "Content-Type": "application/json", "X-CSRFToken": getCSRFToken(),
+            }, body: JSON.stringify({name: groupName}),
         });
         // handle invalid responses
         const data = await response.json();
@@ -239,9 +227,9 @@ async function updateGroup(groupId, groupName) {
             return null;
         }
         // Update local GROUPS array
-        const groupIndex = GROUPS.findIndex((g) => g.id === data.group.id);
+        const groupIndex = ALL_GROUPS.findIndex((g) => g.id === data.group.id);
         if (groupIndex !== -1) {
-            GROUPS[groupIndex] = data.group;
+            ALL_GROUPS[groupIndex] = data.group;
         }
         alert("Group updated");
         return data.group;
@@ -257,8 +245,7 @@ async function updateGroup(groupId, groupName) {
 async function deleteGroup(groupId) {
     try {
         const response = await fetch(`/api/groups/${groupId}/`, {
-            method: "DELETE",
-            headers: {
+            method: "DELETE", headers: {
                 "X-CSRFToken": getCSRFToken(),
             },
         });
@@ -269,10 +256,13 @@ async function deleteGroup(groupId) {
             return false;
         }
         // Remove from local GROUPS array
-        const groupIndex = GROUPS.findIndex((g) => g.id === groupId);
+        const groupIndex = ALL_GROUPS.findIndex((g) => g.id === Number(groupId));
         if (groupIndex !== -1) {
-            GROUPS.splice(groupIndex, 1);
+            ALL_GROUPS.splice(groupIndex, 1);
         }
+        // reset the dropdown
+        GROUP_SEARCH_DROPDOWN.innerHTML = "";
+        hideGroupDropdown();
         alert("Group deleted");
         return true;
     } catch (error) {
@@ -316,11 +306,7 @@ GROUP_EDIT_FORM.addEventListener("submit", async (e) => {
 GROUP_DELETE_BUTTON.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    if (
-        !confirm(
-            "Are you sure you want to delete this group? This action cannot be undone."
-        )
-    ) {
+    if (!confirm("Are you sure you want to delete this group? This action cannot be undone.")) {
         return;
     }
 
@@ -342,12 +328,38 @@ GROUP_CANCEL_BUTTON.addEventListener("click", (e) => {
 
 // Close dropdown when clicking outside
 document.addEventListener("click", (e) => {
-    if (
-        !GROUP_SEARCH_INPUT.contains(e.target) &&
-        !GROUP_SEARCH_DROPDOWN.contains(e.target)
-    ) {
+    if (!GROUP_SEARCH_INPUT.contains(e.target) && !GROUP_SEARCH_DROPDOWN.contains(e.target)) {
         hideGroupDropdown();
     }
 });
+// DELETE ACCOUNT MODAL
+DELETE_ACCOUNT_BUTTON.addEventListener("click", () => {
+    DELETE_ACCOUNT_MODAL.classList.toggle("hidden"); // show the modal
+})
+
+DELETE_ACCOUNT_CANCEL_BUTTON.addEventListener("click", () => {
+    DELETE_ACCOUNT_MODAL.classList.toggle("hidden"); // hide the modal
+})
+
+DELETE_ACCOUNT_CONFIRM_BUTTON.addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+        const url = `/api/users/me/`;
+        const response = await fetch(url, {
+            method: "DELETE", headers: {
+                "X-CSRFToken": getCSRFToken(),
+            }
+        })
+        if (!response.ok) {
+            const data = await response.json();
+            alert(`Unable to delete your account: ${data.detail}`);
+        }
+        // redirect to login page
+        window.location.href = "/login/";
+    } catch (error) {
+        alert("Error occurred whilst deleting the account");
+    }
+})
+
 
 document.addEventListener("DOMContentLoaded", getAllGroups);
