@@ -48,7 +48,6 @@ class CustomUser(AbstractUser):
     # password is handled by django's built in session authentication
     total_groups = models.PositiveIntegerField(default=0)
     total_links = models.PositiveIntegerField(default=0)
-    # TODO: Add a foreign key to all associated Groups and Links
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -59,6 +59,48 @@ def group_all(request: HttpRequest) -> JsonResponse:
     return JsonResponse({"groups": groups})
 
 
+def group_one(request: HttpRequest, group_id: int) -> JsonResponse:
+    if request.method == HttpMethod.DELETE.value:
+        """Equivalent to api/groups/id DELETE"""
+        if not utils.validate_authentication(request.user):
+            return JsonResponse({"detail": "User not authenticated"}, status=401)
+        # user is confirmed to be a custom user now
+        group: Group | None = utils.get_group_from_db(group_id)
+        if not group:
+            return JsonResponse({"detail": "Group not found"}, status=404)
+        # group is found by now
+        row_count = group.delete()
+        if not row_count:
+            return JsonResponse({"detail": "Unable to delete the group"}, status=500)
+        # group has been deleted by now
+        return JsonResponse({"detail": "Group deleted"}, status=201)
+    if request.method == HttpMethod.PATCH.value:
+        """Equivalent to api/groups/id PATCH"""
+        if not utils.validate_authentication(request.user):
+            return JsonResponse({"detail": "User not authenticated"}, status=401)
+        # user is confirmed to be a custom user now
+        group: Group | None = utils.get_group_from_db(group_id)
+        if not group:
+            return JsonResponse({"detail": "Group not found"}, status=404)
+        # group is found
+        data: dict[str, Any] = json.loads(request.body)
+        name: str | None = data.get("name")
+        if not name:
+            return JsonResponse({"detail": "Missing name field"}, status=400)
+        # name is received
+        updated_group: Group = utils.update_group_in_db(group, name)
+        updated_group_data: dict[str, Any] = utils.serialize_object(updated_group)
+        return JsonResponse(
+            {"detail": "Group Updated", "group": updated_group_data}, status=200
+        )
+    # Request is a simple api/group GET
+    group: Group | None = utils.get_group_from_db(group_id)
+    if not group:
+        return JsonResponse({"detail": "Group not found"}, status=404)
+    group_data: dict[str, Any] = utils.serialize_object(group)
+    return JsonResponse({"detail": "group found", "group": group_data}, status=200)
+
+
 def link_all(request: HttpRequest) -> JsonResponse:
     if request.method == HttpMethod.POST.value:
         """Equivalent to api/link POST"""

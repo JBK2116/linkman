@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpRequest
 from django.http.response import HttpResponse
@@ -103,3 +104,24 @@ def login_page(request: HttpRequest) -> HttpResponse:
         return redirect("dashboard")
     else:
         return render(request, "authentication/login.html", {"form": LoginForm()})
+
+
+@ratelimit(key="ip", method="POST", rate="10/m")
+@login_required
+def settings_page(request: HttpRequest) -> HttpResponse:
+    """Settings page for the application"""
+    assert isinstance(request.user, CustomUser)
+    user: CustomUser = request.user
+    created_at: str = user.created_at.strftime("%B %d, %Y")
+    total_groups: int = user.user_groups.count()  # type: ignore -> This is valid, check model.spy
+    total_links: int = user.links.count()  # type: ignore  -> This is also valid, check models.py
+    return render(
+        request,
+        "authentication/settings.html",
+        context={
+            "user": request.user,
+            "created_at": created_at,
+            "total_links": total_links,
+            "total_groups": total_groups,
+        },
+    )

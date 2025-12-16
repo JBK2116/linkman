@@ -98,8 +98,24 @@ def update_link_in_db(link_id: int, data: dict[str, Any]) -> str | Link:
     link.save()
     return link
 
+def update_group_in_db(group: Group, name: str) -> Group:
+    """
+    Updates a group in the database
+    :param group: Group object to update
+    :param name: New name to assign to the group object
+    :return: Group object if updated, else None
+    """
+    group.name = name
+    group.save()
+    return group
+
 
 def get_group_from_db(group_id: int) -> Group | None:
+    """
+    Gets a group from the database
+    :param group_id: ID of the group to retrieve
+    :return: Group object if found, else None
+    """
     try:
         group = Group.objects.get(id=group_id)
         return group
@@ -108,6 +124,11 @@ def get_group_from_db(group_id: int) -> Group | None:
 
 
 def get_link_from_db(link_id: int) -> Link | None:
+    """
+    Gets a link from the database
+    :param link_id: ID of the link to retrieve
+    :return: Link object if found, else None
+    """
     try:
         link = Link.objects.get(id=link_id)
         return link

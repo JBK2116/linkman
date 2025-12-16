@@ -48,12 +48,12 @@ document.querySelectorAll(".filter-option").forEach((option) => {
 
 // Fuse Search input handler
 const fuseOptions = {
-    keys: ['name'],
+    keys: ["name"],
     threshold: 0.3,
     ignoreLocation: true,
     includeScore: true,
     includeMatches: true,
-    minMatchCharLength: 2
+    minMatchCharLength: 2,
 };
 let searchTimeout;
 let linksContainer = document.getElementById("links-container");
@@ -67,7 +67,10 @@ document.getElementById("search-input").addEventListener("input", function (e) {
             return;
         }
         // if we are filtering by group, use the group links, else use the standard utils.LINKS
-        const dataSet = display_utils.CURRENT_FILTERED_LINKS.length > 0 ? display_utils.CURRENT_FILTERED_LINKS : utils.LINKS
+        const dataSet =
+            display_utils.CURRENT_FILTERED_LINKS.length > 0
+                ? display_utils.CURRENT_FILTERED_LINKS
+                : utils.LINKS;
         const fuseObj = new Fuse(dataSet, fuseOptions); // fuse object for implementing the fuzzy search
         const results = fuseObj.search(query);
         // reset the links container
@@ -79,10 +82,10 @@ document.getElementById("search-input").addEventListener("input", function (e) {
         }
         // showcase the results
         display_utils.hideNoResults();
-        results.forEach(result => {
+        results.forEach((result) => {
             const card = display_utils.createLinkCard(result.item);
             linksContainer.appendChild(card);
-        })
+        });
     }, 200);
 });
 
