@@ -98,6 +98,7 @@ def update_link_in_db(link_id: int, data: dict[str, Any]) -> str | Link:
     link.save()
     return link
 
+
 def update_group_in_db(group: Group, name: str) -> Group:
     """
     Updates a group in the database

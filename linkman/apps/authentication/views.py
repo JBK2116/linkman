@@ -113,7 +113,7 @@ def settings_page(request: HttpRequest) -> HttpResponse:
     assert isinstance(request.user, CustomUser)
     user: CustomUser = request.user
     created_at: str = user.created_at.strftime("%B %d, %Y")
-    total_groups: int = user.user_groups.count()  # type: ignore -> This is valid, check model.spy
+    total_groups: int = user.user_groups.count()  # type: ignore -> This is valid, check models.py
     total_links: int = user.links.count()  # type: ignore  -> This is also valid, check models.py
     return render(
         request,

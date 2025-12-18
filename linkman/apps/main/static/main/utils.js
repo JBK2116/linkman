@@ -74,7 +74,6 @@ export async function getGroups() {
         data.groups.forEach((item) => {
             GROUPS.push(item);
         });
-        console.log(GROUPS);
     } catch (error) {
         console.log(`Error occurred fetching all groups: ${error}`);
     }
@@ -98,7 +97,6 @@ export async function getLinks() {
         data.links.forEach((item) => {
             LINKS.push(item);
         });
-        console.log(LINKS);
     } catch (error) {
         console.log(`Error occurred fetching links: ${error}`);
     }
@@ -200,7 +198,7 @@ export function formatUpdatedAt(updatedAt) {
     }
 
     const day = date.getDate();
-    const month = date.toLocaleString("en-US", {month: "long"});
+    const month = date.toLocaleString("en-US", { month: "long" });
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
 }
