@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="mock:///console.sql" value="61f28636-ced2-4557-b8ac-9e428244a91f" />
-    <file url="mock:///console.sql" value="61f28636-ced2-4557-b8ac-9e428244a91f" />
-    <file url="mock:///console.sql" value="61f28636-ced2-4557-b8ac-9e428244a91f" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/61f28636-ced2-4557-b8ac-9e428244a91f/console.sql" value="61f28636-ced2-4557-b8ac-9e428244a91f" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/61f28636-ced2-4557-b8ac-9e428244a91f/console_1.sql" value="61f28636-ced2-4557-b8ac-9e428244a91f" />
   </component>
 </project>

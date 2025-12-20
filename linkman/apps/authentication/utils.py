@@ -101,23 +101,28 @@ def create_default_group(user: CustomUser) -> Group:
     return Group(user=user, name="Default")
 
 
-def send_account_verification_email(token: str, user_email: str) -> str | None:
+def send_account_verification_email(
+    token: str, user_email: str, request: HttpRequest
+) -> str | None:
     """
     Sends a verification email to the provided user email
 
     :param token: Token to embed in the email
     :param user_email: Email to send to
+    :param request: Http request
     :returns: String if an error occurred, else None
     """
+    protocol: str = "https" if request.is_secure() else "http"
+    domain: str = request.get_host()
     subject: str = "LinkMan - Verify Your Account"
     text_content: str = "Verify your account to begin using LinkMan"
     html_message = render_to_string(
         template_name="authentication/verify_email.html",
         context={
             "token": token,
-            "protocol": "http",
-            "domain": "127.0.0.1:8000",
-            "minutes": "10",
+            "protocol": protocol,
+            "domain": domain,
+            "minutes": "15",
         },
     )
     msg = EmailMultiAlternatives(

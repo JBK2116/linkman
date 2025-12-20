@@ -6,6 +6,10 @@
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180">
+    <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
+    <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
+    <link href="{% static 'site.webmanifest' %}" rel="manifest">
     <title>Login | LinkMan</title>
 </head>
 <body class="bg-[#121212] min-h-screen flex flex-col">
@@ -66,7 +70,8 @@
                             type="password"
                     >
                     {% if form.password.errors %}
-                    <p class="mt-1 text-red-400 text-sm" id="password-error" role="alert">{{ form.password.errors.0 }}</p>
+                    <p class="mt-1 text-red-400 text-sm" id="password-error" role="alert">{{ form.password.errors.0
+                        }}</p>
                     {% endif %}
                 </div>
 

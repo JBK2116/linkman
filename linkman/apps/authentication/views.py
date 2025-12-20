@@ -65,14 +65,13 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 "authentication/signup.html",
                 {"email_exists": "A user already exists with that email"},
             )
-        # TODO: Uncomment the default group creation and linking after
         # Create and link the default group to the user
         default_group: Group = auth_utils.create_default_group(new_user)
         default_group.save()
         # Email the user
         token: str = generate_verification_token(new_user)
         email_sent_result: str | None = auth_utils.send_account_verification_email(
-            token, new_user.email
+            token, new_user.email, request
         )
         # error occurred sending the email
         if email_sent_result:
@@ -121,7 +120,7 @@ def login_page(request: HttpRequest) -> HttpResponse:
                 status=400,
             )
         # ensure that the user is verified
-        if not user.is_verified:  # type: ignore -> pyright can't decipher this but it is valid
+        if not user.is_verified:
             return render(
                 request,
                 template_name="authentication/login.html",
@@ -155,7 +154,7 @@ def resend_email(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
     if user:
         # create a new token and send back the email
         new_token: str = generate_verification_token(user)
-        auth_utils.send_account_verification_email(new_token, user.email)
+        auth_utils.send_account_verification_email(new_token, user.email, request)
         # set these values to be used in the login page again
         request.session["email_resent"] = True
         request.session["resent_email"] = email
@@ -216,8 +215,8 @@ def settings_page(request: HttpRequest) -> HttpResponse:
     assert isinstance(request.user, CustomUser)
     user: CustomUser = request.user
     created_at: str = user.created_at.strftime("%B %d, %Y")
-    total_groups: int = user.user_groups.count()  # type: ignore -> This is valid, check models.py
-    total_links: int = user.links.count()  # type: ignore  -> This is also valid, check models.py
+    total_groups: int = user.user_groups.count()
+    total_links: int = user.links.count()
     return render(
         request,
         "authentication/settings.html",
