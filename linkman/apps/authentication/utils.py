@@ -3,9 +3,14 @@ This file stores utility functions for the `authentication` app
 """
 
 from enum import Enum
+from smtplib import SMTPException
+from socket import gaierror
 
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
 from ..main.models import Group
 from .forms import LoginForm, SignupForm
@@ -94,3 +99,40 @@ def create_default_group(user: CustomUser) -> Group:
     :return: Created default group
     """
     return Group(user=user, name="Default")
+
+
+def send_account_verification_email(token: str, user_email: str) -> str | None:
+    """
+    Sends a verification email to the provided user email
+
+    :param token: Token to embed in the email
+    :param user_email: Email to send to
+    :returns: String if an error occurred, else None
+    """
+    subject: str = "LinkMan - Verify Your Account"
+    text_content: str = "Verify your account to begin using LinkMan"
+    html_message = render_to_string(
+        template_name="authentication/verify_email.html",
+        context={
+            "token": token,
+            "protocol": "http",
+            "domain": "127.0.0.1:8000",
+            "minutes": "10",
+        },
+    )
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=text_content,
+        from_email=settings.EMAIL_HOST_USER,
+        to=[user_email],
+    )
+    msg.attach_alternative(content=html_message, mimetype="text/html")
+    try:
+        msg.send()
+        return None
+    except SMTPException:
+        return "Email service temporarily unavailable. Please try again."
+    except gaierror:
+        return "Network error. Please check your connection and try again."
+    except Exception:
+        return "Failed to send verification email. Please try again."

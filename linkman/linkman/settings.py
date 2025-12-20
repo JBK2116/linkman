@@ -107,6 +107,14 @@ SESSION_COOKIE_SAMESITE: str = "Lax"
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
 
+# EMAIL CONFIGURATION
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = get_env_var("EMAIL_NAME")
+EMAIL_HOST_PASSWORD = get_env_var("APP_PASSWORD")
+EMAIL_PORT = 587
+
 ROOT_URLCONF = "linkman.urls"
 
 TEMPLATES = [

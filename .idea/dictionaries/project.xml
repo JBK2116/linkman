@@ -4,8 +4,10 @@
       <w>collectstatic</w>
       <w>endcomment</w>
       <w>jsdelivr</w>
+      <w>modalbtn</w>
       <w>samesite</w>
       <w>sessionid</w>
+      <w>webmanifest</w>
     </words>
   </dictionary>
 </component>

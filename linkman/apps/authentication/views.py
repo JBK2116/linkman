@@ -1,12 +1,17 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseRedirect
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django_ratelimit.decorators import ratelimit
 
 from ..authentication import utils as auth_utils
+from ..authentication.tokens import (
+    generate_verification_token,
+    get_user_id_from_expired_token,
+    verify_verification_token,
+)
 from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
@@ -60,12 +65,28 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 "authentication/signup.html",
                 {"email_exists": "A user already exists with that email"},
             )
+        # TODO: Uncomment the default group creation and linking after
         # Create and link the default group to the user
         default_group: Group = auth_utils.create_default_group(new_user)
         default_group.save()
-        # Login the user and redirect
-        login(request, new_user)
-        return redirect("dashboard")
+        # Email the user
+        token: str = generate_verification_token(new_user)
+        email_sent_result: str | None = auth_utils.send_account_verification_email(
+            token, new_user.email
+        )
+        # error occurred sending the email
+        if email_sent_result:
+            return render(
+                request,
+                "authentication/signup.html",
+                {"form": cleaned_form, "email_sent_error": email_sent_result},
+            )
+        # email was sent successfully
+        return render(
+            request,
+            "authentication/signup.html",
+            {"form": cleaned_form, "email_sent": True, "user_email": new_user.email},
+        )
     else:
         return render(request, "authentication/signup.html", {"form": SignupForm()})
 
@@ -99,11 +120,93 @@ def login_page(request: HttpRequest) -> HttpResponse:
                 },
                 status=400,
             )
+        # ensure that the user is verified
+        if not user.is_verified:  # type: ignore -> pyright can't decipher this but it is valid
+            return render(
+                request,
+                template_name="authentication/login.html",
+                context={
+                    "form": cleaned_form,
+                    "invalid_credentials": "Invalid email or password.",
+                },
+            )
         # login the user
         login(request, user)
         return redirect("dashboard")
     else:
-        return render(request, "authentication/login.html", {"form": LoginForm()})
+        email_resent: bool = request.session.pop("email_resent", False)
+        resent_email: str | None = request.session.pop("resent_email", None)
+        return render(
+            request,
+            "authentication/login.html",
+            {"form": LoginForm(), "email_resent": email_resent, "email": resent_email},
+        )
+
+
+@ratelimit(key="ip", method="POST", rate="5/m")
+def resend_email(request: HttpRequest) -> HttpResponseRedirect | HttpResponse:
+    email: str | None = request.POST.get("email")
+    if not email:
+        return redirect("login_page")
+
+    user: CustomUser | None = CustomUser.objects.filter(
+        email=email, is_verified=False
+    ).first()
+    if user:
+        # create a new token and send back the email
+        new_token: str = generate_verification_token(user)
+        auth_utils.send_account_verification_email(new_token, user.email)
+        # set these values to be used in the login page again
+        request.session["email_resent"] = True
+        request.session["resent_email"] = email
+    return redirect("login_page")
+
+
+@ratelimit(key="ip", method="POST", rate="5/m")
+def verify_email(request: HttpRequest) -> HttpResponse:
+    """Email verification view for creating a new account"""
+    token = request.GET.get("token")  # get the token from the url param
+    if not token:
+        return redirect("signup_page")
+    result: int | None = verify_verification_token(token)
+    if not result:
+        # token was invalid
+        token_user_id: int | None = get_user_id_from_expired_token(token)
+        user = (
+            CustomUser.objects.filter(pk=token_user_id).first()
+            if token_user_id
+            else None
+        )
+        return render(
+            request,
+            template_name="authentication/login.html",
+            context={
+                "form": LoginForm(),
+                "verification_expired": True,
+                "email": user.email if user else None,
+            },
+        )
+    user_id: int = result
+    user = CustomUser.objects.filter(pk=user_id).first()
+    if not user:
+        # user does not exist anymore
+        return redirect("login_page")
+    if user.is_verified:
+        # user is already verified
+        return render(
+            request,
+            "authentication/login.html",
+            {"form": LoginForm(), "email_verified": True},
+        )
+    # verify the user's account
+    user.is_verified = True
+    user.save()
+    # user can now login
+    return render(
+        request,
+        "authentication/login.html",
+        {"form": LoginForm(), "email_verified": True},
+    )
 
 
 @ratelimit(key="ip", method="POST", rate="10/m")
