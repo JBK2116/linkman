@@ -114,8 +114,8 @@ def send_account_verification_email(
     """
     protocol: str = "https" if request.is_secure() else "http"
     domain: str = request.get_host()
-    subject: str = "LinkMan - Verify Your Account"
-    text_content: str = "Verify your account to begin using LinkMan"
+    subject: str = "FuzzyLinks - Verify Your Account"
+    text_content: str = "Verify your account to begin using FuzzyLinks"
     html_message = render_to_string(
         template_name="authentication/verify_email.html",
         context={

@@ -9,7 +9,7 @@
     <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
     <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
     <link href="{% static 'site.webmanifest' %}" rel="manifest">
-    <title>Signup | Linkman</title>
+    <title>Signup | FuzzyLinks</title>
 </head>
 <body class="bg-[#121212] min-h-screen flex flex-col relative">
 {% include "navbar_guest.html" %}
@@ -94,7 +94,8 @@
                             type="password"
                     >
                     {% if form.password_two.errors %}
-                    <p class="mt-1 text-red-400 text-sm" id="pass2-error" role="alert">{{ form.password_two.errors.0 }}</p>
+                    <p class="mt-1 text-red-400 text-sm" id="pass2-error" role="alert">{{ form.password_two.errors.0
+                        }}</p>
                     {% endif %}
                 </div>
 

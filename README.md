@@ -1,2 +1,3 @@
-# linkman
+# FuzzyLinks
+
 A web app to replace your bookmarks

@@ -9,12 +9,13 @@ Partial template that defines the navbar for un-authenticated users
         <div class="flex justify-between items-center h-12">
             <!-- Logo -->
             <div class="shrink-0">
-                <a class="text-[#E0E0E0] text-2xl font-bold hover:text-white transition-colors" href="{% url 'landing_page' %}">
+                <a class="text-[#E0E0E0] text-2xl font-bold hover:text-white transition-colors"
+                   href="{% url 'landing_page' %}">
                     {% comment %}
                     <!-- TODO: Add this later once you have a functioning image -->
                     <img alt="Logo" class="h-8" src="{% static 'path/to/logo.png' %}">
                     {% endcomment %}
-                    LINKMAN
+                    FuzzyLinks
                 </a>
             </div>
 
