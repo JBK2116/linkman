@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from typing import Any
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
@@ -31,6 +32,8 @@ def get_env_var(env_var: str) -> str:
         raise ImproperlyConfigured(error_message)
     return value
 
+DEV_ENV_STR: str = get_env_var("DEV_ENV")
+DEV_ENV: bool = DEV_ENV_STR.lower() in ("true", "yes", "1")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,32 +46,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_env_var("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = DEV_ENV
 
-ALLOWED_HOSTS = ["*"]
-# IN PROD DO THIS -> ALLOWED_HOSTS = ["Your IP", "Your Domain"]
+if DEV_ENV:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+else:
+    ALLOWED_HOSTS = ["Your IP", "Your Domain"]
 
 
 # Application definition
 MY_APPS: list[str] = ["apps.authentication", "apps.main", "apps.api"]
-INSTALLED_APPS = [
+DEV_APPS: list[str] = ["django_browser_reload",]
+INSTALLED_APPS: list[str | Any] = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_browser_reload",
     "tailwind",
     "theme",
     *MY_APPS,
 ]
 
+if DEV_ENV:
+    INSTALLED_APPS+= DEV_APPS
+
 # Tell django-tailwind which app contains your Tailwind code
 TAILWIND_APP_NAME = "theme"
 
 # Enable development mode (auto rebuild)
-TAILWIND_DEV_MODE = False
+TAILWIND_DEV_MODE = DEV_ENV
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -93,12 +101,11 @@ SESSION_COOKIE_HTTPONLY: bool = True
 SESSION_COOKIE_NAME: str = "sessionid"
 SESSION_COOKIE_SAMESITE: str = "Lax"
 
-SESSION_COOKIE_SECURE: bool = True
-
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-CSRF_TRUSTED_ORIGINS = ["", ""]
+if not DEV_ENV:
+    SESSION_COOKIE_SECURE: bool = True
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_TRUSTED_ORIGINS = ["", ""] # Ensure this is valid
 
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
@@ -202,7 +209,8 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static"  # global static folder
 ]
-STATIC_ROOT = "/home/ubuntu/linkman/staticfiles/"  # for production (via collectstatic)
+if not DEV_ENV:
+    STATIC_ROOT = "/home/ubuntu/linkman/staticfiles/"  # for production (via collectstatic)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

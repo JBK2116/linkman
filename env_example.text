@@ -1,13 +1,14 @@
 # SECRETS
-SECRET_KEY=
+SECRET_KEY="super secret string"
+DEV_ENV=str("True", "False", "1", "0", "Yes", "No")
 
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=
+DB_NAME=string
+DB_USER=string
+DB_PASSWORD=string
+DB_HOST=string
+DB_PORT=string
 
-# APP PASSWORD CONFIGURATION
-EMAIL_NAME=
-APP_NAME=
-APP_PASSWORD=
+# Email Service Configuration
+EMAIL_NAME=string
+APP_NAME=string
+APP_PASSWORD=string
