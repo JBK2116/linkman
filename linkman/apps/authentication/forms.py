@@ -5,6 +5,7 @@ This module stores forms used for authentication
 from typing import Any
 
 from django import forms
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 
 
 class SignupForm(forms.Form):
@@ -31,3 +32,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput, required=True, max_length=265, min_length=8
     )
+
+
+class ForgotPasswordForm(PasswordResetForm):
+    pass
+
+
+class ResetPasswordForm(SetPasswordForm):
+    pass
