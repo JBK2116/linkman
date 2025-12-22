@@ -43,7 +43,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_env_var("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 # IN PROD DO THIS -> ALLOWED_HOSTS = ["Your IP", "Your Domain"]
@@ -68,7 +68,7 @@ INSTALLED_APPS = [
 TAILWIND_APP_NAME = "theme"
 
 # Enable development mode (auto rebuild)
-TAILWIND_DEV_MODE = True
+TAILWIND_DEV_MODE = False
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -93,18 +93,16 @@ SESSION_COOKIE_HTTPONLY: bool = True
 SESSION_COOKIE_NAME: str = "sessionid"
 SESSION_COOKIE_SAMESITE: str = "Lax"
 
-# IMPORTANT: Ensure these values are uncommented and properly set in production
-# SESSION_COOKIE_SECURE: bool = True
+SESSION_COOKIE_SECURE: bool = True
 
-# USE_X_FORWARDED_HOST = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#
-# CSRF_TRUSTED_ORIGINS = [
-#     '',
-#     ''
-# ]
-# USE_X_FORWARDED_HOST = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = [
+    '',
+    ''
+]
+
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
 
@@ -207,7 +205,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static"  # global static folder
 ]
-# STATIC_ROOT = "/home/ubuntu/[insert appname]/staticfiles/"  # for production (via collectstatic)
+STATIC_ROOT = "/home/ubuntu/linkman/staticfiles/"  # for production (via collectstatic)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
