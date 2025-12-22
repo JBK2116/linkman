@@ -16,8 +16,6 @@ from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
 
-# TODO: Ensure that rate-limiting works appropriately, also make sure to create a rate limit view
-
 
 def landing_page(request: HttpRequest) -> HttpResponse:
     """Landing page for the application"""
