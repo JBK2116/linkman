@@ -32,6 +32,7 @@ def get_env_var(env_var: str) -> str:
         raise ImproperlyConfigured(error_message)
     return value
 
+
 DEV_ENV_STR: str = get_env_var("DEV_ENV")
 DEV_ENV: bool = DEV_ENV_STR.lower() in ("true", "yes", "1")
 
@@ -56,7 +57,9 @@ else:
 
 # Application definition
 MY_APPS: list[str] = ["apps.authentication", "apps.main", "apps.api"]
-DEV_APPS: list[str] = ["django_browser_reload",]
+DEV_APPS: list[str] = [
+    "django_browser_reload",
+]
 INSTALLED_APPS: list[str | Any] = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -70,7 +73,7 @@ INSTALLED_APPS: list[str | Any] = [
 ]
 
 if DEV_ENV:
-    INSTALLED_APPS+= DEV_APPS
+    INSTALLED_APPS += DEV_APPS
 
 # Tell django-tailwind which app contains your Tailwind code
 TAILWIND_APP_NAME = "theme"
@@ -105,7 +108,7 @@ if not DEV_ENV:
     SESSION_COOKIE_SECURE: bool = True
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    CSRF_TRUSTED_ORIGINS = ["", ""] # Ensure this is valid
+    CSRF_TRUSTED_ORIGINS = ["", ""]  # Ensure this is valid
 
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
@@ -210,7 +213,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"  # global static folder
 ]
 if not DEV_ENV:
-    STATIC_ROOT = "/home/ubuntu/linkman/staticfiles/"  # for production (via collectstatic)
+    STATIC_ROOT = (
+        "/home/ubuntu/linkman/staticfiles/"  # for production (via collectstatic)
+    )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
