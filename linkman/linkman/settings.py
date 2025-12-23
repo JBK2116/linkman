@@ -52,7 +52,7 @@ DEBUG = DEV_ENV
 if DEV_ENV:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 else:
-    ALLOWED_HOSTS = ["Your IP", "Your Domain"]
+    ALLOWED_HOSTS = ["159.203.65.40", "fuzzylinks.site", "localhost"]
 
 
 # Application definition
@@ -108,7 +108,10 @@ if not DEV_ENV:
     SESSION_COOKIE_SECURE: bool = True
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    CSRF_TRUSTED_ORIGINS = ["", ""]  # Ensure this is valid
+    CSRF_TRUSTED_ORIGINS = [
+        "https://fuzzylinks.site",
+        "https://www.fuzzylinks.site",
+    ]
 
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
