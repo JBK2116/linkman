@@ -117,7 +117,9 @@ if not DEV_ENV:
         "https://fuzzylinks.site",
         "https://www.fuzzylinks.site",
     ]
-    RATELIMIT_IP_META_KEY = "HTTP_X_FORWARDED_FOR"
+    RATELIMIT_IP_META_KEY = (  # noqa: E731
+        lambda r: r.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
+    )  # noqa: E731
     RATELIMIT_USE_CACHE = "default"
 
 LOGIN_URL: str = "login_page"
