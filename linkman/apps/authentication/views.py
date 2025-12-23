@@ -52,6 +52,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                     "email_exists": "A user already exists with that email",
                     "email_sent": False,
                     "email_sent_error": None,
+                    "user_email": None,
                 },
                 status=400,
             )
@@ -72,9 +73,11 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 request,
                 "authentication/signup.html",
                 {
+                    "form": cleaned_form,
                     "email_exists": "A user already exists with that email",
                     "email_sent": False,
                     "email_sent_error": None,
+                    "user_email": None,
                 },
             )
         # Create and link the default group to the user
@@ -98,6 +101,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                     "email_sent_error": email_sent_result,
                     "email_sent": False,
                     "email_exists": None,
+                    "user_email": None,
                 },
             )
         # email was sent successfully
@@ -121,7 +125,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 "email_sent": False,
                 "email_sent_error": None,
                 "email_exists": None,
-                "user_email": None
+                "user_email": None,
             },
         )
 
