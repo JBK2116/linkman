@@ -117,7 +117,6 @@ if not DEV_ENV:
         "https://fuzzylinks.site",
         "https://www.fuzzylinks.site",
     ]
-    RATELIMIT_IP_META_KEY = 'HTTP_X_FORWARDED_FOR'
 
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
