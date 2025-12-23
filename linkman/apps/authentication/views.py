@@ -99,7 +99,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
         return render(
             request,
             "authentication/signup.html",
-            {"form": SignupForm(), "email_sent": False},
+            {"form": SignupForm(), "email_sent": False, "email_sent_error": False},
         )
 
 
