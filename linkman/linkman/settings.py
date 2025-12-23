@@ -52,7 +52,7 @@ DEBUG = DEV_ENV
 if DEV_ENV:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 else:
-    ALLOWED_HOSTS = ["159.203.65.40", "fuzzylinks.site", "localhost"]
+    ALLOWED_HOSTS = ["159.203.65.40", "fuzzylinks.site", "www.fuzzylinks.site", "localhost"]
 
 
 # Application definition
