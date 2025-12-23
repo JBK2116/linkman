@@ -63,7 +63,8 @@ def signup_page(request: HttpRequest) -> HttpResponse:
             new_user.save()
         except IntegrityError:
             logger.log(
-                level=40, msg=f"Error occurred saving new user with email {new_user.email}"
+                level=40,
+                msg=f"Error occurred saving new user with email {new_user.email}",
             )
             return render(
                 request,
@@ -80,7 +81,9 @@ def signup_page(request: HttpRequest) -> HttpResponse:
         )
         # error occurred sending the email
         if email_sent_result:
-            logger.log(level=40, msg=f"Error occurred sending email: {email_sent_result}")
+            logger.log(
+                level=40, msg=f"Error occurred sending email: {email_sent_result}"
+            )
             return render(
                 request,
                 "authentication/signup.html",
@@ -93,7 +96,11 @@ def signup_page(request: HttpRequest) -> HttpResponse:
             {"form": cleaned_form, "email_sent": True, "user_email": new_user.email},
         )
     else:
-        return render(request, "authentication/signup.html", {"form": SignupForm()})
+        return render(
+            request,
+            "authentication/signup.html",
+            {"form": SignupForm(), "email_sent": False},
+        )
 
 
 @ratelimit(key="ip", method="POST", rate="10/m")
