@@ -2,9 +2,8 @@
 This file stores utility functions for the `authentication` app
 """
 
+import logging
 from enum import Enum
-from smtplib import SMTPException
-from socket import gaierror
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -15,6 +14,8 @@ from django.template.loader import render_to_string
 from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
+
+logger = logging.getLogger("authentication_app")
 
 
 class HttpMethod(Enum):
@@ -135,9 +136,6 @@ def send_account_verification_email(
     try:
         msg.send()
         return None
-    except SMTPException:
-        return "Email service temporarily unavailable. Please try again."
-    except gaierror:
-        return "Network error. Please check your connection and try again."
-    except Exception:
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}")  # Showcase the actual error
         return "Failed to send verification email. Please try again."

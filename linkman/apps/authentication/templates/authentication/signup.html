@@ -53,7 +53,7 @@
                     {% endif %}
 
                     {% if email_sent_error %}
-                    <p class="mt-1 text-red-400 text-sm" role="alert">{{ email_sent_error }</p>
+                    <p class="mt-1 text-red-400 text-sm" role="alert">{{ email_sent_error }}</p>
                     {% endif %}
                 </div>
 
@@ -93,8 +93,7 @@
                             type="password"
                     >
                     {% if form.password_two.errors %}
-                    <p class="mt-1 text-red-400 text-sm" id="pass2-error" role="alert">{{ form.password_two.errors.0
-                        }}</p>
+                    <p class="mt-1 text-red-400 text-sm" id="pass2-error" role="alert">{{ form.password_two.errors.0 }}</p>
                     {% endif %}
                 </div>
 
