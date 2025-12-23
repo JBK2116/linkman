@@ -128,7 +128,7 @@ def send_account_verification_email(
     msg = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
-        from_email=settings.EMAIL_HOST_USER,
+        from_email=settings.EMAIL_FROM_USER,
         to=[user_email],
     )
     msg.attach_alternative(content=html_message, mimetype="text/html")

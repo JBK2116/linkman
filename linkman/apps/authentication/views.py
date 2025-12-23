@@ -156,6 +156,11 @@ def login_page(request: HttpRequest) -> HttpResponse:
                 context={
                     "form": cleaned_form,
                     "invalid_credentials": "Invalid email or password.",
+                    "email_verified": False,
+                    "verification_expired": False,
+                    "email_resent": False,
+                    "email": None,
+                    "user_email": None,
                 },
                 status=400,
             )
@@ -167,6 +172,11 @@ def login_page(request: HttpRequest) -> HttpResponse:
                 context={
                     "form": cleaned_form,
                     "invalid_credentials": "Invalid email or password.",
+                    "email_verified": False,
+                    "verification_expired": False,
+                    "email_resent": False,
+                    "email": None,
+                    "user_email": None,
                 },
             )
         # login the user
@@ -178,7 +188,15 @@ def login_page(request: HttpRequest) -> HttpResponse:
         return render(
             request,
             "authentication/login.html",
-            {"form": LoginForm(), "email_resent": email_resent, "email": resent_email},
+            {
+                "form": LoginForm(),
+                "invalid_credentials": "",
+                "email_verified": False,
+                "verification_expired": False,
+                "email_resent": email_resent,
+                "email": resent_email,
+                "user_email": None,
+            },
         )
 
 
