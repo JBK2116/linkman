@@ -50,6 +50,8 @@ def signup_page(request: HttpRequest) -> HttpResponse:
                 context={
                     "form": cleaned_form,
                     "email_exists": "A user already exists with that email",
+                    "email_sent": False,
+                    "email_sent_error": None,
                 },
                 status=400,
             )
@@ -69,7 +71,11 @@ def signup_page(request: HttpRequest) -> HttpResponse:
             return render(
                 request,
                 "authentication/signup.html",
-                {"email_exists": "A user already exists with that email"},
+                {
+                    "email_exists": "A user already exists with that email",
+                    "email_sent": False,
+                    "email_sent_error": None,
+                },
             )
         # Create and link the default group to the user
         default_group: Group = auth_utils.create_default_group(new_user)
@@ -87,19 +93,36 @@ def signup_page(request: HttpRequest) -> HttpResponse:
             return render(
                 request,
                 "authentication/signup.html",
-                {"form": cleaned_form, "email_sent_error": email_sent_result},
+                {
+                    "form": cleaned_form,
+                    "email_sent_error": email_sent_result,
+                    "email_sent": False,
+                    "email_exists": None,
+                },
             )
         # email was sent successfully
         return render(
             request,
             "authentication/signup.html",
-            {"form": cleaned_form, "email_sent": True, "user_email": new_user.email},
+            {
+                "form": cleaned_form,
+                "email_sent": True,
+                "user_email": new_user.email,
+                "email_sent_error": None,
+                "email_exists": None,
+            },
         )
     else:
         return render(
             request,
             "authentication/signup.html",
-            {"form": SignupForm(), "email_sent": False, "email_sent_error": False},
+            {
+                "form": SignupForm(),
+                "email_sent": False,
+                "email_sent_error": None,
+                "email_exists": None,
+                "user_email": None
+            },
         )
 
 
