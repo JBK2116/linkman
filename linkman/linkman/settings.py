@@ -150,6 +150,81 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "linkman.wsgi.application"
 
+# Ensure logs directory and files exist
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(exist_ok=True)
+
+for log_file in ["django.log", "authentication.log", "main.log", "api.log"]:
+    log_path = LOGS_DIR / log_file
+    log_path.touch(exist_ok=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "django_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "django.log",
+            "formatter": "verbose",
+        },
+        "authentication_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "authentication.log",
+            "formatter": "verbose",
+        },
+        "main_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "main.log",
+            "formatter": "verbose",
+        },
+        "api_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "api.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["django_file", "console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "authentication_app": {  # Custom logger for 'authentication'
+            "handlers": ["authentication_file", "console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "main_app": {  # Custom logger for 'main'
+            "handlers": ["main_file", "console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "api_app": {  # Custom logger for 'api'
+            "handlers": ["api_file", "console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

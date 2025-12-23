@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -15,6 +17,8 @@ from ..authentication.tokens import (
 from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
+
+logger = logging.getLogger("authentication_app")
 
 
 def landing_page(request: HttpRequest) -> HttpResponse:
@@ -58,6 +62,9 @@ def signup_page(request: HttpRequest) -> HttpResponse:
         try:
             new_user.save()
         except IntegrityError:
+            logger.log(
+                level=40, msg=f"Error occurred saving new user with email {new_user.email}"
+            )
             return render(
                 request,
                 "authentication/signup.html",
@@ -73,6 +80,7 @@ def signup_page(request: HttpRequest) -> HttpResponse:
         )
         # error occurred sending the email
         if email_sent_result:
+            logger.log(level=40, msg=f"Error occurred sending email: {email_sent_result}")
             return render(
                 request,
                 "authentication/signup.html",
