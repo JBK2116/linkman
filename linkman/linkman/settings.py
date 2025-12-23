@@ -148,17 +148,28 @@ WSGI_APPLICATION = "linkman.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": get_env_var("DB_NAME"),
-        "USER": get_env_var("DB_USER"),
-        "PASSWORD": get_env_var("DB_PASSWORD"),
-        "HOST": get_env_var("DB_HOST"),
-        "PORT": get_env_var("DB_PORT"),
+if DEV_ENV:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": get_env_var("DB_NAME"),
+            "USER": get_env_var("DB_USER"),
+            "PASSWORD": get_env_var("DB_PASSWORD"),
+            "HOST": get_env_var("DB_HOST"),
+            "PORT": get_env_var("DB_PORT"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": get_env_var("PROD_NAME"),
+            "USER": get_env_var("PROD_USER"),
+            "PASSWORD": get_env_var("DB_PASSWORD"),
+            "HOST": get_env_var("DB_HOST"),
+            "PORT": get_env_var("DB_PORT"),
+        }
+    }
 
 
 CACHES = {
