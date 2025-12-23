@@ -125,19 +125,19 @@ if not DEV_ENV:
 LOGIN_URL: str = "login_page"
 LOGOUT_REDIRECT_URL: str = "landing_page"
 
-# EMAIL CONFIGURATION
+# EMAIL CONFIGURATION (Working via django-sendgrid package)
 SENDGRID_API_KEY = get_env_var("SENDGRID_API_KEY")
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "apikey"  # this is exactly the value 'apikey'
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = get_env_var(
-    "EMAIL_FROM_USER"
-)  # used for the password reset functionality
-EMAIL_FROM_USER = get_env_var(
-    "EMAIL_FROM_USER"
-)  # actual sender email displayed, should match sender in `sendgrid account`
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+DEFAULT_FROM_EMAIL = get_env_var("EMAIL_FROM_USER")
+EMAIL_FROM_USER = get_env_var("EMAIL_FROM_USER")
+
+# SendGrid settings
+SENDGRID_SANDBOX_MODE_IN_DEBUG = (
+    True  # False if you want emails in dev, True if you don't
+)
+SENDGRID_TRACK_EMAIL_OPENS = True
+SENDGRID_TRACK_CLICKS_HTML = True
+SENDGRID_TRACK_CLICKS_PLAIN = True
 
 ROOT_URLCONF = "linkman.urls"
 
