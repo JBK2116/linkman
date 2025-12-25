@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Any
 
 from django.contrib.auth import logout
@@ -7,8 +8,10 @@ from django.shortcuts import redirect
 
 from ..api import utils
 from ..authentication.models import CustomUser
-from ..authentication.utils import HttpMethod
+from ..authentication.utils import HttpMethod, LogLevel
 from ..main.models import Group, Link
+
+logger = logging.getLogger(__name__)
 
 
 def group_all(request: HttpRequest) -> JsonResponse:
@@ -47,6 +50,11 @@ def group_all(request: HttpRequest) -> JsonResponse:
         # Group name is valid by now
         new_group = Group(user=request.user, name=group_name)
         new_group.save()
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="New Group created",
+            extra={"group": new_group, "user": request.user},
+        )
         new_group_data: dict[str, Any] = utils.serialize_object(new_group)
         return JsonResponse(
             {"detail": "Group successfully created", "group": new_group_data},
@@ -73,6 +81,11 @@ def group_one(request: HttpRequest, group_id: int) -> JsonResponse:
         row_count = group.delete()
         if not row_count:
             return JsonResponse({"detail": "Unable to delete the group"}, status=500)
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="Group deleted",
+            extra={"group_id": group_id, "user": request.user},
+        )
         # group has been deleted by now
         return JsonResponse({"detail": "Group deleted"}, status=201)
     if request.method == HttpMethod.PATCH.value:
@@ -90,6 +103,11 @@ def group_one(request: HttpRequest, group_id: int) -> JsonResponse:
             return JsonResponse({"detail": "Missing name field"}, status=400)
         # name is received
         updated_group: Group = utils.update_group_in_db(group, name)
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="Group updated",
+            extra={"group": updated_group, "user": request.user},
+        )
         updated_group_data: dict[str, Any] = utils.serialize_object(updated_group)
         return JsonResponse(
             {"detail": "Group Updated", "group": updated_group_data}, status=200
@@ -140,6 +158,11 @@ def link_all(request: HttpRequest) -> JsonResponse:
         # Link is valid by now
         new_link = Link(name=link_name, url=link_url, user=request.user, group=group)
         new_link.save()
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="New Link created",
+            extra={"link": new_link, "user": request.user},
+        )
         new_link_data: dict[str, Any] = utils.serialize_object(new_link)
         return JsonResponse(
             {"detail": "Link successfully created", "link": new_link_data}
@@ -162,6 +185,11 @@ def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
         deletion_result: bool = utils.delete_link_in_db(link_id)
         if not deletion_result:
             return JsonResponse({"detail": "Link does not exist"}, status=400)
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="Link Deleted",
+            extra={"link_id": link_id, "user": request.user},
+        )
         return JsonResponse({"detail": "Link successfully deleted"}, status=200)
     link: Link | None = utils.get_link_from_db(link_id)
     if link is None:
@@ -176,6 +204,11 @@ def link_one(request: HttpRequest, link_id: int) -> JsonResponse:
         # if updated link is a string, then an error occurred
         if not isinstance(updated_link, Link):
             return JsonResponse({"detail": f"{updated_link}"}, status=400)
+        logger.log(
+            level=LogLevel.INFO.value,
+            msg="Link updated",
+            extra={"link": updated_link, "user": request.user},
+        )
         updated_link_data: dict[str, Any] = utils.serialize_object(updated_link)
         return JsonResponse(
             {"detail": "Link successfully updated", "link": updated_link_data},
@@ -190,7 +223,11 @@ def users_one(request: HttpRequest) -> JsonResponse | HttpResponseRedirect:
             return JsonResponse({"detail": "User not authenticated"}, status=401)
         # user is authenticated
         assert isinstance(request.user, CustomUser)
+        user_id: int = request.user.pk
         request.user.delete()  # delete the user from the database
+        logger.log(
+            level=LogLevel.INFO.value, msg="User Deleted", extra={"user_id": user_id}
+        )
         logout(request)  # logout the user and clear out all session info
         return redirect("landing_page")  # redirect to landing page
     # request is a simple /api/users/:id GET

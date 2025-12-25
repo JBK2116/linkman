@@ -15,7 +15,7 @@ from ..main.models import Group
 from .forms import LoginForm, SignupForm
 from .models import CustomUser
 
-logger = logging.getLogger("authentication_app")
+error_logger = logging.getLogger("error")
 
 
 class HttpMethod(Enum):
@@ -26,6 +26,13 @@ class HttpMethod(Enum):
     PUT = "PUT"
     PATCH = "PATCH"
     DELETE = "DELETE"
+
+
+class LogLevel(Enum):
+    INFO = 20
+    WARNING = 30
+    ERROR = 40
+    CRITICAL = 50
 
 
 def validate_signup_form(
@@ -41,7 +48,6 @@ def validate_signup_form(
     if is_valid:
         return form
     else:
-        print(form.errors)
         return render(
             request,
             template_name="authentication/signup.html",
@@ -137,5 +143,5 @@ def send_account_verification_email(
         msg.send()
         return None
     except Exception as e:
-        logger.error(f"Failed to send email: {str(e)}")  # Showcase the actual error
+        error_logger.error(f"Failed to send verify account email: {str(e)}")
         return "Failed to send verification email. Please try again."

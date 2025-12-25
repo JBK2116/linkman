@@ -164,7 +164,13 @@ WSGI_APPLICATION = "linkman.wsgi.application"
 LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 
-for log_file in ["django.log", "authentication.log", "main.log", "api.log"]:
+for log_file in [
+    "django.log",
+    "authentication.log",
+    "main.log",
+    "api.log",
+    "error.log",
+]:
     log_path = LOGS_DIR / log_file
     log_path.touch(exist_ok=True)
 
@@ -172,8 +178,12 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {message}",
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(levelname)s %(asctime)s %(name)s %(funcName)s %(lineno)d %(message)s",
+        },
+        "verbose": {  # keep for local dev
+            "format": "{levelname:<8} {asctime} | {name}:{funcName}:{lineno} - {message}",
             "style": "{",
         },
         "simple": {
@@ -182,53 +192,75 @@ LOGGING = {
         },
     },
     "handlers": {
+        "error_file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs" / "error.log",
+            "formatter": "json",
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 3,
+        },
         "django_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs" / "django.log",
             "formatter": "verbose",
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 3,
         },
         "authentication_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs" / "authentication.log",
-            "formatter": "verbose",
+            "formatter": "json",
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 3,
         },
         "main_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs" / "main.log",
-            "formatter": "verbose",
+            "formatter": "json",
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 3,
         },
         "api_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs" / "api.log",
-            "formatter": "verbose",
+            "formatter": "json",
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 3,
         },
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
     },
     "loggers": {
+        # App names must match logger names
+        "error": {
+            "handlers": ["error_file", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
         "django": {
             "handlers": ["django_file", "console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
-        "authentication_app": {  # Custom logger for 'authentication'
+        "apps.authentication": {  # Custom logger for 'authentication'
             "handlers": ["authentication_file", "console"],
             "level": "INFO",
             "propagate": False,
         },
-        "main_app": {  # Custom logger for 'main'
+        "apps.main": {  # Custom logger for 'main'
             "handlers": ["main_file", "console"],
             "level": "INFO",
             "propagate": False,
         },
-        "api_app": {  # Custom logger for 'api'
+        "apps.api": {  # Custom logger for 'api'
             "handlers": ["api_file", "console"],
             "level": "INFO",
             "propagate": False,

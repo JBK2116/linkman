@@ -143,6 +143,9 @@ export function createLinkCard(link) {
     deleteBtn.addEventListener("click", async function (e) {
         e.stopPropagation();
         await delete_link_form.deleteLinkAPI(link, card);
+        if (utils.getLinksCount() <= 0) {
+            showNoResults(); // there are no more links to display
+        }
     });
 
     // EDIT LINK FUNCTIONALITY
@@ -215,7 +218,7 @@ export function reloadLinksDisplay() {
             break;
         }
         default: {
-            console.log("Hello");
+            displayRecentlyCreated(); 
             break;
         }
     }

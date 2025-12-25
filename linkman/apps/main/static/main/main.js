@@ -10,7 +10,7 @@ import * as utils from "./utils.js";
 
 // Filter dropdown toggle
 document.getElementById("filter-button").addEventListener("click", function () {
-    document.getElementById("filter-dropdown").classList.toggle("hidden");
+    document.getElementById("filter-dropdown").classList.toggle("hiddlten");
 });
 
 // Close dropdown when clicking outside
