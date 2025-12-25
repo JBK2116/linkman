@@ -12,7 +12,7 @@ export const CURRENT_DISPLAY = Object.freeze({
     LAST_USED: "last-used",
     GROUP: "group",
 });
-export let currentDisplay = null;
+export let currentDisplay = CURRENT_DISPLAY.RECENTLY_CREATED; // default display
 export let currentGroup = null;
 export let LINKS_PER_PAGE = calculateLinksPerPage();
 
@@ -145,6 +145,14 @@ export function getLink(id) {
         return null;
     }
     return link;
+}
+
+/**
+ * Retrieves the total count of links in the `LINKS` Array
+ * @returns {Number} The number of links
+ */
+export function getLinksCount() {
+    return LINKS.length;
 }
 
 /**
