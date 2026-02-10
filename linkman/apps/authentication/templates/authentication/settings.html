@@ -1,205 +1,187 @@
 {% load static %}
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          name="viewport">
-    <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet"/>
-    <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180">
-    <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
-    <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
-    <link href="{% static 'site.webmanifest' %}" rel="manifest">
-    <title>Settings | FuzzyLinks</title>
-</head>
-<body class="bg-[#121212] min-h-screen flex flex-col">
-{% include "navbar_user.html" %}
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport" />
+        <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+        <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180" />
+        <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png" />
+        <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png" />
+        <link href="{% static 'site.webmanifest' %}" rel="manifest" />
+        <title>Settings | FuzzyLinks</title>
+    </head>
+    <body class="bg-[#121212] min-h-screen flex flex-col">
+        {% include "navbar_user.html" %}
 
-<main class="flex-1">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-[#E0E0E0] text-3xl font-bold">Settings</h1>
-            <p class="text-[#B0B0B0] text-sm mt-2">Manage your account and groups</p>
-        </div>
-
-        <!-- Account Stats Section -->
-        <div class="bg-[#1E1E1E] border border-[#444444] rounded-lg p-6 mb-6">
-            <h2 class="text-[#E0E0E0] text-xl font-semibold mb-6">Account Information</h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
-                    <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Email</p>
-                    <p class="text-[#E0E0E0] text-lg font-medium truncate" id="account-email">{{user.email}}</p>
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-[#E0E0E0] text-3xl font-bold">Settings</h1>
+                    <p class="text-[#B0B0B0] text-sm mt-2">Manage your account and groups</p>
                 </div>
 
-                <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
-                    <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Date Joined</p>
-                    <p class="text-[#E0E0E0] text-lg font-medium" id="account-date-joined">{{created_at}}</p>
-                </div>
+                <!-- Account Stats Section -->
+                <div class="bg-[#1E1E1E] border border-[#444444] rounded-lg p-6 mb-6">
+                    <h2 class="text-[#E0E0E0] text-xl font-semibold mb-6">Account Information</h2>
 
-                <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
-                    <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Total Links</p>
-                    <p class="text-[#E0E0E0] text-lg font-medium" id="account-total-links">{{total_links}}</p>
-                </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
+                            <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Email</p>
+                            <p class="text-[#E0E0E0] text-lg font-medium truncate" id="account-email">{{user.email}}</p>
+                        </div>
 
-                <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
-                    <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Total Groups</p>
-                    <p class="text-[#E0E0E0] text-lg font-medium" id="account-total-groups">{{total_groups}}</p>
-                </div>
-            </div>
-        </div>
+                        <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
+                            <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Date Joined</p>
+                            <p class="text-[#E0E0E0] text-lg font-medium" id="account-date-joined">{{created_at}}</p>
+                        </div>
 
-        <!-- Manage Groups Section -->
-        <div class="bg-[#1E1E1E] border border-[#444444] rounded-lg p-6 mb-6">
-            <h2 class="text-[#E0E0E0] text-xl font-semibold mb-6">Manage Groups</h2>
+                        <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
+                            <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Total Links</p>
+                            <p class="text-[#E0E0E0] text-lg font-medium" id="account-total-links">{{total_links}}</p>
+                        </div>
 
-            <!-- Group Search Input -->
-            <div class="mb-6">
-                <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-search-input">
-                    Search Groups
-                </label>
-                <div class="relative">
-                    <input
-                            autocomplete="off"
-                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                            id="group-search-input"
-                            placeholder="Type to search groups..."
-                            type="text"
-                    >
-                    <div class="hidden absolute w-full mt-1 bg-[#1E1E1E] border border-[#444444] rounded-lg max-h-48 overflow-y-auto z-10"
-                         id="group-search-dropdown">
-                        <!-- Populated by JavaScript -->
+                        <div class="bg-[#121212] border border-[#444444] rounded-lg p-4">
+                            <p class="text-[#888888] text-xs uppercase tracking-wide mb-2">Total Groups</p>
+                            <p class="text-[#E0E0E0] text-lg font-medium" id="account-total-groups">{{total_groups}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Group Edit Form (Hidden by default) -->
-            <div class="hidden" id="group-edit-form-container">
-                <div class="bg-[#121212] border border-[#444444] rounded-lg p-6">
-                    <div class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
-                         id="group-edit-errors">
+                <!-- Manage Groups Section -->
+                <div class="bg-[#1E1E1E] border border-[#444444] rounded-lg p-6 mb-6">
+                    <h2 class="text-[#E0E0E0] text-xl font-semibold mb-6">Manage Groups</h2>
+
+                    <!-- Group Selection -->
+                    <div class="mb-6">
+                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-select"> Select Group </label>
+                        <select
+                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                            id="group-select"
+                        >
+                            <option value="">Choose a group to manage...</option>
+                            <!-- Populated by JavaScript -->
+                        </select>
                     </div>
 
-                    <form id="group-edit-form">
-                        {% csrf_token %}
-                        <input id="group-edit-id" type="hidden">
+                    <!-- Group Edit Form (Hidden by default) -->
+                    <div class="hidden" id="group-edit-form-container">
+                        <div class="bg-[#121212] border border-[#444444] rounded-lg p-6">
+                            <div
+                                class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
+                                id="group-edit-errors"
+                            ></div>
 
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                            <!-- Group Name (Editable) -->
-                            <div>
-                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-edit-name">
-                                    Group Name
-                                </label>
-                                <input
-                                        class="w-full px-4 py-3 bg-[#1E1E1E] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                        id="group-edit-name"
-                                        name="name"
-                                        placeholder="Enter group name"
-                                        type="text"
-                                >
-                            </div>
+                            <form id="group-edit-form">
+                                {% csrf_token %}
+                                <input id="group-edit-id" type="hidden" />
 
-                            <!-- Created At (Read-only) -->
-                            <div>
-                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2">
-                                    Created At
-                                </label>
-                                <div class="px-4 py-3 bg-[#2A2A2A] border border-[#444444] rounded-lg text-[#B0B0B0]"
-                                     id="group-edit-created">
-                                    -
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                                    <!-- Group Name (Editable) -->
+                                    <div>
+                                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-edit-name"> Group Name </label>
+                                        <input
+                                            class="w-full px-4 py-3 bg-[#1E1E1E] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                            id="group-edit-name"
+                                            name="name"
+                                            placeholder="Enter group name"
+                                            type="text"
+                                        />
+                                    </div>
+
+                                    <!-- Created At (Read-only) -->
+                                    <div>
+                                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2"> Created At </label>
+                                        <div class="px-4 py-3 bg-[#2A2A2A] border border-[#444444] rounded-lg text-[#B0B0B0]" id="group-edit-created">
+                                            -
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
+                                <!-- Action Buttons -->
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button
+                                        class="flex-1 sm:flex-none px-6 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
+                                        id="group-save-btn"
+                                        type="submit"
+                                    >
+                                        Save Changes
+                                    </button>
+                                    <button
+                                        class="flex-1 sm:flex-none px-6 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
+                                        id="group-cancel-btn"
+                                        type="button"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        class="flex-1 sm:flex-none px-6 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-medium rounded-lg transition-colors"
+                                        id="group-delete-btn"
+                                        type="button"
+                                    >
+                                        Delete Group
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+                    </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <button
-                                    class="flex-1 sm:flex-none px-6 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
-                                    id="group-save-btn"
-                                    type="submit"
-                            >
-                                Save Changes
-                            </button>
-                            <button
-                                    class="flex-1 sm:flex-none px-6 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
-                                    id="group-cancel-btn"
-                                    type="button"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                    class="flex-1 sm:flex-none px-6 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-medium rounded-lg transition-colors"
-                                    id="group-delete-btn"
-                                    type="button"
-                            >
-                                Delete Group
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Empty State -->
-            <div class="text-center py-8" id="group-empty-state">
-                <p class="text-[#B0B0B0]">Search for a group to manage</p>
-            </div>
-        </div>
-
-        <!-- Danger Zone Section -->
-        <div class="bg-[#1E1E1E] border border-red-500 rounded-lg p-6">
-            <h2 class="text-[#E0E0E0] text-xl font-semibold mb-2">Danger Zone</h2>
-            <p class="text-[#B0B0B0] text-sm mb-6">
-                Deleting your account is permanent and cannot be undone. All your links and groups will be deleted.
-            </p>
-
-            <button
-                    class="px-6 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-medium rounded-lg transition-colors"
-                    id="delete-account-btn"
-            >
-                Delete Account
-            </button>
-        </div>
-
-        <!-- Delete Account Confirmation Modal -->
-        <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-             id="delete-account-modal">
-            <div class="w-full max-w-md bg-[#1e1e1e] border border-red-500 rounded-lg">
-                <div class="px-6 py-4 border-b border-[#444444]">
-                    <h2 class="text-red-400 text-xl font-bold">Delete Account</h2>
+                    <!-- Empty State -->
+                    <div class="text-center py-8" id="group-empty-state">
+                        <p class="text-[#B0B0B0]">Select a group to manage</p>
+                    </div>
                 </div>
 
-                <div class="p-6">
-                    <p class="text-[#E0E0E0] mb-4">
-                        Are you absolutely sure? This action cannot be undone. All your data will be permanently
-                        deleted.
+                <!-- Danger Zone Section -->
+                <div class="bg-[#1E1E1E] border border-red-500 rounded-lg p-6">
+                    <h2 class="text-[#E0E0E0] text-xl font-semibold mb-2">Danger Zone</h2>
+                    <p class="text-[#B0B0B0] text-sm mb-6">
+                        Deleting your account is permanent and cannot be undone. All your links and groups will be deleted.
                     </p>
 
-                    <div class="flex gap-3">
-                        <button
-                                class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
-                                id="cancel-delete-account"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                                class="flex-1 px-4 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-bold rounded-lg transition-colors"
-                                id="confirm-delete-account"
-                        >
-                            Delete Forever
-                        </button>
+                    <button
+                        class="px-6 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-medium rounded-lg transition-colors"
+                        id="delete-account-btn"
+                    >
+                        Delete Account
+                    </button>
+                </div>
+
+                <!-- Delete Account Confirmation Modal -->
+                <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="delete-account-modal">
+                    <div class="w-full max-w-md bg-[#1e1e1e] border border-red-500 rounded-lg">
+                        <div class="px-6 py-4 border-b border-[#444444]">
+                            <h2 class="text-red-400 text-xl font-bold">Delete Account</h2>
+                        </div>
+
+                        <div class="p-6">
+                            <p class="text-[#E0E0E0] mb-4">
+                                Are you absolutely sure? This action cannot be undone. All your data will be permanently deleted.
+                            </p>
+
+                            <div class="flex gap-3">
+                                <button
+                                    class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
+                                    id="cancel-delete-account"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    class="flex-1 px-4 py-3 bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-500 font-bold rounded-lg transition-colors"
+                                    id="confirm-delete-account"
+                                >
+                                    Delete Forever
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-    </div>
-</main>
-
-{% include "footer.html" %}
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0"></script> <!-- May be downloaded locally -->
-<script src="{% static 'authentication/settings.js' %}"></script>
-</body>
+        {% include "footer.html" %}
+        <script src="{% static 'authentication/settings.js' %}"></script>
+    </body>
 </html>
