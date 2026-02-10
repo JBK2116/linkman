@@ -47,7 +47,7 @@ Partial template that defines the navbar for authenticated users
         {% endcomment %}
         <!-- Mobile Navigation -->
         <nav class="hidden md:hidden pb-4" id="mobile-menu">
-            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="#">Settings</a>
+            <a class="block py-2 text-[#E0E0E0] hover:text-white transition-colors" href="{% url 'settings_page' %}">Settings</a>
             <form action="{% url 'logout_page' %}" method="post">
                 {% csrf_token %}
                 <button class="text-[#E0E0E0] hover:text-white transition-colors bg-transparent p-0 border-0"

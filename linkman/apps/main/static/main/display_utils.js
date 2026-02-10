@@ -2,14 +2,14 @@
 This javascript file handles the link display functionality
  */
 
-import * as utils from "./utils.js";
-import * as edit_link_form from "./edit_link_form.js";
-import * as delete_link_form from "./delete_link_form.js";
-import * as clicked_link_form from "./clicked_link_form.js";
+import * as utils from './utils.js';
+import * as edit_link_form from './edit_link_form.js';
+import * as delete_link_form from './delete_link_form.js';
+import * as clicked_link_form from './clicked_link_form.js';
 
 // CONSTANTS
-const LINKS_CONTAINER = document.getElementById("links-container");
-const NO_RESULTS_CONTAINER = document.getElementById("no-results");
+const LINKS_CONTAINER = document.getElementById('links-container');
+const NO_RESULTS_CONTAINER = document.getElementById('no-results');
 export let CURRENT_FILTERED_LINKS = []; // links that are filtered when group filter is on
 let CURRENT_DISPLAYED_COUNT = 0; // tracks the amount of currently displayed links
 
@@ -18,7 +18,7 @@ let CURRENT_DISPLAYED_COUNT = 0; // tracks the amount of currently displayed lin
  */
 export function displayRecentlyCreated() {
     hideNoResults();
-    LINKS_CONTAINER.innerHTML = "";
+    LINKS_CONTAINER.innerHTML = '';
     // sort by updated_at field
     utils.LINKS.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     // handle empty links possibility
@@ -30,8 +30,6 @@ export function displayRecentlyCreated() {
     loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.RECENTLY_CREATED);
-    // update filter label display
-    document.getElementById("filter-label").textContent = "Recently Created";
 }
 
 /**
@@ -39,7 +37,7 @@ export function displayRecentlyCreated() {
  */
 export function displayLastUsed() {
     hideNoResults();
-    LINKS_CONTAINER.innerHTML = "";
+    LINKS_CONTAINER.innerHTML = '';
     // sort by last_used field
     utils.LINKS.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
     // handle empty links possibility
@@ -51,13 +49,11 @@ export function displayLastUsed() {
     loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.LAST_USED);
-    // update filter label display
-    document.getElementById("filter-label").textContent = "Last Used";
 }
 
 export function displayMostUsed() {
     hideNoResults();
-    LINKS_CONTAINER.innerHTML = "";
+    LINKS_CONTAINER.innerHTML = '';
     // sort by click_count field
     utils.LINKS.sort((a, b) => b.click_count - a.click_count);
     // handle empty links possibility
@@ -69,8 +65,6 @@ export function displayMostUsed() {
     loadMoreLinks(); // load more links as necessary
     // set current state
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.MOST_USED);
-    // update filter label display
-    document.getElementById("filter-label").textContent = "Most Used";
 }
 
 /**
@@ -78,19 +72,18 @@ export function displayMostUsed() {
  * @param groupID ID of the group to filter by
  */
 export function displayByGroup(groupID) {
-    LINKS_CONTAINER.innerHTML = "";
+    LINKS_CONTAINER.innerHTML = '';
     hideNoResults();
     // get the current group object
     const group = utils.getGroup(groupID);
     // only display current group
     CURRENT_FILTERED_LINKS = utils.LINKS.filter(
-        (link) => link.group_id === group.id || link.group === group.id
+        (link) => link.group_id === group.id || link.group === group.id,
     );
     // handle empty links display
     if (CURRENT_FILTERED_LINKS.length <= 0) {
         utils.setCurrentDisplay(utils.CURRENT_DISPLAY.GROUP);
         utils.setCurrentGroup(group);
-        document.getElementById("filter-label").textContent = `${group.name}`;
         showNoResults();
         return;
     }
@@ -100,8 +93,6 @@ export function displayByGroup(groupID) {
     // update display
     utils.setCurrentDisplay(utils.CURRENT_DISPLAY.GROUP);
     utils.setCurrentGroup(group);
-    // update filter label display
-    document.getElementById("filter-label").textContent = `${group.name}`;
 }
 
 /**
@@ -110,9 +101,9 @@ export function displayByGroup(groupID) {
  * @returns {HTMLDivElement} Created link card div
  */
 export function createLinkCard(link) {
-    const card = document.createElement("div");
+    const card = document.createElement('div');
     card.className =
-        "link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer";
+        'link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer';
     card.dataset.linkId = link.id;
 
     card.innerHTML = `
@@ -120,10 +111,10 @@ export function createLinkCard(link) {
         <p class="text-[#888888] text-sm mb-3 truncate link-url">${link.url}</p>
         <div class="flex items-center justify-between text-[#B0B0B0] text-xs">
             <span class="link-click-count">Clicks: ${link.click_count || 0}</span>
-            <span class="link-last-used">Last used: ${utils.formatUpdatedAt(link.updated_at) || "Never"}</span>
+            <span class="link-last-used">Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}</span>
         </div>
         <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">
-            <span class="text-[#888888] text-xs link-group-name">${utils.getGroup(link.group_id || link.group).name || "Default"}</span>
+            <span class="text-[#888888] text-xs link-group-name">${utils.getGroup(link.group_id || link.group).name || 'Default'}</span>
             <div class="flex gap-2">
                 <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" title="Edit">
                     <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,8 +130,8 @@ export function createLinkCard(link) {
         </div>
     `;
     // DELETE LINK FUNCTIONALITY
-    const deleteBtn = card.querySelector(".delete-link-btn");
-    deleteBtn.addEventListener("click", async function (e) {
+    const deleteBtn = card.querySelector('.delete-link-btn');
+    deleteBtn.addEventListener('click', async function (e) {
         e.stopPropagation();
         await delete_link_form.deleteLinkAPI(link, card);
         if (utils.getLinksCount() <= 0) {
@@ -149,19 +140,19 @@ export function createLinkCard(link) {
     });
 
     // EDIT LINK FUNCTIONALITY
-    const editBtn = card.querySelector(".edit-link-btn");
-    editBtn.addEventListener("click", function (e) {
+    const editBtn = card.querySelector('.edit-link-btn');
+    editBtn.addEventListener('click', function (e) {
         e.stopPropagation();
         edit_link_form.setUpEditLinkForm(link);
     });
 
     // CARD UPDATE FUNCTIONALITY
-    card.addEventListener("click", async function (e) {
+    card.addEventListener('click', async function (e) {
         e.stopPropagation();
         const updated_link_object =
             await clicked_link_form.updateLinkStats(link);
         updateLinkCard(updated_link_object);
-        window.open(link.url, "_blank"); // redirect the user to the specified links url
+        window.open(link.url, '_blank'); // redirect the user to the specified links url
     });
 
     return card;
@@ -173,15 +164,15 @@ export function createLinkCard(link) {
  */
 export function updateLinkCard(link) {
     const linkCard = document.querySelector(
-        `.link-card[data-link-id="${link.id}"]`
+        `.link-card[data-link-id="${link.id}"]`,
     );
-    linkCard.querySelector(".link-name").textContent = link.name;
-    linkCard.querySelector(".link-url").textContent = link.url;
-    linkCard.querySelector(".link-click-count").textContent =
+    linkCard.querySelector('.link-name').textContent = link.name;
+    linkCard.querySelector('.link-url').textContent = link.url;
+    linkCard.querySelector('.link-click-count').textContent =
         `Clicks: ${link.click_count || 0}`;
-    linkCard.querySelector(".link-last-used").textContent =
-        `Last used: ${utils.formatUpdatedAt(link.updated_at) || "Never"}`;
-    linkCard.querySelector(".link-group-name").textContent =
+    linkCard.querySelector('.link-last-used').textContent =
+        `Last used: ${utils.formatUpdatedAt(link.updated_at) || 'Never'}`;
+    linkCard.querySelector('.link-group-name').textContent =
         `${utils.getGroup(link.group).name}`;
     // remove the link from the current display if the group doesn't match, implement it below
     const currentDisplayValue = utils.getCurrentDisplay();
@@ -218,7 +209,7 @@ export function reloadLinksDisplay() {
             break;
         }
         default: {
-            displayRecentlyCreated(); 
+            displayRecentlyCreated();
             break;
         }
     }
@@ -228,8 +219,8 @@ export function reloadLinksDisplay() {
  * Shows the `no-results` container
  */
 export function showNoResults() {
-    if (NO_RESULTS_CONTAINER.classList.contains("hidden")) {
-        NO_RESULTS_CONTAINER.classList.remove("hidden");
+    if (NO_RESULTS_CONTAINER.classList.contains('hidden')) {
+        NO_RESULTS_CONTAINER.classList.remove('hidden');
     }
 }
 
@@ -237,8 +228,8 @@ export function showNoResults() {
  * Hides the `no-results` container
  */
 export function hideNoResults() {
-    if (!NO_RESULTS_CONTAINER.classList.contains("hidden")) {
-        NO_RESULTS_CONTAINER.classList.add("hidden");
+    if (!NO_RESULTS_CONTAINER.classList.contains('hidden')) {
+        NO_RESULTS_CONTAINER.classList.add('hidden');
     }
 }
 
@@ -257,73 +248,27 @@ export function handleEmptyLinksArrayDisplay() {
 }
 
 // DISPLAY GROUP FUNCTIONALITY
-const GROUP_FILTER_MODAL = document.getElementById("group-filter-modal");
-const GROUP_FILTER_SEARCH = document.getElementById("group-filter-search");
-const GROUP_FILTER_LIST = document.getElementById("group-filter-list");
+const GROUP_FILTER_MODAL = document.getElementById('group-filter-modal');
 const CLOSE_GROUP_FILTER_MODAL = document.getElementById(
-    "close-group-filter-modal"
+    'close-group-filter-modal',
 );
-
-/**
- * Populates the group filter list with all groups
- */
-function populateGroupFilterList(groups) {
-    GROUP_FILTER_LIST.innerHTML = groups
-        .map(
-            (group) => `
-        <button class="group-filter-option w-full px-4 py-3 bg-[#121212] hover:bg-[#2A2A2A] text-[#E0E0E0] text-left rounded-lg transition-colors border border-[#444444] hover:border-[#888888]" data-group-id="${group.id}">
-            ${group.name}
-        </button>
-    `
-        )
-        .join("");
-}
 
 /**
  * Opens the group filter modal
  */
 export function showGroupFilter() {
-    GROUP_FILTER_MODAL.classList.remove("hidden");
-    GROUP_FILTER_SEARCH.value = "";
-    populateGroupFilterList(utils.GROUPS);
-    GROUP_FILTER_SEARCH.focus();
+    GROUP_FILTER_MODAL.classList.remove('hidden');
 }
 
 /**
  * Closes the group filter modal
  */
 function closeGroupFilterModal() {
-    GROUP_FILTER_MODAL.classList.add("hidden");
-    GROUP_FILTER_SEARCH.value = "";
+    GROUP_FILTER_MODAL.classList.add('hidden');
 }
 
-// GROUP FILTER SEARCH FUNCTIONALITY
-GROUP_FILTER_SEARCH.addEventListener("input", (e) => {
-    const query = e.target.value.toLowerCase();
-    const filtered = utils.GROUPS.filter((g) =>
-        g.name.toLowerCase().includes(query)
-    );
-    populateGroupFilterList(filtered);
-});
-
-// GROUP FILTER SELECTION
-GROUP_FILTER_LIST.addEventListener("click", (e) => {
-    if (e.target.classList.contains("group-filter-option")) {
-        const groupId = e.target.dataset.groupId;
-        const group = utils.getGroup(groupId);
-        if (group) {
-            // Update filter label
-            document.getElementById("filter-label").textContent =
-                `Group: ${group.name}`;
-            // Display links filtered by this group
-            displayByGroup(group.id);
-            closeGroupFilterModal();
-        }
-    }
-});
-
 // CLOSE MODAL
-CLOSE_GROUP_FILTER_MODAL.addEventListener("click", closeGroupFilterModal);
+CLOSE_GROUP_FILTER_MODAL.addEventListener('click', closeGroupFilterModal);
 
 // INFINITE SCROLL FUNCTIONALITY
 
