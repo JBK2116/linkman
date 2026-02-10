@@ -188,3 +188,24 @@ LINK_FORM_CANCEL_BUTTON.addEventListener('click', () => {
 LINK_FORM_CANCEL_ICON.addEventListener('click', () => {
     closeLinkForm();
 });
+
+// ARROW KEY NAVIGATION IN LINK FORM
+ADD_LINK_FORM.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const formElements = [
+        LINK_FORM_NAME_INPUT,
+        LINK_FORM_URL_INPUT,
+        LINK_FORM_GROUP_SELECT,
+    ];
+    const currentIndex = formElements.indexOf(document.activeElement);
+    if (currentIndex === -1) return;
+    let nextIndex;
+    if (e.key === 'ArrowDown') {
+        nextIndex = (currentIndex + 1) % formElements.length;
+    } else {
+        nextIndex =
+            (currentIndex - 1 + formElements.length) % formElements.length;
+    }
+    formElements[nextIndex].focus();
+});
