@@ -290,6 +290,15 @@ document.addEventListener('keydown', function (e) {
     )
         return;
     e.preventDefault();
+    // ignore if any modal is open
+    const linkFormModal = document.getElementById('link-form-modal');
+    const groupFormModal = document.getElementById('group-form-modal');
+    if (
+        (linkFormModal && !linkFormModal.classList.contains('hidden')) ||
+        (groupFormModal && !groupFormModal.classList.contains('hidden'))
+    ) {
+        return;
+    }
     // select all link card elements
     const linkCards = Array.from(document.querySelectorAll('.link-card'));
     if (linkCards.length === 0) return;
