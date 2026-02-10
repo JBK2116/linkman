@@ -1,7 +1,7 @@
 /*
 This module stores the functionality for the `delete-btn`
  */
-import * as utils from "./utils.js";
+import * as utils from './utils.js';
 
 // ============================================================================
 // API FUNCTIONS
@@ -18,8 +18,8 @@ export async function deleteLinkAPI(link, linkCard) {
     const csrfToken = utils.getCSRFToken();
     try {
         const response = await fetch(url, {
-            method: "DELETE",
-            headers: { "X-CSRFToken": csrfToken },
+            method: 'DELETE',
+            headers: { 'X-CSRFToken': csrfToken },
         });
         // handle error response
         if (!response.ok) {

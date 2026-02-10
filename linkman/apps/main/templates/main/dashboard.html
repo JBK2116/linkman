@@ -1,411 +1,440 @@
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta
-            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-            name="viewport"
-    />
-    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
-    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet"/>
-    <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180">
-    <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
-    <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
-    <link href="{% static 'site.webmanifest' %}" rel="manifest">
-    <title>Dashboard | FuzzyLinks</title>
-</head>
-<body>
-{% csrf_token %}
-{% include "navbar_user.html" %}
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport" />
+        <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+        <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180" />
+        <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png" />
+        <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png" />
+        <link href="{% static 'site.webmanifest' %}" rel="manifest" />
+        <title>Dashboard | FuzzyLinks</title>
+    </head>
+    <body>
+        {% csrf_token %} {% include "navbar_user.html" %}
 
-<main class="bg-[#121212] min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <div class="mb-8">
-            <div class="max-w-3xl mx-auto">
-                <label for="search-input"></label><input
-                    autocomplete="off"
-                    class="w-full px-6 py-4 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg focus:outline-none focus:border-[#888888] transition-colors text-lg"
-                    id="search-input"
-                    placeholder="Search links..."
-                    type="text"
-            >
-                <p class="mt-2 text-[#B0B0B0] text-sm text-center hidden" id="search-results-count"></p>
-            </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div class="relative">
-                <button
-                        class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] transition-colors flex items-center gap-2"
-                        id="filter-button"
-                >
-                    <span id="filter-label">Recently Created</span>
-                    <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                    </svg>
-                </button>
-                <div class="hidden absolute top-full left-0 mt-2 w-48 bg-[#1E1E1E] border border-[#444444] rounded-lg shadow-lg z-10"
-                     id="filter-dropdown">
-                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
-                            data-filter="recent" id="filter-recently-created">Recently Created
-                    </button>
-                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
-                            data-filter="last-used" id="filter-last-used">Last Used
-                    </button>
-                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors"
-                            data-filter="most-used" id="filter-most-used">Most Used
-                    </button>
-                    <button class="filter-option w-full px-4 py-2 text-left text-[#E0E0E0] hover:bg-[#2A2A2A] transition-colors rounded-b-lg"
-                            data-filter="group" id="filter-by-group">By Group
-                    </button>
-                </div>
-            </div>
-
-            <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                 id="group-filter-modal">
-                <div class="w-full max-w-md bg-[#1e1e1e] border border-[#444444] rounded-lg">
-                    <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                        <h2 class="text-[#E0E0E0] text-xl font-bold">Filter by Group</h2>
-                        <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
-                                id="close-group-filter-modal" type="button">
-                            <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="p-6">
-                        <label for="group-filter-search"></label><input
-                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] mb-4"
-                            id="group-filter-search"
-                            placeholder="Search groups...">
-                        <div class="max-h-64 overflow-y-auto" id="group-filter-list">
-                            <!-- Group buttons populate here -->
-                        </div>
+        <main class="bg-[#121212] min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="mb-8">
+                    <div class="max-w-3xl mx-auto">
+                        <label for="search-input"></label
+                        ><input
+                            autocomplete="off"
+                            class="w-full px-6 py-4 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg focus:outline-none focus:border-[#888888] transition-colors text-lg"
+                            id="search-input"
+                            placeholder="Search links..."
+                            type="text"
+                        />
+                        <p class="mt-2 text-[#B0B0B0] text-sm text-center hidden" id="search-results-count"></p>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex gap-3">
-                <div class="relative">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="relative">
+                        <select
+                            class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                            id="filter-select"
+                        >
+                            <option value="recent">Recently Created</option>
+                            <option value="last-used">Last Used</option>
+                            <option value="most-used">Most Used</option>
+                            <option value="group">By Group</option>
+                        </select>
+                    </div>
                     <button
-                            class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] hover:bg-[#2A2A2A] transition-colors"
-                            id="add-group-button"
+                        class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] hover:bg-[#2A2A2A] transition-colors"
+                        id="show-shortcuts-button"
+                        title="Keyboard Shortcuts (Ctrl+Alt+H)"
                     >
-                        + Group
+                    Shortcuts
                     </button>
 
-                    <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                         id="group-form-modal">
-                        <div class="w-full max-w-md">
-                            <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-                                <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                                    <h2 class="text-[#E0E0E0] text-xl font-bold">Create Group</h2>
-                                    <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
-                                            id="close-group-form"
-                                            type="button">
-                                        <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round"
-                                                  stroke-linejoin="round" stroke-width="2"/>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div class="p-6">
-                                    <div class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
-                                         id="group-form-errors">
-                                    </div>
-
-                                    <form action="{% url 'groups' %}" id="group-form" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="mb-6">
-                                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                                   for="group-name-input">
-                                                Group Name
-                                            </label>
-                                            <input
-                                                    class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                                    id="group-name-input"
-                                                    name="name"
-                                                    placeholder="Enter group name"
-                                                    type="text"
-                                            >
-                                        </div>
-
-                                        <div class="flex gap-3">
-                                            <button
-                                                    class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
-                                                    id="cancel-group-form"
-                                                    type="button"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                    class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
-                                                    id="group-form-submit"
-                                                    type="submit"
-                                            >
-                                                Create
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+                    <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="group-filter-modal">
+                        <div class="w-full max-w-md bg-[#1e1e1e] border border-[#444444] rounded-lg">
+                            <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                                <h2 class="text-[#E0E0E0] text-xl font-bold">Filter by Group</h2>
+                                <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="close-group-filter-modal" type="button">
+                                    <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="p-6">
+                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-filter-select"> Select Group </label>
+                                <select
+                                    class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                    id="group-filter-select"
+                                >
+                                    <option value="">All Groups</option>
+                                    <!-- Populated via JS -->
+                                </select>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="relative">
-                    <button
-                            class="px-4 py-2 bg-[#888888] text-[#121212] rounded-lg hover:bg-[#999999] transition-colors font-medium"
-                            id="add-link-button"
-                    >
-                        + Link
-                    </button>
+                    <div class="flex gap-3">
+                        <div class="relative">
+                            <button
+                                class="px-4 py-2 bg-[#1E1E1E] text-[#E0E0E0] border border-[#444444] rounded-lg hover:border-[#888888] hover:bg-[#2A2A2A] transition-colors"
+                                id="add-group-button"
+                            >
+                                + Group
+                            </button>
 
-                    <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                         id="link-form-modal">
-                        <div class="w-full max-w-md">
-                            <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-                                <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                                    <h2 class="text-[#E0E0E0] text-xl font-bold">Add Link</h2>
-                                    <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
-                                            id="close-link-form"
-                                            type="button">
-                                        <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round"
-                                                  stroke-linejoin="round" stroke-width="2"/>
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <div class="p-6">
-                                    <div class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
-                                         id="link-form-errors">
-                                    </div>
-
-                                    <form action="{% url 'links' %}" id="link-form" method="post">
-                                        {% csrf_token %}
-
-                                        <div class="mb-4">
-                                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                                   for="link-name-input">
-                                                Link Name
-                                            </label>
-                                            <input
-                                                    class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                                    id="link-name-input"
-                                                    name="name"
-                                                    placeholder="Enter link name"
-                                                    type="text"
-                                            >
+                            <div
+                                class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                                id="group-form-modal"
+                            >
+                                <div class="w-full max-w-md">
+                                    <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                                        <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                                            <h2 class="text-[#E0E0E0] text-xl font-bold">Create Group</h2>
+                                            <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="close-group-form" type="button">
+                                                <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                                </svg>
+                                            </button>
                                         </div>
 
-                                        <div class="mb-4">
-                                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                                   for="link-url-input">
-                                                URL
-                                            </label>
-                                            <input
-                                                    class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                                    id="link-url-input"
-                                                    name="url"
-                                                    placeholder="https://example.com"
-                                                    type="url"
-                                            >
-                                        </div>
+                                        <div class="p-6">
+                                            <div
+                                                class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
+                                                id="group-form-errors"
+                                            ></div>
 
-                                        <div class="mb-6">
-                                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                                   for="link-group-input">
-                                                Group
-                                            </label>
-                                            <div class="relative">
-                                                <input
-                                                        autocomplete="off"
+                                            <form action="{% url 'groups' %}" id="group-form" method="post">
+                                                {% csrf_token %}
+
+                                                <div class="mb-6">
+                                                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="group-name-input">
+                                                        Group Name
+                                                    </label>
+                                                    <input
                                                         class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                                        id="link-group-input"
-                                                        placeholder="Search or select group..."
+                                                        id="group-name-input"
+                                                        name="name"
+                                                        placeholder="Enter group name"
                                                         type="text"
-                                                >
-                                                <div class="hidden absolute w-full mt-1 bg-[#1E1E1E] border border-[#444444] rounded-lg max-h-48 overflow-y-auto z-[60]"
-                                                     id="group-dropdown"></div>
-                                                <input id="link-group-id" name="group" type="hidden">
-                                            </div>
+                                                    />
+                                                </div>
+
+                                                <div class="flex gap-3">
+                                                    <button
+                                                        class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
+                                                        id="cancel-group-form"
+                                                        type="button"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
+                                                        id="group-form-submit"
+                                                        type="submit"
+                                                    >
+                                                        Create
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <button
+                                class="px-4 py-2 bg-[#888888] text-[#121212] rounded-lg hover:bg-[#999999] transition-colors font-medium"
+                                id="add-link-button"
+                            >
+                                + Link
+                            </button>
+
+                            <div
+                                class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                                id="link-form-modal"
+                            >
+                                <div class="w-full max-w-md">
+                                    <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                                        <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                                            <h2 class="text-[#E0E0E0] text-xl font-bold">Add Link</h2>
+                                            <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="close-link-form" type="button">
+                                                <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                                </svg>
+                                            </button>
                                         </div>
 
-                                        <div class="flex gap-3">
-                                            <button
-                                                    class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
-                                                    id="cancel-link-form"
-                                                    type="button"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                    class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
-                                                    id="link-form-submit"
-                                                    type="submit"
-                                            >
-                                                Add Link
-                                            </button>
+                                        <div class="p-6">
+                                            <div
+                                                class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
+                                                id="link-form-errors"
+                                            ></div>
+
+                                            <form action="{% url 'links' %}" id="link-form" method="post">
+                                                {% csrf_token %}
+
+                                                <div class="mb-4">
+                                                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="link-name-input">
+                                                        Link Name
+                                                    </label>
+                                                    <input
+                                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                                        id="link-name-input"
+                                                        name="name"
+                                                        placeholder="Enter link name"
+                                                        type="text"
+                                                    />
+                                                </div>
+
+                                                <div class="mb-4">
+                                                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="link-url-input"> URL </label>
+                                                    <input
+                                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                                        id="link-url-input"
+                                                        name="url"
+                                                        placeholder="https://example.com"
+                                                        type="url"
+                                                    />
+                                                </div>
+
+                                                <div class="mb-6">
+                                                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="link-group-select">
+                                                        Group
+                                                    </label>
+                                                    <select
+                                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                                        id="link-group-select"
+                                                        name="group"
+                                                    >
+                                                        <option value="">Select a group...</option>
+                                                        <!-- Populated via JS -->
+                                                    </select>
+                                                </div>
+
+                                                <div class="flex gap-3">
+                                                    <button
+                                                        class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
+                                                        id="cancel-link-form"
+                                                        type="button"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
+                                                        id="link-form-submit"
+                                                        type="submit"
+                                                    >
+                                                        Add Link
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Edit Link Modal -->
-        <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-             id="edit-link-modal">
-            <div class="w-full max-w-md">
-                <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-                    <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                        <h2 class="text-[#E0E0E0] text-xl font-bold">Edit Link</h2>
-                        <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
-                                id="close-edit-link-form"
-                                type="button">
-                            <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round"
-                                      stroke-linejoin="round" stroke-width="2"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="p-6">
-                        <div class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
-                             id="edit-link-form-errors">
-                        </div>
-
-                        <form id="edit-link-form" method="post">
-                            {% csrf_token %}
-
-                            <input id="edit-link-id" type="hidden">
-                            <input id="edit-link-original-name" type="hidden">
-                            <input id="edit-link-original-url" type="hidden">
-                            <input id="edit-link-original-group" type="hidden">
-
-                            <div class="mb-4">
-                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                       for="edit-link-name-input">
-                                    Change Name
-                                </label>
-                                <input
-                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                        id="edit-link-name-input"
-                                        name="name"
-                                        placeholder="Enter link name"
-                                        type="text"
-                                >
+                <!-- Edit Link Modal -->
+                <div class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="edit-link-modal">
+                    <div class="w-full max-w-md">
+                        <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                            <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                                <h2 class="text-[#E0E0E0] text-xl font-bold">Edit Link</h2>
+                                <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="close-edit-link-form" type="button">
+                                    <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                    </svg>
+                                </button>
                             </div>
 
-                            <div class="mb-4">
-                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                       for="edit-link-url-input">
-                                    Change URL
-                                </label>
-                                <input
-                                        class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                        id="edit-link-url-input"
-                                        name="url"
-                                        placeholder="https://example.com"
-                                        type="url"
-                                >
-                            </div>
+                            <div class="p-6">
+                                <div
+                                    class="hidden mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
+                                    id="edit-link-form-errors"
+                                ></div>
 
-                            <div class="mb-6">
-                                <label class="block text-[#E0E0E0] text-sm font-medium mb-2"
-                                       for="edit-link-group-input">
-                                    Change Group
-                                </label>
-                                <div class="relative">
-                                    <input
-                                            autocomplete="off"
-                                            class="w-full px-4 py-3 bg-[#121212] text-[#E0E0E0] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
-                                            id="edit-link-group-input"
-                                            placeholder="Search or select group..."
+                                <form id="edit-link-form" method="post">
+                                    {% csrf_token %}
+
+                                    <input id="edit-link-id" type="hidden" />
+                                    <input id="edit-link-original-name" type="hidden" />
+                                    <input id="edit-link-original-url" type="hidden" />
+                                    <input id="edit-link-original-group" type="hidden" />
+
+                                    <div class="mb-4">
+                                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="edit-link-name-input"> Change Name </label>
+                                        <input
+                                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                            id="edit-link-name-input"
+                                            name="name"
+                                            placeholder="Enter link name"
                                             type="text"
-                                    >
-                                    <div class="hidden absolute w-full mt-1 bg-[#1E1E1E] border border-[#444444] rounded-lg max-h-48 overflow-y-auto z-[60]"
-                                         id="edit-group-dropdown"></div>
-                                    <input id="edit-link-group-id" name="group" type="hidden">
-                                </div>
-                            </div>
+                                        />
+                                    </div>
 
-                            <div class="flex gap-3">
-                                <button
-                                        class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
-                                        id="cancel-edit-link-form"
-                                        type="button"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                        class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
-                                        id="edit-link-form-submit"
-                                        type="submit"
-                                >
-                                    Save Changes
-                                </button>
+                                    <div class="mb-4">
+                                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="edit-link-url-input"> Change URL </label>
+                                        <input
+                                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                            id="edit-link-url-input"
+                                            name="url"
+                                            placeholder="https://example.com"
+                                            type="url"
+                                        />
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="block text-[#E0E0E0] text-sm font-medium mb-2" for="edit-link-group-select">
+                                            Change Group
+                                        </label>
+                                        <select
+                                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded-lg text-[#E0E0E0] focus:outline-none focus:border-[#888888] focus:ring-1 focus:ring-[#888888] transition-colors"
+                                            id="edit-link-group-select"
+                                            name="group"
+                                        >
+                                            <option value="">Select a group...</option>
+                                            <!-- Populated via JS -->
+                                        </select>
+                                    </div>
+
+                                    <div class="flex gap-3">
+                                        <button
+                                            class="flex-1 px-4 py-3 bg-[#2A2A2A] hover:bg-[#333333] text-[#E0E0E0] font-medium rounded-lg transition-colors"
+                                            id="cancel-edit-link-form"
+                                            type="button"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            class="flex-1 px-4 py-3 bg-[#888888] hover:bg-[#999999] text-[#121212] font-bold rounded-lg transition-colors"
+                                            id="edit-link-form-submit"
+                                            type="submit"
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="links-container">
+                    <!-- This is how each link should be displayed -->
+                    <!--            <div class="link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer">-->
+                    <!--                <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">GitHub Repository</h3>-->
+                    <!--                <p class="text-[#888888] text-sm mb-3 truncate">https://github.com/user/repo</p>-->
+                    <!--                <div class="flex items-center justify-between text-[#B0B0B0] text-xs">-->
+                    <!--                    <span>Clicks: 42</span>-->
+                    <!--                    <span>Last used: 2 hours ago</span>-->
+                    <!--                </div>-->
+                    <!--                <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">-->
+                    <!--                    <span class="text-[#888888] text-xs">Development</span>-->
+                    <!--                    <div class="flex gap-2">-->
+                    <!--                        <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"-->
+                    <!--                                title="Edit">-->
+                    <!--                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">-->
+                    <!--                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"-->
+                    <!--                                      stroke-linecap="round" stroke-linejoin="round"-->
+                    <!--                                      stroke-width="2"/>-->
+                    <!--                            </svg>-->
+                    <!--                        </button>-->
+                    <!--                        <button class="delete-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"-->
+                    <!--                                title="Delete">-->
+                    <!--                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">-->
+                    <!--                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"-->
+                    <!--                                      stroke-linecap="round" stroke-linejoin="round"-->
+                    <!--                                      stroke-width="2"/>-->
+                    <!--                            </svg>-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
+                    <!--            </div>-->
+                </div>
+
+                <div class="hidden text-center py-8" id="loading-indicator">
+                    <!-- Loading more links as page scrolls -->
+                    <div class="inline-block w-8 h-8 border-4 border-[#444444] border-t-[#888888] rounded-full animate-spin"></div>
+                </div>
+
+                <div class="hidden text-center py-16" id="no-results">
+                    <!-- Shown if user has no links -->
+                    <p class="text-[#B0B0B0] text-lg">No links found</p>
+                </div>
+            </div>
+        </main>
+
+        <div id="shortcuts-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-[#1E1E1E] border border-[#444444] rounded-lg p-8 max-w-3xl w-full mx-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-[#E0E0E0] text-2xl font-semibold">Keyboard Shortcuts</h2>
+                    <button id="close-shortcuts" class="text-[#888888] hover:text-[#E0E0E0] text-2xl">✕</button>
+                </div>
+                <div class="grid grid-cols-2 gap-x-8">
+                    <div>
+                        <h3 class="text-[#B0B0B0] font-semibold mt-6 text-base">Navigation</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-[#888888]">Focus search</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+/</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Arrow keys</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Navigate cards</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Enter</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Open link</kbd></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-[#B0B0B0] font-semibold mt-6 text-base">Filters</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-[#888888]">Recently created</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+R</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Most used</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+M</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Last used</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+U</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Filter by group</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+F</kbd></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-[#B0B0B0] font-semibold mt-6 text-base">Actions</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-[#888888]">Add link</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+L</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Add group</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+G</kbd></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-[#B0B0B0] font-semibold mt-6 text-base">General</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-[#888888]">Close modal</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Esc</kbd></div>
+                            <div class="flex justify-between"><span class="text-[#888888]">Show shortcuts</span><kbd class="text-[#E0E0E0] bg-[#2A2A2A] px-2 py-1 rounded">Ctrl+Alt+H</kbd></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+                {% include "footer.html" %}
+                <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0"></script>
+                <!-- May be downloaded locally -->
+                <script src="{% static 'main/main.js' %}" type="module"></script>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="links-container">
+        <script>
+            (function () {
+                const search = document.getElementById('search-input');
+                if (!search) return;
 
-            <!-- This is how each link should be displayed -->
-            <!--            <div class="link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer">-->
-            <!--                <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate">GitHub Repository</h3>-->
-            <!--                <p class="text-[#888888] text-sm mb-3 truncate">https://github.com/user/repo</p>-->
-            <!--                <div class="flex items-center justify-between text-[#B0B0B0] text-xs">-->
-            <!--                    <span>Clicks: 42</span>-->
-            <!--                    <span>Last used: 2 hours ago</span>-->
-            <!--                </div>-->
-            <!--                <div class="mt-2 pt-2 border-t border-[#444444] flex items-center justify-between">-->
-            <!--                    <span class="text-[#888888] text-xs">Development</span>-->
-            <!--                    <div class="flex gap-2">-->
-            <!--                        <button class="edit-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"-->
-            <!--                                title="Edit">-->
-            <!--                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">-->
-            <!--                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"-->
-            <!--                                      stroke-linecap="round" stroke-linejoin="round"-->
-            <!--                                      stroke-width="2"/>-->
-            <!--                            </svg>-->
-            <!--                        </button>-->
-            <!--                        <button class="delete-link-btn text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"-->
-            <!--                                title="Delete">-->
-            <!--                            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">-->
-            <!--                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"-->
-            <!--                                      stroke-linecap="round" stroke-linejoin="round"-->
-            <!--                                      stroke-width="2"/>-->
-            <!--                            </svg>-->
-            <!--                        </button>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
-        </div>
+                document.addEventListener('keydown', function (e) {
+                    // ignore shortcuts
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-        <div class="hidden text-center py-8" id="loading-indicator"> <!-- Loading more links as page scrolls -->
-            <div class="inline-block w-8 h-8 border-4 border-[#444444] border-t-[#888888] rounded-full animate-spin"></div>
-        </div>
+                    // ignore non-printable keys (Shift, Arrow, etc.)
+                    if (e.key.length !== 1) return;
 
-        <div class="hidden text-center py-16" id="no-results"> <!-- Shown if user has no links -->
-            <p class="text-[#B0B0B0] text-lg">No links found</p>
-        </div>
+                    // don't steal focus if user typing in a field or modal
+                    const active = document.activeElement;
+                    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
 
-    </div>
-</main>
-{% include "footer.html" %}
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0"></script> <!-- May be downloaded locally -->
-<script src="{% static 'main/main.js' %}" type="module"></script>
-</body>
+                    // ignore when a modal is open
+                    if (document.querySelector('.fixed.inset-0:not(.hidden)')) return;
+
+                    search.focus();
+                });
+            })();
+        </script>
+    </body>
 </html>

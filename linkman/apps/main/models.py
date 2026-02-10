@@ -18,6 +18,12 @@ class Group(models.Model):
         default="Default",
         help_text="Name of the group",
     )  # group name should be unique per user
+    last_accessed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text="Last time a link related to this group was clicked",
+    )
     created_at = models.DateTimeField(
         auto_now_add=True, help_text="Date and time when this group was created"
     )

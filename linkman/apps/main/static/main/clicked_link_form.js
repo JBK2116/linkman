@@ -2,7 +2,7 @@
 This javascript file handles updating the link when it's clicked
  */
 
-import * as utils from "./utils.js";
+import * as utils from './utils.js';
 
 // ============================================================================
 // API FUNCTIONS
@@ -21,10 +21,10 @@ export async function updateLinkStats(link) {
     // alert the server of the link being clicked
     try {
         const response = await fetch(url, {
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken,
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
             },
             body: JSON.stringify(payload),
         });

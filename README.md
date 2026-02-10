@@ -26,7 +26,6 @@ Built for users who save hundreds of links and need sub-second retrieval without
 
 The site is live at: `fuzzylinks.site`
 
-
 ## Usage
 
 1. Add URLs with titles, descriptions, and optional tags
@@ -40,13 +39,12 @@ This application is still being worked on. It is open source so feel free to mod
 ## Production Deployment
 
 The application is deployed using:
+
 - Gunicorn WSGI server
 - Nginx reverse proxy
 - PostgreSQL database
 - Redis for caching
 
-
 ## License
 
 MIT License
-

@@ -1,210 +1,182 @@
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          name="viewport">
-    <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
-    <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180">
-    <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
-    <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
-    <link href="{% static 'site.webmanifest' %}" rel="manifest">
-    <title>Login | FuzzyLinks</title>
-</head>
-<body class="bg-[#121212] min-h-screen flex flex-col">
-{% include "navbar_guest.html" %}
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport" />
+        <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+        <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180" />
+        <link href="{% static 'favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png" />
+        <link href="{% static 'favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png" />
+        <link href="{% static 'site.webmanifest' %}" rel="manifest" />
+        <title>Login | FuzzyLinks</title>
+    </head>
+    <body class="bg-[#121212] min-h-screen flex flex-col">
+        {% include "navbar_guest.html" %}
 
-<!-- Main Content -->
-<main class="flex-grow flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md">
-        <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-xl p-8">
-            <h1 class="text-[#E0E0E0] text-3xl font-bold text-center mb-8">LOGIN</h1>
+        <!-- Main Content -->
+        <main class="flex-grow flex items-center justify-center px-4 py-8">
+            <div class="w-full max-w-md">
+                <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-xl p-8">
+                    <h1 class="text-[#E0E0E0] text-3xl font-bold text-center mb-8">LOGIN</h1>
 
-            <!-- Non-field errors -->
-            {% if form.non_field_errors %}
-            <div aria-live="polite" class="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm"
-                 role="alert">
-                {{ form.non_field_errors }}
-            </div>
-            {% endif %}
-
-            <form action="{% url 'login_page' %}" method="post" novalidate>
-                {% csrf_token %}
-
-                <!-- Email Field -->
-                <div class="mb-6">
-                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2 uppercase"
-                           for="{{ form.email.id_for_label }}">
-                        Email
-                    </label>
-                    <input
-                            aria-required="true"
-                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] transition-colors"
-                            id="{{ form.email.id_for_label }}"
-                            name="{{ form.email.name }}"
-                            placeholder="your@email.com"
-                            type="email"
-                            value="{{ form.email.value|default:'' }}"
-                    >
-                    {% if form.email.errors %}
-                    <p class="mt-1 text-red-400 text-sm" id="email-error" role="alert">{{ form.email.errors.0 }}</p>
+                    <!-- Non-field errors -->
+                    {% if form.non_field_errors %}
+                    <div aria-live="polite" class="mb-4 p-3 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm" role="alert">
+                        {{ form.non_field_errors }}
+                    </div>
                     {% endif %}
-                    {% if invalid_credentials %}
-                    <p class="mt-1 text-red-400 text-sm" role="alert">{{ invalid_credentials }}</p>
-                    {% endif %}
+
+                    <form action="{% url 'login_page' %}" method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Email Field -->
+                        <div class="mb-6">
+                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2 uppercase" for="{{ form.email.id_for_label }}"> Email </label>
+                            <input
+                                aria-required="true"
+                                class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] transition-colors"
+                                id="{{ form.email.id_for_label }}"
+                                name="{{ form.email.name }}"
+                                placeholder="your@email.com"
+                                type="email"
+                                value="{{ form.email.value|default:'' }}"
+                            />
+                            {% if form.email.errors %}
+                            <p class="mt-1 text-red-400 text-sm" id="email-error" role="alert">{{ form.email.errors.0 }}</p>
+                            {% endif %} {% if invalid_credentials %}
+                            <p class="mt-1 text-red-400 text-sm" role="alert">{{ invalid_credentials }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-2">
+                            <label class="block text-[#E0E0E0] text-sm font-medium mb-2 uppercase" for="{{ form.password.id_for_label }}">
+                                Password
+                            </label>
+                            <input
+                                aria-required="true"
+                                class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] transition-colors"
+                                id="{{ form.password.id_for_label }}"
+                                name="{{ form.password.name }}"
+                                placeholder="••••••••"
+                                type="password"
+                            />
+                            {% if form.password.errors %}
+                            <p class="mt-1 text-red-400 text-sm" id="password-error" role="alert">{{ form.password.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Forgot Password Link -->
+                        <div class="mb-6 text-right">
+                            <!-- Update the href to url 'password_reset' later -->
+                            <a class="text-[#888888] hover:text-[#E0E0E0] text-sm transition-colors" href="{% url 'password_reset' %}">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button
+                            aria-label="Sign in to your account"
+                            class="w-full bg-[#ff6b6b] hover:bg-[#ff5252] text-white font-bold py-3 rounded uppercase tracking-wide transition-colors"
+                            type="submit"
+                        >
+                            Sign In
+                        </button>
+
+                        <!-- Divider -->
+                        <div aria-label="or" class="flex items-center my-6" role="separator">
+                            <div class="flex-grow border-t border-[#444444]"></div>
+                            <span class="mx-4 text-[#888888] text-sm uppercase">Or</span>
+                            <div class="flex-grow border-t border-[#444444]"></div>
+                        </div>
+
+                        <!-- Sign Up Link -->
+                        <p class="text-center text-[#B0B0B0] text-sm">
+                            Don't have an account? <a class="text-[#E0E0E0] hover:text-white underline" href="{% url 'signup_page' %}">Sign up</a>
+                        </p>
+                    </form>
                 </div>
-
-                <!-- Password Field -->
-                <div class="mb-2">
-                    <label class="block text-[#E0E0E0] text-sm font-medium mb-2 uppercase"
-                           for="{{ form.password.id_for_label }}">
-                        Password
-                    </label>
-                    <input
-                            aria-required="true"
-                            class="w-full px-4 py-3 bg-[#121212] border border-[#444444] rounded text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-[#888888] transition-colors"
-                            id="{{ form.password.id_for_label }}"
-                            name="{{ form.password.name }}"
-                            placeholder="••••••••"
-                            type="password"
-                    >
-                    {% if form.password.errors %}
-                    <p class="mt-1 text-red-400 text-sm" id="password-error" role="alert">{{ form.password.errors.0
-                        }}</p>
-                    {% endif %}
-                </div>
-
-                <!-- Forgot Password Link -->
-                <div class="mb-6 text-right">
-                    <!-- Update the href to url 'password_reset' later -->
-                    <a class="text-[#888888] hover:text-[#E0E0E0] text-sm transition-colors"
-                       href="{% url 'password_reset' %}">
-                        Forgot password?
-                    </a>
-                </div>
-
-                <!-- Submit Button -->
-                <button
-                        aria-label="Sign in to your account"
-                        class="w-full bg-[#ff6b6b] hover:bg-[#ff5252] text-white font-bold py-3 rounded uppercase tracking-wide transition-colors"
-                        type="submit"
-                >
-                    Sign In
-                </button>
-
-                <!-- Divider -->
-                <div aria-label="or" class="flex items-center my-6" role="separator">
-                    <div class="flex-grow border-t border-[#444444]"></div>
-                    <span class="mx-4 text-[#888888] text-sm uppercase">Or</span>
-                    <div class="flex-grow border-t border-[#444444]"></div>
-                </div>
-
-                <!-- Sign Up Link -->
-                <p class="text-center text-[#B0B0B0] text-sm">
-                    Don't have an account? <a class="text-[#E0E0E0] hover:text-white underline"
-                                              href="{% url 'signup_page' %}">Sign up</a>
-                </p>
-            </form>
-        </div>
-    </div>
-</main>
-
-<!-- Email Verification Modal -->
-{% if email_verified %}
-<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-     id="emailVerificationModal">
-    <div class="w-full max-w-md">
-        <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                <h2 class="text-[#E0E0E0] text-xl font-bold">Account Verified</h2>
-                <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="closeModal" type="button">
-                    <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                    </svg>
-                </button>
             </div>
-            <div class="p-6">
-                <p class="text-[#B0B0B0] mb-4">Your account has been verified!</p>
-                <p class="text-[#888888] text-sm">Login now to begin using FuzzyLinks.</p>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
+        </main>
 
-{% if verification_expired %}
-<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-     id="verificationExpiredModal">
-    <div class="w-full max-w-md">
-        <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                <h2 class="text-[#E0E0E0] text-xl font-bold">Verification Link Expired</h2>
-                <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors"
-                        id="closeExpiredModal"
-                        type="button">
-                    <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 18L18 6M6 6l12 12"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <p class="text-[#B0B0B0] mb-4">
-                    Your verification link has expired.
-                </p>
-                <p class="text-[#888888] text-sm mb-6">
-                    Request a new verification email to complete your account setup.
-                </p>
-
-                <form action="{% url 'resend-verification' %}" method="post">
-                    {% csrf_token %}
-                    <input name="email" type="hidden" value="{{ email }}">
-                    <button
-                            class="block w-full bg-[#888888] hover:bg-[#B0B0B0] text-[#121212] font-semibold py-3 rounded transition-colors"
-                            type="submit">
-                        Resend Verification Email
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<!-- Email Verification Modal -->
-{% if email_resent %}
-<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-     id="resendEmailModal">
-    <div class="w-full max-w-md">
-        <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
-            <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
-                <h2 class="text-[#E0E0E0] text-xl font-bold">Check Your Email</h2>
-                <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="closeResendEmailModal"
-                        type="button">
-                    <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <p class="text-[#B0B0B0] mb-2">We sent another verification email to: {{ user_email }}</p>
-                <p class="text-[#E0E0E0] font-medium mb-6" id="userEmail">{{ user_email }}</p>
-                <p class="text-[#888888] text-sm mb-6">Click the link in the email to verify your account.</p>
-                <div class="pt-4 border-t border-[#2a2a2a]">
-                    <p class="text-[#888888] text-sm">
-                        Didn't receive the email? Check your spam folder.
-                    </p>
+        <!-- Email Verification Modal -->
+        {% if email_verified %}
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="emailVerificationModal">
+            <div class="w-full max-w-md">
+                <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                    <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                        <h2 class="text-[#E0E0E0] text-xl font-bold">Account Verified</h2>
+                        <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="closeModal" type="button">
+                            <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-[#B0B0B0] mb-4">Your account has been verified!</p>
+                        <p class="text-[#888888] text-sm">Login now to begin using FuzzyLinks.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-{% endif %}
+        {% endif %} {% if verification_expired %}
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="verificationExpiredModal">
+            <div class="w-full max-w-md">
+                <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                    <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                        <h2 class="text-[#E0E0E0] text-xl font-bold">Verification Link Expired</h2>
+                        <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="closeExpiredModal" type="button">
+                            <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-[#B0B0B0] mb-4">Your verification link has expired.</p>
+                        <p class="text-[#888888] text-sm mb-6">Request a new verification email to complete your account setup.</p>
 
-{% include "footer.html" %}
-<script src="{% static 'authentication/login.js' %}"></script>
-</body>
+                        <form action="{% url 'resend-verification' %}" method="post">
+                            {% csrf_token %}
+                            <input name="email" type="hidden" value="{{ email }}" />
+                            <button
+                                class="block w-full bg-[#888888] hover:bg-[#B0B0B0] text-[#121212] font-semibold py-3 rounded transition-colors"
+                                type="submit"
+                            >
+                                Resend Verification Email
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Email Verification Modal -->
+        {% if email_resent %}
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" id="resendEmailModal">
+            <div class="w-full max-w-md">
+                <div class="bg-[#1e1e1e] border border-[#444444] rounded-lg shadow-2xl">
+                    <div class="flex justify-between items-center px-6 py-4 border-b border-[#444444]">
+                        <h2 class="text-[#E0E0E0] text-xl font-bold">Check Your Email</h2>
+                        <button class="text-[#B0B0B0] hover:text-[#E0E0E0] transition-colors" id="closeResendEmailModal" type="button">
+                            <svg class="w-6 h-6" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-[#B0B0B0] mb-2">We sent another verification email to: {{ user_email }}</p>
+                        <p class="text-[#E0E0E0] font-medium mb-6" id="userEmail">{{ user_email }}</p>
+                        <p class="text-[#888888] text-sm mb-6">Click the link in the email to verify your account.</p>
+                        <div class="pt-4 border-t border-[#2a2a2a]">
+                            <p class="text-[#888888] text-sm">Didn't receive the email? Check your spam folder.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %} {% include "footer.html" %}
+        <script src="{% static 'authentication/login.js' %}"></script>
+    </body>
 </html>
