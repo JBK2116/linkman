@@ -363,5 +363,29 @@
         <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0"></script>
         <!-- May be downloaded locally -->
         <script src="{% static 'main/main.js' %}" type="module"></script>
+
+        <script>
+            (function () {
+                const search = document.getElementById('search-input');
+                if (!search) return;
+
+                document.addEventListener('keydown', function (e) {
+                    // ignore shortcuts
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+                    // ignore non-printable keys (Shift, Arrow, etc.)
+                    if (e.key.length !== 1) return;
+
+                    // don't steal focus if user typing in a field or modal
+                    const active = document.activeElement;
+                    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+
+                    // ignore when a modal is open
+                    if (document.querySelector('.fixed.inset-0:not(.hidden)')) return;
+
+                    search.focus();
+                });
+            })();
+        </script>
     </body>
 </html>
