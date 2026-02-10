@@ -183,12 +183,12 @@ def login_page(request: HttpRequest) -> HttpResponse:
                 status=400,
             )
         # ensure that the user is verified
-        if not user.is_verified: # pyright: ignore[reportAttributeAccessIssue] 
+        if not user.is_verified:  # pyright: ignore[reportAttributeAccessIssue]
             logger.log(
                 level=LogLevel.WARNING.value,
                 msg="Authentication failed for user",
                 extra={
-                    "email": user.email, # pyright: ignore[reportAttributeAccessIssue]
+                    "email": user.email,  # pyright: ignore[reportAttributeAccessIssue]
                     "reason": "User is not verified in the database",
                 },
             )
@@ -338,8 +338,8 @@ def settings_page(request: HttpRequest) -> HttpResponse:
     assert isinstance(request.user, CustomUser)
     user: CustomUser = request.user
     created_at: str = user.created_at.strftime("%B %d, %Y")
-    total_groups: int = user.user_groups.count() # pyright: ignore[reportAttributeAccessIssue]
-    total_links: int = user.links.count() # pyright: ignore[reportAttributeAccessIssue]
+    total_groups: int = user.user_groups.count()  # pyright: ignore[reportAttributeAccessIssue]
+    total_links: int = user.links.count()  # pyright: ignore[reportAttributeAccessIssue]
     return render(
         request,
         "authentication/settings.html",

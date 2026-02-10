@@ -42,7 +42,20 @@ const closeGroupFilterButton = document.getElementById(
 // Populate group filter select
 function populateGroupFilterSelect() {
     groupFilterSelect.innerHTML = '<option value="">All Groups</option>';
-    utils.GROUPS.forEach((group) => {
+    const ranked = [...utils.GROUPS].sort((a, b) => {
+        // sort by recent usage
+        if (a.updated_at && b.updated_at)
+            return new Date(b.updated_at) - new Date(a.updated_at);
+        if (a.updated_at) return -1;
+        if (b.updated_at) return 1;
+        // sort by frequency of usage
+        if (a.click_count !== b.click_count)
+            return b.click_count - a.click_count;
+        // sort by name (fallback)
+        return a.name.localeCompare(b.name);
+    });
+
+    ranked.forEach((group) => {
         const option = document.createElement('option');
         option.value = group.id;
         option.textContent = group.name;

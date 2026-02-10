@@ -7,6 +7,7 @@ from typing import Any
 
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.core import serializers
+from django.utils import timezone
 
 from ..main.models import CustomUser, Group, Link
 
@@ -92,10 +93,14 @@ def update_link_in_db(link_id: int, data: dict[str, Any]) -> str | Link:
         link.click_count += 1
         link.save()
         return link
+    # update the link stats
     link.name = data["link_name"]
     link.url = data["link_url"]
     link.group = group
+    # update the group stats
+    group.last_accessed_at = timezone.now()
     link.save()
+    group.save()
     return link
 
 
