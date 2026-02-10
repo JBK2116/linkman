@@ -275,3 +275,56 @@ document.addEventListener('keydown', function (e) {
         linkFormModalWrapper.classList.add('hidden');
     }
 });
+
+// Arrow key navigation for link cards
+document.addEventListener('keydown', function (e) {
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key))
+        return;
+    // ignore if typing in inputs
+    const active = document.activeElement;
+    if (
+        active &&
+        (active.tagName === 'INPUT' ||
+            active.tagName === 'TEXTAREA' ||
+            active.isContentEditable)
+    )
+        return;
+    e.preventDefault();
+    // select all link card elements
+    const linkCards = Array.from(document.querySelectorAll('.link-card'));
+    if (linkCards.length === 0) return;
+    // find index of current element
+    let currentIndex = linkCards.findIndex(
+        (card) =>
+            card.contains(document.activeElement) ||
+            card === document.activeElement,
+    );
+    // if nothing focused, start at first card
+    if (currentIndex === -1) {
+        linkCards[0].focus();
+        return;
+    }
+    const COLUMNS = 3; // link card columns
+    let nextIndex;
+    // calculate next arrow placement depending on clicked arrow key
+    if (e.key === 'ArrowRight') nextIndex = currentIndex + 1;
+    else if (e.key === 'ArrowLeft') nextIndex = currentIndex - 1;
+    else if (e.key === 'ArrowDown') nextIndex = currentIndex + COLUMNS;
+    else if (e.key === 'ArrowUp') nextIndex = currentIndex - COLUMNS;
+    if (nextIndex >= 0 && nextIndex < linkCards.length) {
+        linkCards[nextIndex].focus();
+    }
+});
+
+// enter key to focus first link card
+document
+    .getElementById('search-input')
+    .addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const linkCards = document.querySelectorAll('.link-card');
+            if (linkCards.length > 0) {
+                linkCards[0].focus();
+            }
+        }
+    });

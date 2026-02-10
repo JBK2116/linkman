@@ -103,8 +103,9 @@ export function displayByGroup(groupID) {
 export function createLinkCard(link) {
     const card = document.createElement('div');
     card.className =
-        'link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] transition-colors cursor-pointer';
+        'link-card bg-[#1E1E1E] border border-[#444444] rounded-lg p-4 hover:border-[#888888] hover:outline hover:outline-2 hover:outline-[#888888] hover:outline-offset-2 transition-colors cursor-pointer focus:outline focus:outline-2 focus:outline-[#888888] focus:outline-offset-2';
     card.dataset.linkId = link.id;
+    card.tabIndex = 0;
 
     card.innerHTML = `
         <h3 class="text-[#E0E0E0] font-semibold text-lg mb-2 truncate link-name">${link.name}</h3>
@@ -155,6 +156,13 @@ export function createLinkCard(link) {
         window.open(link.url, '_blank'); // redirect the user to the specified links url
     });
 
+    // ENTER KEY TO CLICK
+    card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            card.click();
+        }
+    });
     return card;
 }
 
