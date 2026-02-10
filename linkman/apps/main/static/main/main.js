@@ -9,22 +9,28 @@ import * as display_utils from './display_utils.js';
 import * as utils from './utils.js';
 
 // Filter select change handler
-document
-    .getElementById('filter-select')
-    .addEventListener('change', function () {
-        const filterType = this.value;
-        if (filterType === utils.CURRENT_DISPLAY.RECENTLY_CREATED) {
-            display_utils.displayRecentlyCreated();
-        } else if (filterType === utils.CURRENT_DISPLAY.LAST_USED) {
-            display_utils.displayLastUsed();
-        } else if (filterType === utils.CURRENT_DISPLAY.MOST_USED) {
-            display_utils.displayMostUsed();
-        } else if (filterType === utils.CURRENT_DISPLAY.GROUP) {
-            display_utils.showGroupFilter();
-        } else {
-            console.log('No display accessed');
-        }
-    });
+const filterSelect = document.getElementById('filter-select');
+
+filterSelect.addEventListener('change', function () {
+    const filterType = this.value;
+
+    if (filterType === utils.CURRENT_DISPLAY.RECENTLY_CREATED)
+        display_utils.displayRecentlyCreated();
+    else if (filterType === utils.CURRENT_DISPLAY.LAST_USED)
+        display_utils.displayLastUsed();
+    else if (filterType === utils.CURRENT_DISPLAY.MOST_USED)
+        display_utils.displayMostUsed();
+});
+
+filterSelect.addEventListener('mousedown', function (e) {
+    const option = e.target.closest('option');
+    if (!option) return;
+
+    if (option.value === utils.CURRENT_DISPLAY.GROUP) {
+        e.preventDefault(); // stop dropdown locking
+        display_utils.showGroupFilter();
+    }
+});
 
 // Group filter modal functionality
 const groupFilterModal = document.getElementById('group-filter-modal');
