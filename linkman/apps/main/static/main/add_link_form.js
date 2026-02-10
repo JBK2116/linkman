@@ -10,7 +10,7 @@ import * as display_utils from './display_utils.js';
 // ============================================================================
 
 const ADD_LINK_BUTTON = document.getElementById('add-link-button');
-const Add_link_form = document.getElementById('link-form');
+const ADD_LINK_FORM = document.getElementById('link-form');
 const LINK_FORM_NAME_INPUT = document.getElementById('link-name-input');
 const LINK_FORM_URL_INPUT = document.getElementById('link-url-input');
 const LINK_FORM_GROUP_SELECT = document.getElementById('link-group-select');
@@ -51,7 +51,7 @@ export function validateLinkForm(name, url) {
 /**
  * Populates the group select element with available groups
  */
-function populateGroupSelect() {
+export function populateGroupSelect() {
     LINK_FORM_GROUP_SELECT.innerHTML =
         '<option value="">Select a group...</option>';
     utils.GROUPS.forEach((group) => {
@@ -65,7 +65,7 @@ function populateGroupSelect() {
 /**
  * Resets all data in the `link form`
  */
-function resetLinkForm() {
+export function resetLinkForm() {
     // reset the form values
     LINK_FORM_NAME_INPUT.value = '';
     LINK_FORM_URL_INPUT.value = '';
@@ -80,7 +80,7 @@ function resetLinkForm() {
 /**
  * Handles the logic for closing the add link form
  */
-function closeLinkForm() {
+export function closeLinkForm() {
     const formIsEmpty =
         LINK_FORM_NAME_INPUT.value.trim().length <= 0 &&
         LINK_FORM_URL_INPUT.value.trim().length <= 0;
@@ -97,6 +97,20 @@ function closeLinkForm() {
     }
 }
 
+/**
+ * Opens the add link modal. Resetting it's state completely in the process.
+ */
+export function openAddLinkForm() {
+    console.log('function called');
+    // show modal
+    utils.toggleElementVisibility('link-form-modal'); // ← Use this instead
+    // reset fields and errors
+    resetLinkForm();
+    // populate group dropdown
+    populateGroupSelect();
+    LINK_FORM_NAME_INPUT.focus();
+}
+
 // ============================================================================
 // EVENT LISTENERS
 // ============================================================================
@@ -110,9 +124,9 @@ ADD_LINK_BUTTON.addEventListener('click', () => {
 });
 
 // LINK FORM SUBMIT FUNCTIONALITY
-Add_link_form.addEventListener('submit', async (e) => {
+ADD_LINK_FORM.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const url = Add_link_form.action;
+    const url = ADD_LINK_FORM.action;
     const csrfToken = utils.getCSRFToken();
     const linkName = LINK_FORM_NAME_INPUT.value.trim();
     const linkURL = LINK_FORM_URL_INPUT.value.trim();

@@ -39,7 +39,7 @@ function validateGroupName(name) {
 /**
  * Resets all values in the `group form modal`
  */
-function resetGroupForm() {
+export function resetGroupForm() {
     GROUP_NAME_INPUT.value = '';
     if (!GROUP_FORM_ERRORS.classList.contains('hidden')) {
         GROUP_FORM_ERRORS.classList.add('hidden');
@@ -50,7 +50,7 @@ function resetGroupForm() {
 /**
  * Handles the logic for closing the group form
  */
-function closeGroupForm() {
+export function closeGroupForm() {
     const formIsEmpty = GROUP_NAME_INPUT.value.trim().length <= 0;
     if (formIsEmpty) {
         utils.toggleElementVisibility('group-form-modal');
@@ -62,7 +62,21 @@ function closeGroupForm() {
         }
     }
 }
+/**
+ * Opens the add group form. Resetting it's state completely in the process
+ */
+export function openAddGroupForm() {
+    // Make sure the modal is visible
+    utils.toggleElementVisibility('group-form-modal');
 
+    // Reset input and errors
+    GROUP_NAME_INPUT.value = '';
+    GROUP_FORM_ERRORS.innerHTML = '';
+    GROUP_FORM_ERRORS.classList.add('hidden');
+
+    // Focus the group name input for immediate typing
+    GROUP_NAME_INPUT.focus();
+}
 // ============================================================================
 // EVENT LISTENERS
 // ============================================================================

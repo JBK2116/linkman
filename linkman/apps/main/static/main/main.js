@@ -1,8 +1,8 @@
 /*
 This js file serves as the entry point for the logic in the `dashboard.html` page
  */
-import './add_group_form.js';
-import './add_link_form.js';
+import * as group_utils from './add_group_form.js';
+import * as link_utils from './add_link_form.js';
 import './edit_link_form.js';
 import './delete_link_form.js';
 import * as display_utils from './display_utils.js';
@@ -127,16 +127,6 @@ document.getElementById('search-input').addEventListener('input', function (e) {
     }, 200);
 });
 
-// Clear search on Escape key
-document
-    .getElementById('search-input')
-    .addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            this.value = '';
-            this.dispatchEvent(new Event('input'));
-        }
-    });
-
 // Infinite scroll implementation
 let isLoading = false;
 window.addEventListener('scroll', function () {
@@ -187,3 +177,101 @@ window.addEventListener(
         }
     }, 300),
 );
+
+document.addEventListener('keydown', function (e) {
+    // require Ctrl + Alt for shortcuts
+    if (!(e.ctrlKey && e.altKey)) return;
+    // ignore typing in inputs, textareas, or contenteditable
+    const active = document.activeElement;
+    if (
+        active &&
+        (active.tagName === 'INPUT' ||
+            active.tagName === 'TEXTAREA' ||
+            active.isContentEditable)
+    )
+        return;
+    // retrieve the pressed key
+    const key = e.key.toLowerCase();
+    switch (key) {
+        case '/':
+            e.preventDefault(); // prevent default browser behavior
+            document.getElementById('search-input')?.focus();
+            break;
+        case 'r':
+            document.getElementById('filter-select').value = 'recent';
+            display_utils.displayRecentlyCreated();
+            break;
+        case 'm':
+            document.getElementById('filter-select').value = 'most-used';
+            display_utils.displayMostUsed();
+            break;
+        case 'u':
+            document.getElementById('filter-select').value = 'last-used';
+            display_utils.displayLastUsed();
+            break;
+        case 'f':
+            display_utils.showGroupFilter(); // open the modal
+            const groupModal = document.getElementById('group-filter-modal');
+            const groupSelect = document.getElementById('group-filter-select');
+
+            if (
+                groupModal &&
+                !groupModal.classList.contains('hidden') &&
+                groupSelect
+            ) {
+                // focus the dropdown
+                groupSelect.focus();
+                // open the native dropdown programmatically
+                const event = new MouseEvent('mousedown', { bubbles: true });
+                groupSelect.dispatchEvent(event);
+            }
+            break;
+        case 'g': // open Add Group form
+            utils.toggleElementVisibility('group-form-modal');
+            break;
+        case 'l': // new Add Link shortcut
+            link_utils.openAddLinkForm();
+            // populate the group select
+            link_utils.populateGroupSelect();
+            break;
+    }
+});
+
+// Global Escape handler
+document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+
+    const searchInput = document.getElementById('search-input');
+    const groupModal = document.getElementById('group-filter-modal');
+    const groupFormModal = document.getElementById('group-form-modal');
+    const linkFormModalWrapper = document.getElementById('link-form-modal');
+
+    // clear and blur search input if focused
+    if (document.activeElement === searchInput) {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+        searchInput.blur();
+    }
+
+    // close group filter modal if open
+    if (groupModal && !groupModal.classList.contains('hidden')) {
+        groupModal.classList.add('hidden');
+        document.getElementById('group-filter-select').value = '';
+        const currentDisplay = utils.getCurrentDisplay();
+        document.getElementById('filter-select').value = currentDisplay;
+    }
+
+    // close add group form modal if open
+    if (groupFormModal && !groupFormModal.classList.contains('hidden')) {
+        group_utils.resetGroupForm();
+        groupFormModal.classList.add('hidden');
+    }
+    // close add link form modal if open
+    if (
+        linkFormModalWrapper &&
+        !linkFormModalWrapper.classList.contains('hidden')
+    ) {
+        link_utils.resetLinkForm();
+        linkFormModalWrapper.classList.add('hidden');
+    }
+});
