@@ -84,6 +84,7 @@ export function openAddGroupForm() {
 // GROUP FORM VISIBILITY
 ADD_GROUP_BUTTON.addEventListener('click', () => {
     utils.toggleElementVisibility('group-form-modal');
+    GROUP_NAME_INPUT.focus();
 });
 
 // GROUP FORM CANCEL BUTTONS

@@ -233,3 +233,24 @@ export function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
+
+/**
+ * Returns true if the user is typing in the search bar input. False otherwise
+ **/
+export function isTypingInInput() {
+    const active = document.activeElement;
+    return (
+        active &&
+        (active.tagName === 'INPUT' ||
+            active.tagName === 'TEXTAREA' ||
+            active.isContentEditable)
+    );
+}
+
+/**
+ * Toggles the shortcuts modal on and off
+ */
+export function toggleShortcutsModal() {
+    const modal = document.getElementById('shortcuts-modal');
+    modal.classList.toggle('hidden');
+}

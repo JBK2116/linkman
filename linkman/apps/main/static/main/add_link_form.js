@@ -103,7 +103,7 @@ export function closeLinkForm() {
 export function openAddLinkForm() {
     console.log('function called');
     // show modal
-    utils.toggleElementVisibility('link-form-modal'); // ← Use this instead
+    utils.toggleElementVisibility('link-form-modal');
     // reset fields and errors
     resetLinkForm();
     // populate group dropdown
@@ -119,6 +119,7 @@ export function openAddLinkForm() {
 ADD_LINK_BUTTON.addEventListener('click', () => {
     // show the form
     utils.toggleElementVisibility('link-form-modal');
+    LINK_FORM_NAME_INPUT.focus();
     // populate the group select
     populateGroupSelect();
 });

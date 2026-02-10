@@ -226,10 +226,11 @@ document.addEventListener('keydown', function (e) {
                 groupSelect.dispatchEvent(event);
             }
             break;
-        case 'g': // open Add Group form
+        case 'g': // open add group form
             utils.toggleElementVisibility('group-form-modal');
+            document.getElementById('group-name-input').focus();
             break;
-        case 'l': // new Add Link shortcut
+        case 'l': // new add link Shortcut
             link_utils.openAddLinkForm();
             // populate the group select
             link_utils.populateGroupSelect();
@@ -245,6 +246,7 @@ document.addEventListener('keydown', function (e) {
     const groupModal = document.getElementById('group-filter-modal');
     const groupFormModal = document.getElementById('group-form-modal');
     const linkFormModalWrapper = document.getElementById('link-form-modal');
+    const shortcutsModal = document.getElementById('shortcuts-modal');
 
     // clear and blur search input if focused
     if (document.activeElement === searchInput) {
@@ -253,6 +255,10 @@ document.addEventListener('keydown', function (e) {
         searchInput.blur();
     }
 
+    // close shortcuts modal if open
+    if (shortcutsModal && !shortcutsModal.classList.contains('hidden')) {
+        shortcutsModal.classList.add('hidden');
+    }
     // close group filter modal if open
     if (groupModal && !groupModal.classList.contains('hidden')) {
         groupModal.classList.add('hidden');
@@ -336,4 +342,35 @@ document
                 linkCards[0].focus();
             }
         }
+    });
+
+document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        console.log('Opening shortcuts modal');
+        document.getElementById('shortcuts-modal').classList.toggle('hidden');
+    }
+});
+
+// close shortcuts modal with button
+document
+    .getElementById('close-shortcuts')
+    .addEventListener('click', function () {
+        document.getElementById('shortcuts-modal').classList.add('hidden');
+    });
+
+// close shortcuts modal by clicking outside
+document
+    .getElementById('shortcuts-modal')
+    .addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.classList.add('hidden');
+        }
+    });
+
+// open shortcuts modal with button
+document
+    .getElementById('show-shortcuts-button')
+    .addEventListener('click', function () {
+        document.getElementById('shortcuts-modal').classList.remove('hidden');
     });
